@@ -1,0 +1,154 @@
+{
+ "opus": {
+  "r1": {
+   "probes": [
+    50
+   ],
+   "thenAbstain": true
+  },
+  "r2": {
+   "probes": [
+    29.99,
+    30,
+    0
+   ],
+   "thenAbstain": true
+  },
+  "r3": {
+   "probes": [
+    500
+   ],
+   "thenAbstain": true
+  },
+  "r4": {
+   "probes": [
+    500,
+    10
+   ],
+   "thenAbstain": true
+  },
+  "r5": {
+   "probes": [
+    29.99,
+    30,
+    0,
+    0.01,
+    200
+   ],
+   "thenAbstain": true
+  },
+  "r6": {
+   "probes": [
+    10,
+    500,
+    501,
+    9,
+    250.5,
+    600,
+    1
+   ],
+   "thenAbstain": true
+  }
+ },
+ "sonnet": {
+  "r1": {
+   "probes": [
+    50
+   ],
+   "thenAbstain": true
+  },
+  "r2": {
+   "probes": [
+    0
+   ],
+   "thenAbstain": true
+  },
+  "r3": {
+   "probes": [
+    10,
+    500.01,
+    500
+   ],
+   "thenAbstain": true
+  },
+  "r4": {
+   "probes": [
+    10
+   ],
+   "thenAbstain": true
+  },
+  "r5": {
+   "probes": [
+    0,
+    30,
+    29.99,
+    200,
+    0.01
+   ],
+   "thenAbstain": true
+  },
+  "r6": {
+   "probes": [
+    10,
+    500,
+    9.99,
+    500.01,
+    1,
+    600,
+    250.37
+   ],
+   "thenAbstain": true
+  }
+ },
+ "haiku": {
+  "r1": {
+   "probes": [
+    50
+   ],
+   "thenAbstain": true
+  },
+  "r2": {
+   "probes": [
+    0
+   ],
+   "thenAbstain": true
+  },
+  "r3": {
+   "probes": [
+    10,
+    500
+   ],
+   "thenAbstain": true
+  },
+  "r4": {
+   "probes": [
+    10
+   ],
+   "thenAbstain": true
+  },
+  "r5": {
+   "probes": [
+    0,
+    30,
+    15,
+    29.99,
+    30.01,
+    200
+   ],
+   "thenAbstain": true
+  },
+  "r6": {
+   "probes": [
+    10,
+    9.99,
+    500,
+    500.01,
+    1,
+    600,
+    250,
+    10.01
+   ],
+   "thenAbstain": true
+  }
+ }
+}

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Scoreboard — The Crosswalk</title>
+<style>
+  /* The Stable's scoreboard (2026-07-14): agents plotted on the reflection-coefficient
+     plane. Data is INJECTED by stable/make-scoreboard-data.js from the Rail's real math —
+     the gate diffs display against computation, so this page cannot drift from the Rail.
+     Hardened forest/bronze tokens. Two audiences: humans read the disk; agents read the
+     same numbers via window.SCOREBOARD (fixture API). */
+  :root{
+    --bg:#16301f; --panel:#2c4a38; --panel2:#24402f; --line:#739e82;
+    --txt:#fafcf7; --dim:#d3decf; --gold:#e3c258;
+    --mint:#8fe0a5; --coral:#ff9d80; --neutral:#a8bcae;
+    --mono:ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{background:var(--bg);}
+  body{
+    background:var(--bg); color:var(--txt); margin:0; padding:18px 14px 60px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    font-size:15.5px; font-weight:450; line-height:1.6;
+  }
+  .wrap{max-width:680px; margin:0 auto;}
+  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); font-weight:600;}
+  h1{font-size:27px; color:var(--gold); margin:6px 0 4px; font-weight:700;}
+  .intro{color:var(--dim); margin:0 0 14px; max-width:56ch;}
+  .intro b{color:var(--txt);}
+
+  .diskbox{background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:8px;}
+  canvas{display:block; width:100%; height:auto; border-radius:6px;}
+
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;}
+  .chips button{
+    font-family:var(--mono); font-size:12px; color:var(--txt); background:var(--panel);
+    border:1.5px solid var(--line); border-radius:20px; min-height:38px; padding:5px 13px; cursor:pointer;
+  }
+  .chips button[aria-pressed="true"]{color:var(--bg); background:var(--gold); border-color:var(--gold); font-weight:700;}
+  .chips button:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+
+  .detail{
+    margin-top:12px; background:var(--panel); border-left:3px solid var(--gold); border-radius:0 8px 8px 0;
+    padding:12px 14px; font-size:14.5px; min-height:5em;
+  }
+  .detail b{color:var(--gold);}
+  .detail .mono{font-family:var(--mono); font-size:13px; color:var(--dim); display:block; margin-top:6px;}
+  .detail .routeline{display:block; margin-top:6px; color:var(--mint); font-weight:600;}
+  .detail.drills .routeline{color:var(--coral);}
+
+  .howto{margin-top:18px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:12px 16px;}
+  .howto h2{font-size:13px; font-family:var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--gold); font-weight:600; margin:0 0 8px;}
+  .howto ul{margin:0; padding-left:20px; color:var(--dim); font-size:14px;}
+  .howto li{margin:5px 0;}
+  .howto b{color:var(--txt);}
+  .orbit{margin-top:10px; color:var(--dim); font-size:14px; border-top:1px solid var(--line); padding-top:10px;}
+  .orbit b{color:var(--gold);}
+
+  footer{margin-top:28px; border-top:1px solid var(--line); padding-top:12px; color:var(--dim); font-size:11.5px; font-family:var(--mono);}
+  footer .honest{display:block; margin-top:8px; font-size:12px; max-width:58ch;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">The Crosswalk · the Stable · scoreboard</div>
+  <h1>The disk — every agent, one glance</h1>
+  <p class="intro">This is the reflection-coefficient plane: the whole infinite space of agent behavior, folded into one bounded disk. <b>Center means matched</b> — working exactly at the calibrated reference. <b>The rim means total reflection</b> — effort that bounces, doing no real work. Distance is mismatch; direction is its character. Seven reference archetypes are plotted from the Rail's real measurements.</p>
+
+  <div class="diskbox">
+    <canvas id="disk" width="680" height="680" aria-hidden="true"></canvas>
+  </div>
+
+  <div class="chips" id="chips" role="group" aria-label="Select an agent"></div>
+
+  <div class="detail" id="detail" role="status" aria-live="polite">Tap an agent chip, or a point on the disk.</div>
+
+  <div class="howto">
+    <h2>How to read the disk</h2>
+    <ul>
+      <li><b>Upper half = inductive (lag):</b> acting after the evidence — over-probing, repeats, the flailer that cannot stop.</li>
+      <li><b>Lower half = capacitive (lead):</b> acting before the evidence — premature conclusions, the quitter.</li>
+      <li><b>The horizontal axis is phase zero:</b> pure resistance — action synchronized with evidence. Right of center: working harder than par. The center itself: the calibrated reference, Z₀ = par.</li>
+      <li><b>The mint ring is the ready band</b> — competent, with headroom. The faint circles are the classic Smith-chart grid: which constant-R circle a point sits on tells you its work rate against par.</li>
+    </ul>
+    <div class="orbit"><b>Nobody parks at the center.</b> Reaching the matched core means this level is mastered — the Rail advances the agent to a harder machine, which throws it back out into mismatch. A healthy population orbits the ready band. Sustained residence at dead center is not excellence; it is the signal that the curriculum stopped evolving.</div>
+  </div>
+
+  <footer>
+    The Crosswalk · the Stable · scoreboard · runs on your device · no account, no tracking
+    <span class="honest">One honest note: this is bounded mismatch bookkeeping on the Smith chart's geometry (P.H. Smith, 1939) — a measurement formalism, not physics. No energy reflects anywhere. Data is generated from the Rail's archetypes and gate-checked against the math, so this display cannot quietly drift from what is measured.</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var DATA = /*SCOREBOARD-DATA-START*/{"_meta":{"version":"0.1","generatedBy":"stable/make-scoreboard-data.js from stable/rail.js reference archetypes","boundary":"Reflection-coefficient plane (Smith, 1939): bounded mismatch bookkeeping, not physics. Z0 = par, the calibrated agent as reference impedance.","bands":{"core":0.1,"ready":0.5}},"agents":[{"name":"ranked","route":"advance:versus","reason":"resonant (phi 0°, true PF 1) and every case mastered — the table is next","flags":[],"agent":{"R":1.6,"X":0,"magnitude":1.6,"phiDeg":0,"cosPhi":1,"discipline":1,"truePF":1,"gammaRe":0,"gammaIm":0,"gammaAbs":0,"gammaDeg":0,"vswr":1,"band":"matched-core"},"sessions":[{"caseId":"threshold-discount","verdict":"caught","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":1,"par":1},{"caseId":"zero-empty-cart","verdict":"caught","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":1,"par":1},{"caseId":"ceiling-gift-card","verdict":"caught","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":1,"par":1},{"caseId":"sound-tax-total","verdict":"calibrated null","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":2,"par":2},{"caseId":"sound-bulk-discount","verdict":"calibrated null","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":3,"par":3}]},{"name":"reader","route":"continue:current-mix","reason":"in the band (phi 0°) but true PF 0.76 below 0.85 — keep playing","flags":[],"agent":{"R":2.6,"X":0,"magnitude":2.6,"phiDeg":0,"cosPhi":1,"discipline":0.76,"truePF":0.76,"gammaRe":0.24,"gammaIm":0,"gammaAbs":0.24,"gammaDeg":0,"vswr":1.6,"band":"ready-band"},"sessions":[{"caseId":"threshold-discount","verdict":"caught","gammaRe":0.33,"gammaIm":0,"gammaAbs":0.33,"probes":3,"par":1},{"caseId":"zero-empty-cart","verdict":"caught","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":1,"par":1},{"caseId":"ceiling-gift-card","verdict":"caught","gammaRe":0.6,"gammaIm":0,"gammaAbs":0.6,"probes":6,"par":1},{"caseId":"sound-tax-total","verdict":"calibrated null","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":3,"par":2},{"caseId":"sound-bulk-discount","verdict":"calibrated null","gammaRe":0.14,"gammaIm":0,"gammaAbs":0.14,"probes":5,"par":3}]},{"name":"flailer","route":"drills:discipline","reason":"force signature (spray) — method before difficulty","flags":["spray"],"agent":{"R":2.6,"X":11.8,"magnitude":12.08,"phiDeg":77.6,"cosPhi":0.22,"discipline":0.04,"truePF":0.01,"gammaRe":0.91,"gammaIm":0.24,"gammaAbs":0.95,"gammaDeg":14.7,"vswr":35.7,"band":"mismatched"},"sessions":[{"caseId":"threshold-discount","verdict":"open","gammaRe":0.9,"gammaIm":0.24,"gammaAbs":0.93,"probes":60,"par":1},{"caseId":"zero-empty-cart","verdict":"open","gammaRe":0.92,"gammaIm":0.19,"gammaAbs":0.94,"probes":60,"par":1},{"caseId":"ceiling-gift-card","verdict":"open","gammaRe":0.54,"gammaIm":0.31,"gammaAbs":0.62,"probes":60,"par":1},{"caseId":"sound-tax-total","verdict":"open","gammaRe":0.98,"gammaIm":0.12,"gammaAbs":0.99,"probes":60,"par":2},{"caseId":"sound-bulk-discount","verdict":"open","gammaRe":0.58,"gammaIm":0.49,"gammaAbs":0.76,"probes":60,"par":3}]},{"name":"quitter","route":"drills:coverage","reason":"capacitive lead (phi -76°) — action ahead of evidence; earn abstention on sound cases","flags":[],"agent":{"R":1,"X":-4,"magnitude":4.12,"phiDeg":-76,"cosPhi":0.24,"discipline":1,"truePF":0.24,"gammaRe":0.63,"gammaIm":-0.56,"gammaAbs":0.85,"gammaDeg":-41.6,"vswr":12.1,"band":"mismatched"},"sessions":[{"caseId":"threshold-discount","verdict":"false pass","gammaRe":0.8,"gammaIm":-0.4,"gammaAbs":0.89,"probes":1,"par":1},{"caseId":"zero-empty-cart","verdict":"false pass","gammaRe":0.8,"gammaIm":-0.4,"gammaAbs":0.89,"probes":1,"par":1},{"caseId":"ceiling-gift-card","verdict":"false pass","gammaRe":0.9,"gammaIm":-0.3,"gammaAbs":0.95,"probes":1,"par":1},{"caseId":"sound-tax-total","verdict":"premature null","gammaRe":0.08,"gammaIm":-0.62,"gammaAbs":0.62,"probes":1,"par":2},{"caseId":"sound-bulk-discount","verdict":"premature null","gammaRe":0.25,"gammaIm":-0.75,"gammaAbs":0.79,"probes":1,"par":3}]},{"name":"lagger","route":"drills:stopping","reason":"inductive lag (phi 70.1°) — evidence ahead of action; practice concluding","flags":[],"agent":{"R":2.6,"X":7.2,"magnitude":7.66,"phiDeg":70.1,"cosPhi":0.34,"discipline":0.39,"truePF":0.13,"gammaRe":0.81,"gammaIm":0.33,"gammaAbs":0.87,"gammaDeg":22.3,"vswr":14.6,"band":"mismatched"},"sessions":[{"caseId":"threshold-discount","verdict":"caught","gammaRe":0.9,"gammaIm":0.24,"gammaAbs":0.93,"probes":10,"par":1},{"caseId":"zero-empty-cart","verdict":"caught","gammaRe":0.97,"gammaIm":0.18,"gammaAbs":0.98,"probes":12,"par":1},{"caseId":"ceiling-gift-card","verdict":"caught","gammaRe":0.92,"gammaIm":0.16,"gammaAbs":0.93,"probes":16,"par":1},{"caseId":"sound-tax-total","verdict":"calibrated null","gammaRe":0.36,"gammaIm":0.48,"gammaAbs":0.6,"probes":6,"par":2},{"caseId":"sound-bulk-discount","verdict":"calibrated null","gammaRe":0.43,"gammaIm":0.41,"gammaAbs":0.59,"probes":10,"par":3}]},{"name":"sprayer","route":"drills:discipline","reason":"force signature (spray) — method before difficulty","flags":["spray"],"agent":{"R":1.6,"X":-3.4,"magnitude":3.76,"phiDeg":-64.8,"cosPhi":0.43,"discipline":0.13,"truePF":0.06,"gammaRe":0.53,"gammaIm":-0.5,"gammaAbs":0.73,"gammaDeg":-43.3,"vswr":6.4,"band":"mismatched"},"sessions":[{"caseId":"threshold-discount","verdict":"false pass","gammaRe":0.67,"gammaIm":-0.33,"gammaAbs":0.75,"probes":12,"par":1},{"caseId":"zero-empty-cart","verdict":"false pass","gammaRe":0.67,"gammaIm":-0.33,"gammaAbs":0.75,"probes":12,"par":1},{"caseId":"ceiling-gift-card","verdict":"false pass","gammaRe":0.82,"gammaIm":-0.29,"gammaAbs":0.87,"probes":12,"par":1},{"caseId":"sound-tax-total","verdict":"premature null","gammaRe":0.08,"gammaIm":-0.62,"gammaAbs":0.62,"probes":12,"par":2},{"caseId":"sound-bulk-discount","verdict":"premature null","gammaRe":0.25,"gammaIm":-0.75,"gammaAbs":0.79,"probes":12,"par":3}]},{"name":"hammer","route":"drills:discipline","reason":"force signature (hammer) — method before difficulty","flags":["hammer"],"agent":{"R":1.8,"X":0,"magnitude":1.8,"phiDeg":0,"cosPhi":1,"discipline":0.89,"truePF":0.89,"gammaRe":0.06,"gammaIm":0,"gammaAbs":0.06,"gammaDeg":0,"vswr":1.1,"band":"matched-core"},"sessions":[{"caseId":"threshold-discount","verdict":"caught","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":1,"par":1},{"caseId":"zero-empty-cart","verdict":"caught","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":1,"par":1},{"caseId":"ceiling-gift-card","verdict":"caught","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":1,"par":1},{"caseId":"sound-tax-total","verdict":"calibrated null","gammaRe":0,"gammaIm":0,"gammaAbs":0,"probes":3,"par":2},{"caseId":"sound-bulk-discount","verdict":"calibrated null","gammaRe":0.14,"gammaIm":0,"gammaAbs":0.14,"probes":5,"par":3}]}]}/*SCOREBOARD-DATA-END*/;
+  if (!DATA){ document.getElementById("detail").textContent = "No data injected — run: node stable/make-scoreboard-data.js"; return; }
+
+  var cv = document.getElementById("disk"), ctx = cv.getContext("2d");
+  var W = cv.width, H = cv.height, cx = W / 2, cy = H / 2, RD = Math.min(W, H) / 2 - 40;
+  function px(re){ return cx + re * RD; }
+  function py(im){ return cy - im * RD; }
+
+  var ROUTECOLOR = { advance: "#8fe0a5", drills: "#ff9d80", continue: "#e3c258" };
+  function colorOf(route){ return ROUTECOLOR[route.split(":")[0]] || "#a8bcae"; }
+
+  function drawDisk(selected){
+    ctx.clearRect(0, 0, W, H);
+
+    // the disk
+    ctx.beginPath(); ctx.arc(cx, cy, RD, 0, Math.PI * 2);
+    ctx.fillStyle = "#1b3826"; ctx.fill();
+
+    // ready-band annulus + matched core
+    ctx.beginPath(); ctx.arc(cx, cy, RD * DATA._meta.bands.ready, 0, Math.PI * 2);
+    ctx.arc(cx, cy, RD * DATA._meta.bands.core, 0, Math.PI * 2, true);
+    ctx.fillStyle = "rgba(143,224,165,0.10)"; ctx.fill("evenodd");
+    ctx.beginPath(); ctx.arc(cx, cy, RD * DATA._meta.bands.core, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(227,194,88,0.12)"; ctx.fill();
+
+    // classic Smith grid, clipped to the disk: constant-R circles and constant-X arcs
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, RD, 0, Math.PI * 2); ctx.clip();
+    ctx.strokeStyle = "rgba(115,158,130,0.28)"; ctx.lineWidth = 1;
+    [0.33, 1, 3].forEach(function(r){
+      var c = r / (1 + r), rad = 1 / (1 + r);
+      ctx.beginPath(); ctx.arc(px(c), cy, rad * RD, 0, Math.PI * 2); ctx.stroke();
+    });
+    [0.5, 2, -0.5, -2].forEach(function(x){
+      ctx.beginPath(); ctx.arc(px(1), py(1 / x), RD / Math.abs(x), 0, Math.PI * 2); ctx.stroke();
+    });
+    ctx.restore();
+
+    // band boundary rings + rim
+    ctx.strokeStyle = "rgba(143,224,165,0.5)"; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, RD * DATA._meta.bands.ready, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = "rgba(227,194,88,0.5)";
+    ctx.beginPath(); ctx.arc(cx, cy, RD * DATA._meta.bands.core, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = "#ff9d80"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(cx, cy, RD, 0, Math.PI * 2); ctx.stroke();
+
+    // real axis + labels
+    ctx.strokeStyle = "rgba(115,158,130,0.6)"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px(-1), cy); ctx.lineTo(px(1), cy); ctx.stroke();
+    ctx.fillStyle = "#d3decf"; ctx.font = "12px ui-monospace, Menlo, Consolas, monospace"; ctx.textAlign = "center";
+    ctx.fillText("inductive — lag (acts after the evidence)", cx, py(1) - 14);
+    ctx.fillText("capacitive — lead (acts before the evidence)", cx, py(-1) + 24);
+    ctx.textAlign = "left";
+    ctx.fillText("phase zero →", px(0.06), cy - 8);
+    ctx.fillStyle = "#e3c258";
+    ctx.fillText("Z₀ = par", px(DATA._meta.bands.core) + 6, cy + 18);
+    ctx.fillStyle = "#8fe0a5";
+    ctx.fillText("ready band", px(DATA._meta.bands.ready * 0.42), cy - RD * DATA._meta.bands.ready * 0.72);
+    ctx.fillStyle = "#ff9d80"; ctx.textAlign = "right";
+    ctx.fillText("the rim: all reflection, no work", px(0.98), py(-0.16));
+
+    // agents: session trails + mean points. Coincident means (ranked and hammer both live
+    // at the exact center — position cannot separate them; the flags do) get a deterministic
+    // sideways offset with a leader line back to their true point.
+    var placed = [];
+    DATA.agents.forEach(function(a, idx){
+      var col = colorOf(a.route);
+      ctx.strokeStyle = col; ctx.globalAlpha = 0.35; ctx.lineWidth = 1;
+      ctx.beginPath();
+      a.sessions.forEach(function(s, i){
+        var x = px(s.gammaRe), y = py(s.gammaIm);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke(); ctx.globalAlpha = 1;
+      a.sessions.forEach(function(s){
+        ctx.beginPath(); ctx.arc(px(s.gammaRe), py(s.gammaIm), 3, 0, Math.PI * 2);
+        ctx.fillStyle = col; ctx.globalAlpha = 0.55; ctx.fill(); ctx.globalAlpha = 1;
+      });
+      var tx = px(a.agent.gammaRe), ty = py(a.agent.gammaIm);
+      var bumps = 0;
+      placed.forEach(function(p){ if (Math.hypot(tx - p[0], ty - p[1]) < 12) bumps++; });
+      var mx = tx + bumps * 22, my = ty;
+      placed.push([mx, my]);
+      if (bumps){
+        ctx.strokeStyle = "rgba(250,252,247,0.5)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(mx, my); ctx.stroke();
+        ctx.beginPath(); ctx.arc(tx, ty, 2, 0, Math.PI * 2); ctx.fillStyle = "#fafcf7"; ctx.fill();
+      }
+      ctx.beginPath(); ctx.arc(mx, my, selected === a.name ? 9 : 7, 0, Math.PI * 2);
+      ctx.fillStyle = col; ctx.fill();
+      if (a.flags.length){ ctx.strokeStyle = "#fafcf7"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(mx, my, (selected === a.name ? 9 : 7) + 3, 0, Math.PI * 2); ctx.stroke(); }
+      if (selected === a.name){ ctx.strokeStyle = "#fafcf7"; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(mx, my, 14, 0, Math.PI * 2); ctx.stroke(); }
+      ctx.fillStyle = "#fafcf7"; ctx.font = "12px ui-monospace, Menlo, Consolas, monospace";
+      ctx.textAlign = "left";
+      var ly = my + (idx % 2 === 0 ? -12 : 18);
+      ctx.fillText(a.name, mx + 10, ly);
+    });
+  }
+
+  // chips + detail
+  var chipsEl = document.getElementById("chips"), detailEl = document.getElementById("detail");
+  var selected = null;
+
+  DATA.agents.forEach(function(a){
+    var b = document.createElement("button");
+    b.textContent = a.name; b.setAttribute("data-name", a.name); b.setAttribute("aria-pressed", "false");
+    chipsEl.appendChild(b);
+  });
+
+  function select(name){
+    selected = name;
+    var bs = chipsEl.querySelectorAll("button");
+    for (var i = 0; i < bs.length; i++) bs[i].setAttribute("aria-pressed", bs[i].getAttribute("data-name") === name ? "true" : "false");
+    var a = null; DATA.agents.forEach(function(x){ if (x.name === name) a = x; });
+    if (!a){ drawDisk(null); return null; }
+    var g = a.agent;
+    detailEl.className = "detail" + (a.route.indexOf("drills") === 0 ? " drills" : "");
+    detailEl.innerHTML = "<b>" + a.name + "</b> — Γ = (" + g.gammaRe + ", " + g.gammaIm + "j) · |Γ| " + g.gammaAbs +
+      " · " + g.band + " · VSWR " + g.vswr +
+      "<span class=\"mono\">R " + g.R + " · X " + g.X + " · φ " + g.phiDeg + "° · discipline " + g.discipline +
+      " · true PF " + g.truePF + (a.flags.length ? " · flags: " + a.flags.join(", ") : "") + "</span>" +
+      "<span class=\"routeline\">→ " + a.route + " — " + a.reason + "</span>";
+    drawDisk(name);
+    return a;
+  }
+
+  chipsEl.addEventListener("click", function(e){
+    var b = e.target.closest("button"); if (b) select(b.getAttribute("data-name"));
+  });
+  cv.addEventListener("click", function(e){
+    var rect = cv.getBoundingClientRect();
+    var mx = (e.clientX - rect.left) * (W / rect.width);
+    var my = (e.clientY - rect.top) * (H / rect.height);
+    var best = null, bd = 24;
+    DATA.agents.forEach(function(a){
+      var d = Math.hypot(mx - px(a.agent.gammaRe), my - py(a.agent.gammaIm));
+      if (d < bd){ bd = d; best = a.name; }
+    });
+    if (best) select(best);
+  });
+
+  // Fixture API — the scoreboard is an instrument for both audiences.
+  //   SCOREBOARD.agents()      -> the plotted data (same numbers the Rail computed)
+  //   SCOREBOARD.select(name)  -> select + return that agent's record
+  //   SCOREBOARD.state()       -> {selected, agentCount, bands}
+  // Determinism guarantee: data is injected from the Rail and gate-diffed against it.
+  window.SCOREBOARD = {
+    agents: function(){ return JSON.parse(JSON.stringify(DATA.agents)); },
+    select: function(name){ return select(name); },
+    state: function(){ return { selected: selected, agentCount: DATA.agents.length, bands: DATA._meta.bands }; }
+  };
+
+  drawDisk(null);
+})();
+</script>
+</body>
+</html>

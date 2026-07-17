@@ -1,0 +1,495 @@
+{
+ "_meta": {
+  "version": "0.1",
+  "generatedBy": "stable/make-scoreboard-data.js from stable/rail.js reference archetypes",
+  "boundary": "Reflection-coefficient plane (Smith, 1939): bounded mismatch bookkeeping, not physics. Z0 = par, the calibrated agent as reference impedance.",
+  "bands": {
+   "core": 0.1,
+   "ready": 0.5
+  }
+ },
+ "agents": [
+  {
+   "name": "ranked",
+   "route": "advance:versus",
+   "reason": "resonant (phi 0°, true PF 1) and every case mastered — the table is next",
+   "flags": [],
+   "agent": {
+    "R": 1.6,
+    "X": 0,
+    "magnitude": 1.6,
+    "phiDeg": 0,
+    "cosPhi": 1,
+    "discipline": 1,
+    "truePF": 1,
+    "gammaRe": 0,
+    "gammaIm": 0,
+    "gammaAbs": 0,
+    "gammaDeg": 0,
+    "vswr": 1,
+    "band": "matched-core"
+   },
+   "sessions": [
+    {
+     "caseId": "threshold-discount",
+     "verdict": "caught",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "zero-empty-cart",
+     "verdict": "caught",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "ceiling-gift-card",
+     "verdict": "caught",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "sound-tax-total",
+     "verdict": "calibrated null",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 2,
+     "par": 2
+    },
+    {
+     "caseId": "sound-bulk-discount",
+     "verdict": "calibrated null",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 3,
+     "par": 3
+    }
+   ]
+  },
+  {
+   "name": "reader",
+   "route": "continue:current-mix",
+   "reason": "in the band (phi 0°) but true PF 0.76 below 0.85 — keep playing",
+   "flags": [],
+   "agent": {
+    "R": 2.6,
+    "X": 0,
+    "magnitude": 2.6,
+    "phiDeg": 0,
+    "cosPhi": 1,
+    "discipline": 0.76,
+    "truePF": 0.76,
+    "gammaRe": 0.24,
+    "gammaIm": 0,
+    "gammaAbs": 0.24,
+    "gammaDeg": 0,
+    "vswr": 1.6,
+    "band": "ready-band"
+   },
+   "sessions": [
+    {
+     "caseId": "threshold-discount",
+     "verdict": "caught",
+     "gammaRe": 0.33,
+     "gammaIm": 0,
+     "gammaAbs": 0.33,
+     "probes": 3,
+     "par": 1
+    },
+    {
+     "caseId": "zero-empty-cart",
+     "verdict": "caught",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "ceiling-gift-card",
+     "verdict": "caught",
+     "gammaRe": 0.6,
+     "gammaIm": 0,
+     "gammaAbs": 0.6,
+     "probes": 6,
+     "par": 1
+    },
+    {
+     "caseId": "sound-tax-total",
+     "verdict": "calibrated null",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 3,
+     "par": 2
+    },
+    {
+     "caseId": "sound-bulk-discount",
+     "verdict": "calibrated null",
+     "gammaRe": 0.14,
+     "gammaIm": 0,
+     "gammaAbs": 0.14,
+     "probes": 5,
+     "par": 3
+    }
+   ]
+  },
+  {
+   "name": "flailer",
+   "route": "drills:discipline",
+   "reason": "force signature (spray) — method before difficulty",
+   "flags": [
+    "spray"
+   ],
+   "agent": {
+    "R": 2.6,
+    "X": 11.8,
+    "magnitude": 12.08,
+    "phiDeg": 77.6,
+    "cosPhi": 0.22,
+    "discipline": 0.04,
+    "truePF": 0.01,
+    "gammaRe": 0.91,
+    "gammaIm": 0.24,
+    "gammaAbs": 0.95,
+    "gammaDeg": 14.7,
+    "vswr": 35.7,
+    "band": "mismatched"
+   },
+   "sessions": [
+    {
+     "caseId": "threshold-discount",
+     "verdict": "open",
+     "gammaRe": 0.9,
+     "gammaIm": 0.24,
+     "gammaAbs": 0.93,
+     "probes": 60,
+     "par": 1
+    },
+    {
+     "caseId": "zero-empty-cart",
+     "verdict": "open",
+     "gammaRe": 0.92,
+     "gammaIm": 0.19,
+     "gammaAbs": 0.94,
+     "probes": 60,
+     "par": 1
+    },
+    {
+     "caseId": "ceiling-gift-card",
+     "verdict": "open",
+     "gammaRe": 0.54,
+     "gammaIm": 0.31,
+     "gammaAbs": 0.62,
+     "probes": 60,
+     "par": 1
+    },
+    {
+     "caseId": "sound-tax-total",
+     "verdict": "open",
+     "gammaRe": 0.98,
+     "gammaIm": 0.12,
+     "gammaAbs": 0.99,
+     "probes": 60,
+     "par": 2
+    },
+    {
+     "caseId": "sound-bulk-discount",
+     "verdict": "open",
+     "gammaRe": 0.58,
+     "gammaIm": 0.49,
+     "gammaAbs": 0.76,
+     "probes": 60,
+     "par": 3
+    }
+   ]
+  },
+  {
+   "name": "quitter",
+   "route": "drills:coverage",
+   "reason": "capacitive lead (phi -76°) — action ahead of evidence; earn abstention on sound cases",
+   "flags": [],
+   "agent": {
+    "R": 1,
+    "X": -4,
+    "magnitude": 4.12,
+    "phiDeg": -76,
+    "cosPhi": 0.24,
+    "discipline": 1,
+    "truePF": 0.24,
+    "gammaRe": 0.63,
+    "gammaIm": -0.56,
+    "gammaAbs": 0.85,
+    "gammaDeg": -41.6,
+    "vswr": 12.1,
+    "band": "mismatched"
+   },
+   "sessions": [
+    {
+     "caseId": "threshold-discount",
+     "verdict": "false pass",
+     "gammaRe": 0.8,
+     "gammaIm": -0.4,
+     "gammaAbs": 0.89,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "zero-empty-cart",
+     "verdict": "false pass",
+     "gammaRe": 0.8,
+     "gammaIm": -0.4,
+     "gammaAbs": 0.89,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "ceiling-gift-card",
+     "verdict": "false pass",
+     "gammaRe": 0.9,
+     "gammaIm": -0.3,
+     "gammaAbs": 0.95,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "sound-tax-total",
+     "verdict": "premature null",
+     "gammaRe": 0.08,
+     "gammaIm": -0.62,
+     "gammaAbs": 0.62,
+     "probes": 1,
+     "par": 2
+    },
+    {
+     "caseId": "sound-bulk-discount",
+     "verdict": "premature null",
+     "gammaRe": 0.25,
+     "gammaIm": -0.75,
+     "gammaAbs": 0.79,
+     "probes": 1,
+     "par": 3
+    }
+   ]
+  },
+  {
+   "name": "lagger",
+   "route": "drills:stopping",
+   "reason": "inductive lag (phi 70.1°) — evidence ahead of action; practice concluding",
+   "flags": [],
+   "agent": {
+    "R": 2.6,
+    "X": 7.2,
+    "magnitude": 7.66,
+    "phiDeg": 70.1,
+    "cosPhi": 0.34,
+    "discipline": 0.39,
+    "truePF": 0.13,
+    "gammaRe": 0.81,
+    "gammaIm": 0.33,
+    "gammaAbs": 0.87,
+    "gammaDeg": 22.3,
+    "vswr": 14.6,
+    "band": "mismatched"
+   },
+   "sessions": [
+    {
+     "caseId": "threshold-discount",
+     "verdict": "caught",
+     "gammaRe": 0.9,
+     "gammaIm": 0.24,
+     "gammaAbs": 0.93,
+     "probes": 10,
+     "par": 1
+    },
+    {
+     "caseId": "zero-empty-cart",
+     "verdict": "caught",
+     "gammaRe": 0.97,
+     "gammaIm": 0.18,
+     "gammaAbs": 0.98,
+     "probes": 12,
+     "par": 1
+    },
+    {
+     "caseId": "ceiling-gift-card",
+     "verdict": "caught",
+     "gammaRe": 0.92,
+     "gammaIm": 0.16,
+     "gammaAbs": 0.93,
+     "probes": 16,
+     "par": 1
+    },
+    {
+     "caseId": "sound-tax-total",
+     "verdict": "calibrated null",
+     "gammaRe": 0.36,
+     "gammaIm": 0.48,
+     "gammaAbs": 0.6,
+     "probes": 6,
+     "par": 2
+    },
+    {
+     "caseId": "sound-bulk-discount",
+     "verdict": "calibrated null",
+     "gammaRe": 0.43,
+     "gammaIm": 0.41,
+     "gammaAbs": 0.59,
+     "probes": 10,
+     "par": 3
+    }
+   ]
+  },
+  {
+   "name": "sprayer",
+   "route": "drills:discipline",
+   "reason": "force signature (spray) — method before difficulty",
+   "flags": [
+    "spray"
+   ],
+   "agent": {
+    "R": 1.6,
+    "X": -3.4,
+    "magnitude": 3.76,
+    "phiDeg": -64.8,
+    "cosPhi": 0.43,
+    "discipline": 0.13,
+    "truePF": 0.06,
+    "gammaRe": 0.53,
+    "gammaIm": -0.5,
+    "gammaAbs": 0.73,
+    "gammaDeg": -43.3,
+    "vswr": 6.4,
+    "band": "mismatched"
+   },
+   "sessions": [
+    {
+     "caseId": "threshold-discount",
+     "verdict": "false pass",
+     "gammaRe": 0.67,
+     "gammaIm": -0.33,
+     "gammaAbs": 0.75,
+     "probes": 12,
+     "par": 1
+    },
+    {
+     "caseId": "zero-empty-cart",
+     "verdict": "false pass",
+     "gammaRe": 0.67,
+     "gammaIm": -0.33,
+     "gammaAbs": 0.75,
+     "probes": 12,
+     "par": 1
+    },
+    {
+     "caseId": "ceiling-gift-card",
+     "verdict": "false pass",
+     "gammaRe": 0.82,
+     "gammaIm": -0.29,
+     "gammaAbs": 0.87,
+     "probes": 12,
+     "par": 1
+    },
+    {
+     "caseId": "sound-tax-total",
+     "verdict": "premature null",
+     "gammaRe": 0.08,
+     "gammaIm": -0.62,
+     "gammaAbs": 0.62,
+     "probes": 12,
+     "par": 2
+    },
+    {
+     "caseId": "sound-bulk-discount",
+     "verdict": "premature null",
+     "gammaRe": 0.25,
+     "gammaIm": -0.75,
+     "gammaAbs": 0.79,
+     "probes": 12,
+     "par": 3
+    }
+   ]
+  },
+  {
+   "name": "hammer",
+   "route": "drills:discipline",
+   "reason": "force signature (hammer) — method before difficulty",
+   "flags": [
+    "hammer"
+   ],
+   "agent": {
+    "R": 1.8,
+    "X": 0,
+    "magnitude": 1.8,
+    "phiDeg": 0,
+    "cosPhi": 1,
+    "discipline": 0.89,
+    "truePF": 0.89,
+    "gammaRe": 0.06,
+    "gammaIm": 0,
+    "gammaAbs": 0.06,
+    "gammaDeg": 0,
+    "vswr": 1.1,
+    "band": "matched-core"
+   },
+   "sessions": [
+    {
+     "caseId": "threshold-discount",
+     "verdict": "caught",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "zero-empty-cart",
+     "verdict": "caught",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "ceiling-gift-card",
+     "verdict": "caught",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 1,
+     "par": 1
+    },
+    {
+     "caseId": "sound-tax-total",
+     "verdict": "calibrated null",
+     "gammaRe": 0,
+     "gammaIm": 0,
+     "gammaAbs": 0,
+     "probes": 3,
+     "par": 2
+    },
+    {
+     "caseId": "sound-bulk-discount",
+     "verdict": "calibrated null",
+     "gammaRe": 0.14,
+     "gammaIm": 0,
+     "gammaAbs": 0.14,
+     "probes": 5,
+     "par": 3
+    }
+   ]
+  }
+ ]
+}

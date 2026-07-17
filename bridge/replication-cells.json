@@ -1,0 +1,622 @@
+{
+ "cells": [
+  {
+   "model": "opus",
+   "arm": "oneshot",
+   "round": "r5",
+   "rep": 1,
+   "probes": [
+    0,
+    29.99,
+    30,
+    0.01,
+    200
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "opus",
+   "arm": "oneshot",
+   "round": "r5",
+   "rep": 2,
+   "probes": [
+    0,
+    29.99,
+    30,
+    0.01,
+    29,
+    200,
+    100
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "opus",
+   "arm": "oneshot",
+   "round": "r5",
+   "rep": 3,
+   "probes": [
+    0,
+    29.99,
+    30,
+    0.01,
+    29,
+    5,
+    200,
+    100
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "opus",
+   "arm": "oneshot",
+   "round": "r6",
+   "rep": 1,
+   "probes": [
+    9.99,
+    500.01,
+    10,
+    500,
+    1,
+    600,
+    0.99,
+    600.01,
+    255
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "opus",
+   "arm": "oneshot",
+   "round": "r6",
+   "rep": 2,
+   "probes": [
+    500,
+    10,
+    500.01,
+    9.99,
+    600,
+    1,
+    600.01,
+    0.99,
+    250.5
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "opus",
+   "arm": "oneshot",
+   "round": "r6",
+   "rep": 3,
+   "probes": [
+    9.99,
+    500.01,
+    10,
+    500,
+    1,
+    600,
+    255.55
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "opus",
+   "arm": "iterative",
+   "round": "r5",
+   "rep": 1,
+   "probes": [
+    0,
+    29.99,
+    30,
+    0.01,
+    200
+   ],
+   "endedBy": "abstain",
+   "decisions": 6
+  },
+  {
+   "model": "opus",
+   "arm": "iterative",
+   "round": "r5",
+   "rep": 2,
+   "probes": [
+    30,
+    29.99,
+    0,
+    200,
+    10,
+    0.01,
+    100,
+    20,
+    29.99,
+    30.01
+   ],
+   "endedBy": "abstain",
+   "decisions": 11
+  },
+  {
+   "model": "opus",
+   "arm": "iterative",
+   "round": "r5",
+   "rep": 3,
+   "probes": [
+    30,
+    29.99,
+    0,
+    200,
+    0.01,
+    100,
+    30.01,
+    15
+   ],
+   "endedBy": "abstain",
+   "decisions": 9
+  },
+  {
+   "model": "opus",
+   "arm": "iterative",
+   "round": "r6",
+   "rep": 1,
+   "probes": [
+    10,
+    500,
+    9.99,
+    500.01,
+    600,
+    1,
+    250.5,
+    499.99
+   ],
+   "endedBy": "abstain",
+   "decisions": 9
+  },
+  {
+   "model": "opus",
+   "arm": "iterative",
+   "round": "r6",
+   "rep": 2,
+   "probes": [
+    9.99,
+    10,
+    500,
+    500.01,
+    5,
+    250,
+    600,
+    123.45
+   ],
+   "endedBy": "abstain",
+   "decisions": 10
+  },
+  {
+   "model": "opus",
+   "arm": "iterative",
+   "round": "r6",
+   "rep": 3,
+   "probes": [
+    500,
+    10,
+    9.99,
+    501,
+    250.5,
+    600,
+    1
+   ],
+   "endedBy": "abstain",
+   "decisions": 8
+  },
+  {
+   "model": "sonnet",
+   "arm": "oneshot",
+   "round": "r5",
+   "rep": 1,
+   "probes": [
+    0,
+    30,
+    29.99,
+    30.01,
+    0.01,
+    200
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "sonnet",
+   "arm": "oneshot",
+   "round": "r5",
+   "rep": 2,
+   "probes": [
+    0,
+    30,
+    29.99,
+    0.01,
+    200,
+    15,
+    100
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "sonnet",
+   "arm": "oneshot",
+   "round": "r5",
+   "rep": 3,
+   "probes": [
+    30,
+    0,
+    29.99,
+    30.01,
+    0.01,
+    200,
+    199.99
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "sonnet",
+   "arm": "oneshot",
+   "round": "r6",
+   "rep": 1,
+   "probes": [
+    10,
+    9.99,
+    500,
+    500.01,
+    1,
+    600,
+    499.99,
+    100
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "sonnet",
+   "arm": "oneshot",
+   "round": "r6",
+   "rep": 2,
+   "probes": [
+    1,
+    600,
+    9.99,
+    10,
+    500,
+    500.01,
+    0.99,
+    600.01,
+    250.5
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "sonnet",
+   "arm": "oneshot",
+   "round": "r6",
+   "rep": 3,
+   "probes": [
+    5,
+    550,
+    10,
+    500,
+    9.99,
+    500.01,
+    1,
+    600,
+    0.5,
+    700,
+    250.33
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "sonnet",
+   "arm": "iterative",
+   "round": "r5",
+   "rep": 1,
+   "probes": [
+    30,
+    0,
+    29.99,
+    200,
+    0.01,
+    30.01
+   ],
+   "endedBy": "abstain",
+   "decisions": 7
+  },
+  {
+   "model": "sonnet",
+   "arm": "iterative",
+   "round": "r5",
+   "rep": 2,
+   "probes": [
+    0,
+    30,
+    29.99,
+    200,
+    0.01
+   ],
+   "endedBy": "abstain",
+   "decisions": 6
+  },
+  {
+   "model": "sonnet",
+   "arm": "iterative",
+   "round": "r5",
+   "rep": 3,
+   "probes": [
+    0,
+    30,
+    29.99,
+    200,
+    0.01
+   ],
+   "endedBy": "abstain",
+   "decisions": 6
+  },
+  {
+   "model": "sonnet",
+   "arm": "iterative",
+   "round": "r6",
+   "rep": 1,
+   "probes": [
+    500,
+    10,
+    9.99,
+    500.01,
+    123.45,
+    600,
+    1
+   ],
+   "endedBy": "abstain",
+   "decisions": 8
+  },
+  {
+   "model": "sonnet",
+   "arm": "iterative",
+   "round": "r6",
+   "rep": 2,
+   "probes": [
+    10,
+    1,
+    500,
+    9.99,
+    500.01,
+    600,
+    250.55
+   ],
+   "endedBy": "abstain",
+   "decisions": 9
+  },
+  {
+   "model": "sonnet",
+   "arm": "iterative",
+   "round": "r6",
+   "rep": 3,
+   "probes": [
+    10,
+    500,
+    9.99,
+    500.01,
+    1,
+    600,
+    123.45
+   ],
+   "endedBy": "abstain",
+   "decisions": 8
+  },
+  {
+   "model": "haiku",
+   "arm": "oneshot",
+   "round": "r5",
+   "rep": 1,
+   "probes": [
+    0,
+    30,
+    0.01,
+    29.99,
+    200
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "haiku",
+   "arm": "oneshot",
+   "round": "r5",
+   "rep": 2,
+   "probes": [
+    30,
+    29.99,
+    0,
+    0.01,
+    200
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "haiku",
+   "arm": "oneshot",
+   "round": "r5",
+   "rep": 3,
+   "probes": [
+    30,
+    29.99,
+    0,
+    0.01,
+    200
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "haiku",
+   "arm": "oneshot",
+   "round": "r6",
+   "rep": 1,
+   "probes": [
+    10,
+    500,
+    9.99,
+    500.01,
+    600
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "haiku",
+   "arm": "oneshot",
+   "round": "r6",
+   "rep": 2,
+   "probes": [
+    10,
+    9.99,
+    500,
+    500.01,
+    1,
+    600
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "haiku",
+   "arm": "oneshot",
+   "round": "r6",
+   "rep": 3,
+   "probes": [
+    10,
+    500,
+    9.99,
+    500.01,
+    1,
+    600
+   ],
+   "thenAbstain": true,
+   "endedBy": "committed",
+   "decisions": 1
+  },
+  {
+   "model": "haiku",
+   "arm": "iterative",
+   "round": "r5",
+   "rep": 1,
+   "probes": [
+    30,
+    0,
+    15
+   ],
+   "endedBy": "agent-error",
+   "decisions": 4
+  },
+  {
+   "model": "haiku",
+   "arm": "iterative",
+   "round": "r5",
+   "rep": 2,
+   "probes": [
+    0,
+    0.01,
+    30,
+    30.01
+   ],
+   "endedBy": "agent-error",
+   "decisions": 5
+  },
+  {
+   "model": "haiku",
+   "arm": "iterative",
+   "round": "r5",
+   "rep": 3,
+   "probes": [
+    30,
+    29.99,
+    0,
+    100
+   ],
+   "endedBy": "agent-error",
+   "decisions": 5
+  },
+  {
+   "model": "haiku",
+   "arm": "iterative",
+   "round": "r6",
+   "rep": 1,
+   "probes": [
+    10,
+    9.99,
+    500,
+    500.01,
+    1
+   ],
+   "endedBy": "agent-error",
+   "decisions": 6
+  },
+  {
+   "model": "haiku",
+   "arm": "iterative",
+   "round": "r6",
+   "rep": 2,
+   "probes": [
+    10,
+    9.99,
+    500,
+    500.01
+   ],
+   "endedBy": "agent-error",
+   "decisions": 5
+  },
+  {
+   "model": "haiku",
+   "arm": "iterative",
+   "round": "r6",
+   "rep": 3,
+   "probes": [
+    10,
+    500,
+    9.99,
+    500.01
+   ],
+   "endedBy": "agent-error",
+   "decisions": 5
+  }
+ ],
+ "tokens": {
+  "opus:oneshot": 5567,
+  "opus:iterative": 35152,
+  "sonnet:oneshot": 15673,
+  "sonnet:iterative": 48800,
+  "haiku:oneshot": 38809,
+  "haiku:iterative": 41399
+ }
+}

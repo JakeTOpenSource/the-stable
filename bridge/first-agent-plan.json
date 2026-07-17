@@ -1,0 +1,43 @@
+{
+ "threshold-discount": {
+  "probes": [
+   50,
+   49.99,
+   200
+  ],
+  "thenAbstain": true
+ },
+ "zero-empty-cart": {
+  "probes": [
+   30,
+   0,
+   29.99
+  ],
+  "thenAbstain": true
+ },
+ "ceiling-gift-card": {
+  "probes": [
+   500,
+   10,
+   500.01,
+   9.99
+  ],
+  "thenAbstain": true
+ },
+ "sound-tax-total": {
+  "probes": [
+   100,
+   1,
+   200
+  ],
+  "thenAbstain": true
+ },
+ "sound-bulk-discount": {
+  "probes": [
+   100,
+   99.99,
+   200
+  ],
+  "thenAbstain": true
+ }
+}

@@ -1,0 +1,79 @@
+{
+ "_meta": {
+  "frozen": "2026-07-16",
+  "note": "0.3 re-freeze: par semantics migrated to the region+extremes target model AND sound-builder reward re-tuned floor((probes-par)/2) -> /3 (tournament-measured: /2 under derived par let defense dominate again, 193.6 vs 187.6; /3 restores the 0.2 balance doctrine). All other branches identical to 0.2."
+ },
+ "scale": "0.3",
+ "rows": [
+  {
+   "verdict": "caught",
+   "probes": 1,
+   "par": 1,
+   "witness": 10,
+   "builder": 0
+  },
+  {
+   "verdict": "caught",
+   "probes": 3,
+   "par": 1,
+   "witness": 3.3,
+   "builder": 2
+  },
+  {
+   "verdict": "caught",
+   "probes": 6,
+   "par": 1,
+   "witness": 1.7,
+   "builder": 5
+  },
+  {
+   "verdict": "calibrated null",
+   "probes": 5,
+   "par": 5,
+   "witness": 10,
+   "builder": 0
+  },
+  {
+   "verdict": "calibrated null",
+   "probes": 7,
+   "par": 5,
+   "witness": 7.1,
+   "builder": 0
+  },
+  {
+   "verdict": "calibrated null",
+   "probes": 10,
+   "par": 5,
+   "witness": 5,
+   "builder": 1
+  },
+  {
+   "verdict": "premature null",
+   "probes": 1,
+   "par": 5,
+   "witness": 0,
+   "builder": 10
+  },
+  {
+   "verdict": "false pass",
+   "probes": 8,
+   "par": 1,
+   "witness": 0,
+   "builder": 15
+  },
+  {
+   "verdict": "open",
+   "probes": 25,
+   "par": 1,
+   "witness": 0,
+   "builder": 12
+  },
+  {
+   "verdict": "tripped",
+   "probes": 6,
+   "par": 1,
+   "witness": 0,
+   "builder": 12
+  }
+ ]
+}

@@ -1,0 +1,101 @@
+{
+ "_meta": {
+  "note": "Phase-4 discrimination test plans (sonnet, haiku), saved for reproducible re-scoring against witness-suite v0.3. Opus plan is bridge/first-agent-plan.json.",
+  "date": "2026-07-16"
+ },
+ "sonnet": {
+  "threshold-discount": {
+   "probes": [
+    50,
+    49.99,
+    50.01,
+    1,
+    200
+   ],
+   "thenAbstain": true
+  },
+  "zero-empty-cart": {
+   "probes": [
+    0,
+    30,
+    29.99,
+    30.01,
+    0.01
+   ],
+   "thenAbstain": true
+  },
+  "ceiling-gift-card": {
+   "probes": [
+    10,
+    9.99,
+    500,
+    500.01,
+    600
+   ],
+   "thenAbstain": true
+  },
+  "sound-tax-total": {
+   "probes": [
+    1,
+    200,
+    19.99,
+    100
+   ],
+   "thenAbstain": true
+  },
+  "sound-bulk-discount": {
+   "probes": [
+    100,
+    99.99,
+    100.01,
+    1,
+    200
+   ],
+   "thenAbstain": true
+  }
+ },
+ "haiku": {
+  "threshold-discount": {
+   "probes": [
+    49.99,
+    50,
+    50.01
+   ],
+   "thenAbstain": true
+  },
+  "zero-empty-cart": {
+   "probes": [
+    0,
+    29.99,
+    30,
+    30.01
+   ],
+   "thenAbstain": true
+  },
+  "ceiling-gift-card": {
+   "probes": [
+    9.99,
+    10,
+    500,
+    500.01
+   ],
+   "thenAbstain": true
+  },
+  "sound-tax-total": {
+   "probes": [
+    1,
+    100,
+    200
+   ],
+   "thenAbstain": true
+  },
+  "sound-bulk-discount": {
+   "probes": [
+    99.99,
+    100,
+    100.01
+   ],
+   "thenAbstain": true
+  }
+ }
+}

@@ -1,0 +1,69 @@
+{
+ "_meta": {
+  "project": "The Crosswalk",
+  "file": "agent-eval-landscape",
+  "version": "0.1",
+  "generated": "2026-07-14",
+  "purpose": "Fetch-verified sweep answering: does anything already score an agent on VERIFYING a spec claim against a black box via efficient probing? Grounds the Witness Suite build decision.",
+  "verdict": "Provisionally underserved. Closest neighbors (PBT-Bench, TestExplora) have spec+black-box+bug-catching but score detection only — none score probe economy/minimality. Mainstream (SWE-bench family, METR suites, SWE-RL/RLVR) measure production of code, not audit of claims. PROVISIONAL: deeper looks at PBT-Bench/TestExplora follow-ups or ISSTA/FSE 2026 could close the gap.",
+  "rule": "All findings fetched by the sweep agent. Credit the neighbors; do not overclaim novelty."
+ },
+ "findings": [
+  {
+   "id": "swe-bench",
+   "title": "SWE-bench / SWE-bench Verified",
+   "url": "https://swebench.com",
+   "covers": "NO",
+   "says": "Agent produces a patch for a GitHub issue; graded by pre-written hidden tests (FAIL->PASS). Agent never decides what to test or probes a black box."
+  },
+  {
+   "id": "metr-suites",
+   "title": "METR task suites (HCAST, RE-Bench, SWAA)",
+   "url": "https://metr.org",
+   "covers": "NO",
+   "says": "~250 tasks measuring autonomous task-completion time horizons; no spec-vs-implementation audit tasks."
+  },
+  {
+   "id": "pbt-bench",
+   "title": "PBT-Bench",
+   "url": "https://arxiv.org/abs/2605.15229",
+   "covers": "PARTIAL — closest neighbor",
+   "says": "Docs-as-spec + injected-bug library versions; agent writes Hypothesis property tests to catch bugs (100 problems, 365 bugs). Scores bug recall only — no probe-economy metric."
+  },
+  {
+   "id": "testexplora",
+   "title": "TestExplora",
+   "url": "https://arxiv.org/abs/2602.10471",
+   "covers": "PARTIAL — second neighbor",
+   "says": "2,389 tasks, 482 repos; docs as oracle; find latent bugs in black-box repos (best models ~16% F2P). Scored on discovery, not probe minimality."
+  },
+  {
+   "id": "swe-rl",
+   "title": "SWE-RL (representative of RLVR training trend)",
+   "url": "https://arxiv.org/abs/2502.18449",
+   "covers": "NO",
+   "says": "RL with deterministic rewards on PR history — verifiable means the REWARD is deterministic, not that the agent verifies third-party work."
+  },
+  {
+   "id": "anthropic-evals",
+   "title": "Anthropic: Demystifying evals for AI agents",
+   "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+   "covers": "NO",
+   "says": "Evals OF agents (graders judge agent output) — not agents performing audits of another system."
+  },
+  {
+   "id": "oracle-bench",
+   "title": "ORACLE benchmark",
+   "url": "https://arxiv.org/abs/2508.19035",
+   "covers": "ADJACENT",
+   "says": "Black-box hidden-function discovery via bounded exploration — function discovery, not spec-conformance; efficiency noted but not scored."
+  },
+  {
+   "id": "agenteval-boundaries",
+   "title": "AgentEval / workflow-graph boundary testing",
+   "url": "https://arxiv.org/abs/2607.06873",
+   "covers": "ADJACENT",
+   "says": "Auto-mines behavioral boundaries of conversational agents; scored on coverage/false alarms, not probe count, and no pre-written explicit spec."
+  }
+ ]
+}

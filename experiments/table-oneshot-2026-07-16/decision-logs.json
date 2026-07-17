@@ -1,0 +1,295 @@
+{
+ "_meta": {
+  "purpose": "Provenance archive: one record per agent call — the REAL API model id from the assistant message record, the structured decision/plan the model returned (verbatim, including its stated reasoning), the API message id, and the sha256 of the exact prompt (regenerable from the committed prompt template + the ledgers; hash-match proves which prompt produced which decision). Round labels sharing identical prose are deliberately NOT disambiguated here — the prompt could not tell them apart either (hidden information).",
+  "workflow_run": "wf_88f3c2c7-115",
+  "extracted": "2026-07-17",
+  "model_counts": {
+   "claude-haiku-4-5-20251001": 1,
+   "claude-sonnet-5": 1,
+   "claude-opus-4-8": 1
+  },
+  "records": 3
+ },
+ "records": [
+  {
+   "file": "agent-a6554c79154cb38db.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "oneshot-six-plans",
+   "prompt_round_family": null,
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "plans": [
+     {
+      "round": "r1",
+      "reasoning": "Off-by-one bug at $50 boundary most likely; also check domain edges for universal application errors",
+      "probes": [
+       50,
+       49.99,
+       50.01,
+       1,
+       200
+      ],
+      "thenAbstain": true
+     },
+     {
+      "round": "r2",
+      "reasoning": "Special case $0 and boundary $30 are bug hotspots; off-by-one at $30 or missing $0 handling most likely",
+      "probes": [
+       0,
+       0.01,
+       30,
+       29.99,
+       30.01,
+       200
+      ],
+      "thenAbstain": true
+     },
+     {
+      "round": "r3",
+      "reasoning": "Two boundaries ($10 and $500) create two off-by-one opportunities; test each boundary and just-outside/inside, plus domain edges",
+      "probes": [
+       10,
+       9.99,
+       500,
+       500.01,
+       10.01,
+       499.99,
+       1,
+       600
+      ],
+      "thenAbstain": true
+     },
+     {
+      "round": "r4",
+      "reasoning": "Identical promise to r3; same boundary-testing strategy—most likely bugs are off-by-one at $10 or $500",
+      "probes": [
+       10,
+       9.99,
+       500,
+       500.01,
+       10.01,
+       499.99,
+       1,
+       600
+      ],
+      "thenAbstain": true
+     },
+     {
+      "round": "r5",
+      "reasoning": "Identical to r2: special case $0 and boundary $30 are critical; test both plus domain ceiling",
+      "probes": [
+       0,
+       0.01,
+       30,
+       29.99,
+       30.01,
+       200
+      ],
+      "thenAbstain": true
+     },
+     {
+      "round": "r6",
+      "reasoning": "Identical promise to r3 and r4; same dual-boundary strategy with just-inside/just-outside coverage",
+      "probes": [
+       10,
+       9.99,
+       500,
+       500.01,
+       10.01,
+       499.99,
+       1,
+       600
+      ],
+      "thenAbstain": true
+     }
+    ]
+   },
+   "api_message_id": "msg_011Cd6vr7MyPmyKHQRwzjcAw",
+   "prompt_sha256": "f90c52be1d0b319b4682f155461ff3642c8b32446599b40926f042e3ce619754",
+   "prompt_chars": 3010
+  },
+  {
+   "file": "agent-aac79d2ce88a919ca.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "oneshot-six-plans",
+   "prompt_round_family": null,
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "plans": [
+     {
+      "round": "r1",
+      "probes": [
+       50,
+       49.99,
+       50.01,
+       1,
+       200
+      ],
+      "thenAbstain": true,
+      "reasoning": "The only rule boundary is the $50 discount threshold, so test it from both sides (49.99 unchanged, 50.00 and 50.01 discounted) first since off-by-one is the classic bug spot, then confirm the domain floor ($1, unchanged) and ceiling ($200, correctly discounted to $180) aren't mishandled."
+     },
+     {
+      "round": "r2",
+      "probes": [
+       30,
+       29.99,
+       0,
+       0.01,
+       200
+      ],
+      "thenAbstain": true,
+      "reasoning": "Two named exceptions exist ($0 exact and the $30 fee threshold): probe the $30 edge both sides first (30.00 unchanged vs 29.99 +$5), then verify the $0 special-case is exact and doesn't bleed into $0.01 (which should still get the fee), then confirm the domain ceiling $200 stays unchanged."
+     },
+     {
+      "round": "r3",
+      "probes": [
+       10,
+       9.99,
+       500,
+       500.01,
+       1,
+       600,
+       300
+      ],
+      "thenAbstain": true,
+      "reasoning": "Two thresholds define the accept window ($10 and $500 inclusive), so hit both edges first (9.99 reject, 10.00 accept, 500.00 accept, 500.01 reject), then confirm the domain floor/ceiling (1, 600) are still rejected outside the window, and check a mid-range value (300) passes through unmodified per 'exactly as sent'."
+     },
+     {
+      "round": "r4",
+      "probes": [
+       10,
+       9.99,
+       500,
+       500.01,
+       1,
+       600,
+       300
+      ],
+      "thenAbstain": true,
+      "reasoning": "Same spec as r3 but an independent implementation, so re-run identical boundary coverage: both accept-window edges ($10, $500), domain floor/ceiling rejects (1, 600), and a mid-range identity check (300) to catch any silent modification within the accepted band."
+     },
+     {
+      "round": "r5",
+      "probes": [
+       30,
+       29.99,
+       0,
+       0.01,
+       200
+      ],
+      "thenAbstain": true,
+      "reasoning": "Same spec as r2 but an independent implementation, so re-run identical coverage: the $30 fee threshold from both sides, the $0 special-case versus the immediately-adjacent $0.01 (still fee-eligible), and the $200 domain ceiling staying unchanged."
+     },
+     {
+      "round": "r6",
+      "probes": [
+       10,
+       9.99,
+       500,
+       500.01,
+       1,
+       600,
+       300
+      ],
+      "thenAbstain": true,
+      "reasoning": "Same spec as r3/r4 but an independent implementation, so re-run identical boundary coverage: both accept-window edges ($10, $500), domain floor/ceiling rejects (1, 600), and a mid-range identity check (300) to catch silent modification within the accepted band."
+     }
+    ]
+   },
+   "api_message_id": "msg_011Cd6vr5qhFFsrxuDkpBABJ",
+   "prompt_sha256": "f90c52be1d0b319b4682f155461ff3642c8b32446599b40926f042e3ce619754",
+   "prompt_chars": 3010
+  },
+  {
+   "file": "agent-aaf05290a1142d147.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "oneshot-six-plans",
+   "prompt_round_family": null,
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "plans": [
+     {
+      "round": "r1",
+      "probes": [
+       50,
+       49.99,
+       200,
+       1
+      ],
+      "thenAbstain": true,
+      "reasoning": "Off-by-one at the $50 discount threshold is prime: $50 must be 45.00, $49.99 must stay 49.99; $200->180.00 checks ceiling+10% math, $1 checks floor unchanged."
+     },
+     {
+      "round": "r2",
+      "probes": [
+       0,
+       30,
+       29.99,
+       0.01,
+       200
+      ],
+      "thenAbstain": true,
+      "reasoning": "$0 special may be misrouted into the sub-$30 fee, and $30 may wrongly get it: probe $0->0, both sides of $30 (30 and 34.99), the $0.01 fee edge, then ceiling $200 unchanged."
+     },
+     {
+      "round": "r3",
+      "probes": [
+       10,
+       9.99,
+       500,
+       500.01,
+       1,
+       600
+      ],
+      "thenAbstain": true,
+      "reasoning": "Accept-range edges hide off-by-one: $10/$500 must pass through, $9.99/$500.01 must reject; floor $1 and ceiling $600 must also reject."
+     },
+     {
+      "round": "r4",
+      "probes": [
+       10,
+       9.99,
+       500,
+       500.01,
+       1,
+       600
+      ],
+      "thenAbstain": true,
+      "reasoning": "Independent impl of same accept spec: probe lower edge $10/$9.99 and upper edge $500/$500.01 first, then domain floor $1 and ceiling $600 which must reject."
+     },
+     {
+      "round": "r5",
+      "probes": [
+       0,
+       30,
+       29.99,
+       0.01,
+       200
+      ],
+      "thenAbstain": true,
+      "reasoning": "Same $0/$30 fee spec, independent impl: $0->0 special, $30->30 vs $29.99->34.99 threshold, $0.01->5.01 fee edge, $200 ceiling unchanged."
+     },
+     {
+      "round": "r6",
+      "probes": [
+       10,
+       9.99,
+       500,
+       500.01,
+       1,
+       600
+      ],
+      "thenAbstain": true,
+      "reasoning": "Third independent accept-range impl: front-load both boundary pairs $10/$9.99 and $500/$500.01, then floor $1 and ceiling $600 for reject coverage."
+     }
+    ]
+   },
+   "api_message_id": "msg_011Cd6vyqxzJqwwQvvEgQRYm",
+   "prompt_sha256": "f90c52be1d0b319b4682f155461ff3642c8b32446599b40926f042e3ce619754",
+   "prompt_chars": 3010
+  }
+ ]
+}

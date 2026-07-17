@@ -1,0 +1,92 @@
+{
+ "_meta": {
+  "purpose": "Seam constructions that beat a witness (false passes) — the discovered open nodes. Promotion to the suite/human arcade happens ONLY through Jake's cold-read lane, never automatically.",
+  "source": "run-versus-match.js reference matches (deterministic)"
+ },
+ "candidates": [
+  {
+   "matchId": "m-surge",
+   "round": 1,
+   "builder": "B",
+   "witness": "A",
+   "declaration": {
+    "id": "threshold-discount",
+    "domain": {
+     "min": 1,
+     "max": 200
+    },
+    "clauses": [
+     {
+      "type": "threshold",
+      "op": ">=",
+      "t": 50,
+      "effect": {
+       "kind": "percentOff",
+       "value": 10
+      }
+     }
+    ],
+    "deviation": {
+     "clauseIndex": 0,
+     "flip": "opStrict"
+    }
+   }
+  },
+  {
+   "matchId": "m-surge",
+   "round": 3,
+   "builder": "B",
+   "witness": "A",
+   "declaration": {
+    "id": "threshold-discount",
+    "domain": {
+     "min": 1,
+     "max": 200
+    },
+    "clauses": [
+     {
+      "type": "threshold",
+      "op": ">=",
+      "t": 50,
+      "effect": {
+       "kind": "percentOff",
+       "value": 10
+      }
+     }
+    ],
+    "deviation": {
+     "clauseIndex": 0,
+     "flip": "opStrict"
+    }
+   }
+  },
+  {
+   "matchId": "m-surge",
+   "round": 5,
+   "builder": "B",
+   "witness": "A",
+   "declaration": {
+    "id": "threshold-discount",
+    "domain": {
+     "min": 1,
+     "max": 200
+    },
+    "clauses": [
+     {
+      "type": "threshold",
+      "op": ">=",
+      "t": 50,
+      "effect": {
+       "kind": "percentOff",
+       "value": 10
+      }
+     }
+    ],
+    "deviation": {
+     "clauseIndex": 0,
+     "flip": "opStrict"
+    }
+   }
+  }
+ ]
+}

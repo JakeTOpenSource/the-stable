@@ -1,0 +1,999 @@
+{
+ "_meta": {
+  "purpose": "Provenance archive: one record per agent call — the REAL API model id from the assistant message record, the structured decision/plan the model returned (verbatim, including its stated reasoning), the API message id, and the sha256 of the exact prompt (regenerable from the committed prompt template + the ledgers; hash-match proves which prompt produced which decision). Round labels sharing identical prose are deliberately NOT disambiguated here — the prompt could not tell them apart either (hidden information).",
+  "workflow_run": "wf_2245a9b6-9f6",
+  "extracted": "2026-07-17",
+  "model_counts": {
+   "<synthetic>": 1,
+   "claude-haiku-4-5-20251001": 20,
+   "claude-opus-4-8": 21,
+   "claude-sonnet-5": 20
+  },
+  "records": 62
+ },
+ "records": [
+  {
+   "file": "agent-a05496489eee16790.jsonl",
+   "model": "<synthetic>",
+   "status": "no-decision(error)",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 8,
+   "decision": null,
+   "api_message_id": "a8f24a84-da82-4043-9714-d18623ee0ddb",
+   "prompt_sha256": "d49ca0425dadc93eaa8f6b598d73f5db1fc1cbd246187cbfa1f03bda1f3e5297",
+   "prompt_chars": 1666
+  },
+  {
+   "file": "agent-a074843599868dd21.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "Test the critical $30 boundary where \"under $30\" rule meets \"all other amounts\" rule"
+   },
+   "api_message_id": "msg_011Cd6xKsHHjPaVqQgwUqzMS",
+   "prompt_sha256": "9e6287a76aae39ff127360172341708b76f7671f0ee0b023bbb1a465f2bbe572",
+   "prompt_chars": 1297
+  },
+  {
+   "file": "agent-a0b85e2afab188f0a.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "Test the upper acceptance boundary just outside $500 to detect off-by-one or boundary logic errors."
+   },
+   "api_message_id": "msg_011Cd6xKo2ogdxaRNPfi14S5",
+   "prompt_sha256": "396929e4fefa76d03b0d15dad89724422581a6a218e5d14ef87526a6ef2f385b",
+   "prompt_chars": 1323
+  },
+  {
+   "file": "agent-a0e906767e8185737.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Testing the lower accepted-range threshold ($10), the classic off-by-one spot untouched so far."
+   },
+   "api_message_id": "msg_011Cd6wrNrkTq6JJvcsBsN48",
+   "prompt_sha256": "dbf3e4129f21621c31991cd6018a2cbc14f6c58cefe9f071f3bfb5e63f7ace1f",
+   "prompt_chars": 1190
+  },
+  {
+   "file": "agent-a109f5c7ddc7c6b8c.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "Test the exact $30 threshold for an off-by-one (< vs <=); it should be unchanged at $30.00, not fee-added."
+   },
+   "api_message_id": "msg_011Cd6wp3AX68S5wSXZiESNG",
+   "prompt_sha256": "1ef33628fa38ae8a9f1828000dcd21cb61abedb119d0f5a13eaafab94beb024a",
+   "prompt_chars": 1181
+  },
+  {
+   "file": "agent-a13736a306d532581.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Test the exact lower boundary of the accepted range ($10)"
+   },
+   "api_message_id": "msg_011Cd6xG1hwQUxpWKtWVzA2r",
+   "prompt_sha256": "901fd9e273eb9bd8e3843fa8b3cc6834a18d8a0848b87bb243f9f4976c897779",
+   "prompt_chars": 1160
+  },
+  {
+   "file": "agent-a186ceca24df91f28.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 600,
+    "why": "Test the ceiling of the valid input range ($600) to confirm the promise holds at the upper boundary."
+   },
+   "api_message_id": "msg_011Cd6xNUWAJ6gQaLb3PmUo6",
+   "prompt_sha256": "101a6f03fd375ce2553de2a985be183a3f3c908551187b013eccfa4ae8fa611e",
+   "prompt_chars": 1464
+  },
+  {
+   "file": "agent-a18de114f47f362c4.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "abstain",
+    "why": "All promise-defined points match across 5 clean probes: $30 threshold both adjacent sides, $0 special case and neighbor, floor, ceiling, and both edges of each single-rule stretch with the fee constant confirmed twice."
+   },
+   "api_message_id": "msg_011Cd6wtXbutntnnwepnwnDu",
+   "prompt_sha256": "652d7b80e49001378da07023c180ad948ed540c5b229405d571c990999f1e235",
+   "prompt_chars": 1433
+  },
+  {
+   "file": "agent-a1b90dadfa6f1b574.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Testing the upper accept threshold exactly, the likeliest off-by-one spot where $500 might be wrongly rejected instead of returned as 500."
+   },
+   "api_message_id": "msg_011Cd6wohttzZNagRS3o4pfo",
+   "prompt_sha256": "901fd9e273eb9bd8e3843fa8b3cc6834a18d8a0848b87bb243f9f4976c897779",
+   "prompt_chars": 1160
+  },
+  {
+   "file": "agent-a1dd8a35360b87121.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 15,
+    "why": "Test core fee rule: amounts under $30 should add $5. Not yet verified; only $0 and $30 boundary tested."
+   },
+   "api_message_id": "msg_011Cd6xJmratThntCiDShJFm",
+   "prompt_sha256": "607dd95cca255e9381cd937bd220fc283e25c5e5acc649bc081f55d77d9cf1d4",
+   "prompt_chars": 1235
+  },
+  {
+   "file": "agent-a1f0391ff78f825be.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "Verify the special case $0 outputs $0 (not subject to +$5 fee despite being under $30)"
+   },
+   "api_message_id": "msg_011Cd6xGA11fDwjQRbZUDcoM",
+   "prompt_sha256": "4eb2b9cb0848805faaf7e8ad16c01a97c98008e28eee7ca6d3fc2d696631a4e7",
+   "prompt_chars": 1147
+  },
+  {
+   "file": "agent-a1f2fd2ee5441a5c6.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 200,
+    "why": "Ceiling of the valid range ($200) hasn't been tested yet; need to confirm it returns unchanged before declaring sound."
+   },
+   "api_message_id": "msg_011Cd6x6epKyP8795GBRNpGZ",
+   "prompt_sha256": "c0731ee9a85265b5d09330779b854e821c90c1c7e9583a91cda3445721320c89",
+   "prompt_chars": 1303
+  },
+  {
+   "file": "agent-a1f7551ff136ab105.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "Testing just above the accepted-range ceiling ($500) to check for an off-by-one boundary bug where it might still be accepted instead of rejected."
+   },
+   "api_message_id": "msg_011Cd6x5M2Ukhn9c2JXdgqbX",
+   "prompt_sha256": "d1349f296f41c006e59ad29083c7a9f1fd9d1dd8d6448ced81726d9ffb071d99",
+   "prompt_chars": 1188
+  },
+  {
+   "file": "agent-a20112a8adbb3804b.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "The promise carves out $0 as a special no-fee case distinct from the general \"under $30 add fee\" rule, so this is the prime spot for the implementation to miss the exception and charge $5 instead."
+   },
+   "api_message_id": "msg_011Cd6x3mETa4wDq42xaP1wm",
+   "prompt_sha256": "4eb2b9cb0848805faaf7e8ad16c01a97c98008e28eee7ca6d3fc2d696631a4e7",
+   "prompt_chars": 1147
+  },
+  {
+   "file": "agent-a213ce798cedd3c04.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "Haven't yet tested the upper accept-boundary's just-outside edge (just above $500), which is a classic off-by-one bug location."
+   },
+   "api_message_id": "msg_011Cd6x7hpw3LAUCmPveueK7",
+   "prompt_sha256": "c9779782399b80a4501d0e9a7abd5bcd8754f84c2728420e449656cea0d0c546",
+   "prompt_chars": 1323
+  },
+  {
+   "file": "agent-a21bc7f837704aa00.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "Testing just below the $30 threshold, where the $5 fee applies, is a common off-by-one bug boundary."
+   },
+   "api_message_id": "msg_011Cd6woiuvGQcn1jae7KiSv",
+   "prompt_sha256": "4eb2b9cb0848805faaf7e8ad16c01a97c98008e28eee7ca6d3fc2d696631a4e7",
+   "prompt_chars": 1147
+  },
+  {
+   "file": "agent-a227162392fb32192.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "Testing the named $30 threshold exactly to check for an off-by-one (should be unchanged, not fee'd, since only amounts strictly under $30 get the fee)."
+   },
+   "api_message_id": "msg_011Cd6x4Wkbaa9ky7sH2CA1n",
+   "prompt_sha256": "0dcf2471ac0dae42ae969bda6fd9747a0f1fc2024776ad165d786e83b8583aa0",
+   "prompt_chars": 1173
+  },
+  {
+   "file": "agent-a287571af7dd8ea95.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "amount": 29.99,
+    "why": "Probing just under the $30 threshold, where the $5 fee rule should apply, to check the boundary behavior.",
+    "action": "probe"
+   },
+   "api_message_id": "msg_011Cd6woerLhASsUBueR87cw",
+   "prompt_sha256": "4eb2b9cb0848805faaf7e8ad16c01a97c98008e28eee7ca6d3fc2d696631a4e7",
+   "prompt_chars": 1147
+  },
+  {
+   "file": "agent-a39c8750adc54798c.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 600,
+    "why": "The floor of the valid range ($1) was tested but the ceiling ($600) was not, leaving a required coverage gap."
+   },
+   "api_message_id": "msg_011Cd6xA4ukmf7q1ZaEDGdH2",
+   "prompt_sha256": "c4ae81e8fdfdc74ed4316978410bfb1f9fdc80ffc9b8f53926220d9acbe0e3ff",
+   "prompt_chars": 1464
+  },
+  {
+   "file": "agent-a422e52ac374dfb7c.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "abstain",
+    "why": "Probes already cover the floor ($0 special-cased), just-above-floor ($0.01), both sides of the $30 threshold (29.99/30), and the ceiling ($200), with every result matching the promise."
+   },
+   "api_message_id": "msg_011Cd6x94rVqovKniHxAdoS4",
+   "prompt_sha256": "bc89c4e988cb1ed6506dd9d0f69b23685a53312ac7e0e9ed003b97a7e4f35fa6",
+   "prompt_chars": 1433
+  },
+  {
+   "file": "agent-a47b70618e98a9a44.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "$0 is the named special carve-out that contradicts the under-$30 fee rule — the likeliest place a bug hides, and still untested."
+   },
+   "api_message_id": "msg_011Cd6wppGQu8Uh4LGu5KrRP",
+   "prompt_sha256": "7cb519dcd3cc5185709b7accc5cf1ad27494f3bcf5a02a072b6ac28e16dd05c2",
+   "prompt_chars": 1243
+  },
+  {
+   "file": "agent-a4d4f30bb09f11e43.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "amount": 250.5,
+    "action": "probe",
+    "why": "Thresholds are all covered; this tests the untested interior stretch and cents handling at once, where a fee/rounding bug would hide."
+   },
+   "api_message_id": "msg_011Cd6wuh1ynU6GTnr7Pbdt7",
+   "prompt_sha256": "fc9b61cd85aa4017cd98dc1c65098a72e3cc883b4b2276e29a79d711bb99c78a",
+   "prompt_chars": 1390
+  },
+  {
+   "file": "agent-a4d860b6407f2deab.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "Testing the exact $30 threshold — the promise says $30 is unchanged, so a boundary-inclusive bug would wrongly add the $5 fee here."
+   },
+   "api_message_id": "msg_011Cd6wpG2gNeZyeqZstN4PQ",
+   "prompt_sha256": "1ef33628fa38ae8a9f1828000dcd21cb61abedb119d0f5a13eaafab94beb024a",
+   "prompt_chars": 1181
+  },
+  {
+   "file": "agent-a4e9fd7522722c93b.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Need to check the upper edge of the accepted range ($500 exact) before declaring sound; only the lower edge ($10) has been tested so far."
+   },
+   "api_message_id": "msg_011Cd6x4osVMWKLT4ewPYxK4",
+   "prompt_sha256": "d1349f296f41c006e59ad29083c7a9f1fd9d1dd8d6448ced81726d9ffb071d99",
+   "prompt_chars": 1188
+  },
+  {
+   "file": "agent-a50c439dbb48e754e.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Only the exact accepted-range endpoints have been tested; the boundary just below $10 (should reject) is untested and is a classic off-by-one bug location."
+   },
+   "api_message_id": "msg_011Cd6x65qhfhnmP9ibW2NhZ",
+   "prompt_sha256": "6d5c1307e6ccf16c575ee8173788161715e1d0e82ffd7197e07d9826d860c3e0",
+   "prompt_chars": 1252
+  },
+  {
+   "file": "agent-a50eb72edd0449119.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 0.01,
+    "why": "Need to test the boundary just above the special-cased exact $0, where the under-$30 fee rule should first kick in — untested edge distinct from the $29.99 upper edge of that same stretch."
+   },
+   "api_message_id": "msg_011Cd6x7CGw7eL1xKY4f7S3U",
+   "prompt_sha256": "c79dc859c1d579c44dab008436c8c9423bbd9b1dbb9bd8c9e6a1daaf2694193a",
+   "prompt_chars": 1367
+  },
+  {
+   "file": "agent-a566273c370c4ca7a.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "abstain",
+    "why": "All named thresholds ($10/$500) are covered just-inside and just-outside, both valid-range endpoints ($1/$600) and cents ($250.5) are probed, and every single-rule stretch has its edges nailed — coverage is complete with no region left for a bug to hide."
+   },
+   "api_message_id": "msg_011Cd6wzk2CYRWgf7aYK8aCA",
+   "prompt_sha256": "74a2110904d9527f6315df760ec5026047d588d7a970486bc37350f1f1d25275",
+   "prompt_chars": 1596
+  },
+  {
+   "file": "agent-a57ee43d8b0b0516f.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "Need to test just below the $30 threshold (fee should apply) to complement the exact-$30 boundary already checked, catching an off-by-one on the '<30' rule."
+   },
+   "api_message_id": "msg_011Cd6x5hgwaMBzQFpxSXSGy",
+   "prompt_sha256": "607dd95cca255e9381cd937bd220fc283e25c5e5acc649bc081f55d77d9cf1d4",
+   "prompt_chars": 1235
+  },
+  {
+   "file": "agent-a590b16732df8969a.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 600,
+    "why": "The stretch from $502 to $600 is untested; a leaky upper bound would accept high-but-valid amounts that the promise says must be rejected."
+   },
+   "api_message_id": "msg_011Cd6wxCGRwo7RuASpW9bgA",
+   "prompt_sha256": "283f14242061d26753fa3cff794b297f71d355853c39acf553524c59b7f88d88",
+   "prompt_chars": 1458
+  },
+  {
+   "file": "agent-a5fd09cb8c94c385f.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 1,
+    "why": "Floor of the valid input range ($1) is untested and required coverage before declaring SOUND; expect 'rejected' since it's outside the $10-$500 accept band."
+   },
+   "api_message_id": "msg_011Cd6x8h8J26FqZJeGJ7a3f",
+   "prompt_sha256": "92e972902b118a1afb46fd0d185afdab1c32fb80d12cf02457587bf25bebb1d2",
+   "prompt_chars": 1396
+  },
+  {
+   "file": "agent-a5ffeb2a9b8a0e15a.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "why": "$0.01 sits against the $0 special case and inside the sub-$30 fee band; should return $5.01, a likely leak point.",
+    "action": "probe",
+    "amount": 0.01
+   },
+   "api_message_id": "msg_011Cd6wr8uri3nnhvSV8yQUE",
+   "prompt_sha256": "c96c6d40694a48d3f095e8cb18b1a1e12dab7695994dea01dcff57cf0c88604a",
+   "prompt_chars": 1303
+  },
+  {
+   "file": "agent-a60c89e4bb030c5db.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Test upper boundary threshold of accepted range; critical edge case for range validation bugs"
+   },
+   "api_message_id": "msg_011Cd6xJcJcKaK5yterDS6YE",
+   "prompt_sha256": "3e00bdacf8e688a57a8dffd96cabbe59cecbb5cc7caca8ad58e6aa430c729d51",
+   "prompt_chars": 1259
+  },
+  {
+   "file": "agent-a68d6391d352fe0fb.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 250,
+    "why": "Test the interior of the $10–$500 accepted range to cover all stretches before declaring SOUND."
+   },
+   "api_message_id": "msg_011Cd6xPhmfBMsXWa3BqifB9",
+   "prompt_sha256": "edf331ecc63750eacab5ce3801bce7a648052533d444c328e85962f707f443e0",
+   "prompt_chars": 1534
+  },
+  {
+   "file": "agent-a6a662fea0574808c.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Need to confirm the upper accepted boundary is inclusive (500.01 already rejects, but exact 500 is untested)."
+   },
+   "api_message_id": "msg_011Cd6x6BzY6LexGGBie4Zwj",
+   "prompt_sha256": "d89472622b417b5a29c2fe41a5b39a3c4177dcbfe2fa8849a8f65da330e23544",
+   "prompt_chars": 1261
+  },
+  {
+   "file": "agent-a7013c4846adb1871.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Testing the lower edge of the accepted-exact range ($10) to check inclusive boundary handling."
+   },
+   "api_message_id": "msg_011Cd6x3mDxpdhfEdCimTbXu",
+   "prompt_sha256": "901fd9e273eb9bd8e3843fa8b3cc6834a18d8a0848b87bb243f9f4976c897779",
+   "prompt_chars": 1160
+  },
+  {
+   "file": "agent-a70cd15f59caa80fe.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "r1",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 50,
+    "why": "Testing the exact $50 threshold boundary, the likeliest spot for an off-by-one bug (> vs >=)."
+   },
+   "api_message_id": "msg_011Cd6wofVHwdL8q5Hm3h7mp",
+   "prompt_sha256": "de8b387b63e3bbad79c3100b93f6571688641b29b4be51a49d578fab7a3fdab3",
+   "prompt_chars": 1117
+  },
+  {
+   "file": "agent-a733648b87e3003a1.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 30.01,
+    "why": "Test the critical threshold: $30.01 should return $30.01 unchanged (not $35.01 with fee), verifying the boundary between \"under $30\" and \"≥$30\" rules."
+   },
+   "api_message_id": "msg_011Cd6xNojJmZptFuprHZS5B",
+   "prompt_sha256": "eb71688bfb7d935007ab07de9a951cdf596ae3cf94837f89f503b8f733f9bef8",
+   "prompt_chars": 1365
+  },
+  {
+   "file": "agent-a735b103a738a4548.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "r1",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 50,
+    "why": "Test the critical $50 boundary where the discount rule activates; most likely site for off-by-one errors."
+   },
+   "api_message_id": "msg_011Cd6xG2SbGeJFwvdCxEgae",
+   "prompt_sha256": "de8b387b63e3bbad79c3100b93f6571688641b29b4be51a49d578fab7a3fdab3",
+   "prompt_chars": 1117
+  },
+  {
+   "file": "agent-a79a70ae7ff6675b7.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "probe",
+    "amount": 10.01,
+    "why": "Test cents within accepted range to cover untested decimal-handling behavior at the lower boundary."
+   },
+   "api_message_id": "msg_011Cd6xR5sxgQ9cLARWakD1J",
+   "prompt_sha256": "4c15740d74edc298a25c523acbc0a579f0b9c6f90270a64160e3b4f472958f89",
+   "prompt_chars": 1598
+  },
+  {
+   "file": "agent-a8789af69b24ccd4a.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Test lower boundary of $10–$500 acceptance range; $9.99 should be rejected per the promise."
+   },
+   "api_message_id": "msg_011Cd6xHLgESeTN72mcqzZfo",
+   "prompt_sha256": "d1349f296f41c006e59ad29083c7a9f1fd9d1dd8d6448ced81726d9ffb071d99",
+   "prompt_chars": 1188
+  },
+  {
+   "file": "agent-a8cc61b190a21e380.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Testing the lower accepted-range boundary first; with zero probes so far I can't yet claim coverage, so I must start probing at a named threshold."
+   },
+   "api_message_id": "msg_011Cd6x3j7xQpvQ8rW596ein",
+   "prompt_sha256": "901fd9e273eb9bd8e3843fa8b3cc6834a18d8a0848b87bb243f9f4976c897779",
+   "prompt_chars": 1160
+  },
+  {
+   "file": "agent-a948eab990ec051e9.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Test the upper boundary of the accepted range ($500); most likely place for off-by-one errors after floor is confirmed"
+   },
+   "api_message_id": "msg_011Cd6xHUHNySyyRssDRRgzY",
+   "prompt_sha256": "d1349f296f41c006e59ad29083c7a9f1fd9d1dd8d6448ced81726d9ffb071d99",
+   "prompt_chars": 1188
+  },
+  {
+   "file": "agent-a95ab5116855d7286.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Test the upper accept threshold — $500 should be accepted exactly per the promise, a prime spot for an off-by-one bug."
+   },
+   "api_message_id": "msg_011Cd6wqTeT9WGeHQcxDyCQD",
+   "prompt_sha256": "d1349f296f41c006e59ad29083c7a9f1fd9d1dd8d6448ced81726d9ffb071d99",
+   "prompt_chars": 1188
+  },
+  {
+   "file": "agent-a9be635e449f664d5.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Test exact lower boundary of accepted range ($10-$500); should output 10"
+   },
+   "api_message_id": "msg_011Cd6xG3Yp6cx6y1aPC19jx",
+   "prompt_sha256": "901fd9e273eb9bd8e3843fa8b3cc6834a18d8a0848b87bb243f9f4976c897779",
+   "prompt_chars": 1160
+  },
+  {
+   "file": "agent-aa625d8448a639d31.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "Test the critical $30 threshold where the fee rule changes to unchanged."
+   },
+   "api_message_id": "msg_011Cd6xHRNWJHWQUr8v6xaPK",
+   "prompt_sha256": "0dcf2471ac0dae42ae969bda6fd9747a0f1fc2024776ad165d786e83b8583aa0",
+   "prompt_chars": 1173
+  },
+  {
+   "file": "agent-aaa15b0762e3ef549.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "why": "Upper edge just-outside ($501) is tested but the symmetric lower edge just-outside is not — $9 must reject; a lower off-by-one is the likeliest hidden bug.",
+    "action": "probe",
+    "amount": 9
+   },
+   "api_message_id": "msg_011Cd6wtLUvyWmpiqJ47NCMu",
+   "prompt_sha256": "1be71648cfee54d4fc11868040c67551c2080f9ba757da8c36cd40e8f43fac06",
+   "prompt_chars": 1322
+  },
+  {
+   "file": "agent-aaa8292b69218c911.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "amount": 200,
+    "why": "Ceiling of the valid range is the only named coverage point untested; the unchanged band is anchored only at its $30 floor.",
+    "action": "probe"
+   },
+   "api_message_id": "msg_011Cd6wrwRpoR6weyDhLjKwM",
+   "prompt_sha256": "3171c48b91d074f7bd35c260029283294f141f58571908dcac64c83a297ad98b",
+   "prompt_chars": 1369
+  },
+  {
+   "file": "agent-ab1352ec11e14dc76.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 250.37,
+    "why": "Need to confirm exact pass-through (including cents) for a mid-range value, not just the boundaries already tested."
+   },
+   "api_message_id": "msg_011Cd6xByrhr5Yv6Vh2ES5ke",
+   "prompt_sha256": "1ae45a8e7bf880a40b3d69e7447dab0103875b92ca7787ccba71c729700cd37b",
+   "prompt_chars": 1534
+  },
+  {
+   "file": "agent-ab62238bd8c4f54ab.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "r1",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 50,
+    "why": "The threshold is named exactly at $50 (\"$50 or more\"), the classic spot for an off-by-one (> vs >=) bug, so it's the highest-value first probe."
+   },
+   "api_message_id": "msg_011Cd6x3jSZSM9PXEyV9S3dH",
+   "prompt_sha256": "de8b387b63e3bbad79c3100b93f6571688641b29b4be51a49d578fab7a3fdab3",
+   "prompt_chars": 1117
+  },
+  {
+   "file": "agent-ab6d758457774a665.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 200,
+    "why": "Test the stated upper boundary of the valid range to complete threshold coverage"
+   },
+   "api_message_id": "msg_011Cd6xQG2sXCrGSd2vsWqeT",
+   "prompt_sha256": "8e04e8d90a7d7aba89f7b5cc7051368710b121b2e0372c250717050bc7c9b3d2",
+   "prompt_chars": 1433
+  },
+  {
+   "file": "agent-ac2fd0c690943b3e5.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 501,
+    "why": "Both inside edges matched; I must test just outside the accepted ceiling, where an off-by-one or a $500-vs-$600 cap confusion would leak an accept instead of a reject."
+   },
+   "api_message_id": "msg_011Cd6wr7xohooQbtvh8DJJr",
+   "prompt_sha256": "6d5c1307e6ccf16c575ee8173788161715e1d0e82ffd7197e07d9826d860c3e0",
+   "prompt_chars": 1252
+  },
+  {
+   "file": "agent-ac7a74391314ee740.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "The promise carves out $0 as a special exact case distinct from the general under-$30 rule, and $0 also satisfies \"under $30\" — a classic spot for the special case to be forgotten and the fee wrongly applied."
+   },
+   "api_message_id": "msg_011Cd6x3msAQBNmZZggybqp4",
+   "prompt_sha256": "4eb2b9cb0848805faaf7e8ad16c01a97c98008e28eee7ca6d3fc2d696631a4e7",
+   "prompt_chars": 1147
+  },
+  {
+   "file": "agent-aca131111faf290d8.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Test the exact lower boundary of the accepted range to check for an off-by-one rejection bug."
+   },
+   "api_message_id": "msg_011Cd6x3i9fcmuviDe1GCRkz",
+   "prompt_sha256": "901fd9e273eb9bd8e3843fa8b3cc6834a18d8a0848b87bb243f9f4976c897779",
+   "prompt_chars": 1160
+  },
+  {
+   "file": "agent-ace48f08bcd2a2e6d.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "abstain",
+    "why": "All named thresholds ($10, $500), their just-outside neighbors ($9.99, $500.01), the valid-range floor/ceiling ($1, $600), and an interior accept-stretch value ($250.37) all matched the promise with no deviation."
+   },
+   "api_message_id": "msg_011Cd6xDLr31nCFkyKvMwvqJ",
+   "prompt_sha256": "087c6c83a8b9ad8a2d9d9c219c1a6959bd272aac096faa65ca9bd35eb55474ac",
+   "prompt_chars": 1604
+  },
+  {
+   "file": "agent-adc7138e116fd1d77.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "$0 is a named special case (\"owes nothing\") untested so far; a naive under-$30 fee rule would wrongly return $5."
+   },
+   "api_message_id": "msg_011Cd6wr9AUz1gaUPMBkhUzN",
+   "prompt_sha256": "7cb519dcd3cc5185709b7accc5cf1ad27494f3bcf5a02a072b6ac28e16dd05c2",
+   "prompt_chars": 1243
+  },
+  {
+   "file": "agent-ae3191a05aa1caff7.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 1,
+    "why": "The floor of the valid range ($1) is the one required coverage point untested; it should return 'rejected' since it's below the $10 accepted minimum."
+   },
+   "api_message_id": "msg_011Cd6wyAkgKmhopGUcNNedA",
+   "prompt_sha256": "e34e33cd32776078eb5b8643ba3eb020c7f7a1d098d0332a3a87c1d504bc2949",
+   "prompt_chars": 1528
+  },
+  {
+   "file": "agent-ae58931ca1b5a1234.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 1,
+    "why": "Test floor of valid input range ($1) for off-by-one bugs at stated boundaries."
+   },
+   "api_message_id": "msg_011Cd6xMBnoNP6iUTuRgAnKM",
+   "prompt_sha256": "098649468926f7c89716ed7124a6f10ff941318b97de2641b4efd9f0743984fd",
+   "prompt_chars": 1396
+  },
+  {
+   "file": "agent-ae94dbfea16b98ecd.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "Testing the special case that $0 owes nothing, as explicitly stated in the promise."
+   },
+   "api_message_id": "msg_011Cd6xG3LfY8cD7oqucXnz1",
+   "prompt_sha256": "4eb2b9cb0848805faaf7e8ad16c01a97c98008e28eee7ca6d3fc2d696631a4e7",
+   "prompt_chars": 1147
+  },
+  {
+   "file": "agent-ae9827d3043964180.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Testing the exact upper threshold ($500) of the accepted range, a prime off-by-one location before checking the other edges."
+   },
+   "api_message_id": "msg_011Cd6woeVG4JgS2itjbvx2N",
+   "prompt_sha256": "901fd9e273eb9bd8e3843fa8b3cc6834a18d8a0848b87bb243f9f4976c897779",
+   "prompt_chars": 1160
+  },
+  {
+   "file": "agent-aeb1e1c0a7f71bfe0.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Verify lower acceptance threshold at promised $10 boundary"
+   },
+   "api_message_id": "msg_011Cd6xG29ESkQxSJW8UQT6c",
+   "prompt_sha256": "901fd9e273eb9bd8e3843fa8b3cc6834a18d8a0848b87bb243f9f4976c897779",
+   "prompt_chars": 1160
+  },
+  {
+   "file": "agent-af5d420557ce007bb.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Testing the exact lower accepted threshold ($10) for an off-by-one false-reject bug."
+   },
+   "api_message_id": "msg_011Cd6woqghwwGzvA2545dYy",
+   "prompt_sha256": "901fd9e273eb9bd8e3843fa8b3cc6834a18d8a0848b87bb243f9f4976c897779",
+   "prompt_chars": 1160
+  },
+  {
+   "file": "agent-afc3fdb4d28a90349.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "abstain",
+    "why": "All critical thresholds ($0 special case, $30 boundary with both-side coverage, range limits) tested comprehensively; tool matches promise perfectly across all named rules and edges."
+   },
+   "api_message_id": "msg_011Cd6xRRySr6798UXk1JZVy",
+   "prompt_sha256": "7755d68115c63269eba1a485aef40fda873d1efbdd5b679e2070ce150cc22777",
+   "prompt_chars": 1497
+  }
+ ]
+}

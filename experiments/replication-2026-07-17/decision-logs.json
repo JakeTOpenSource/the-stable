@@ -1,0 +1,2445 @@
+{
+ "_meta": {
+  "purpose": "Provenance archive: one record per agent call — the REAL API model id from the assistant message record, the structured decision/plan the model returned (verbatim, including its stated reasoning), the API message id, and the sha256 of the exact prompt (regenerable from the committed prompt template + the ledgers; hash-match proves which prompt produced which decision). Round labels sharing identical prose are deliberately NOT disambiguated here — the prompt could not tell them apart either (hidden information).",
+  "workflow_run": "wf_521256e3-6e0",
+  "extracted": "2026-07-17",
+  "model_counts": {
+   "claude-opus-4-8": 59,
+   "claude-haiku-4-5-20251001": 30,
+   "claude-sonnet-5": 50,
+   "<synthetic>": 6
+  },
+  "records": 145
+ },
+ "records": [
+  {
+   "file": "agent-a0156f2bdbafefe11.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     9.99,
+     500.01,
+     10,
+     500,
+     1,
+     600,
+     255.55
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise has two nested ranges. VALID range is $1–$600 (outside → rejected as invalid input). Within valid, ACCEPTED range is $10–$500 exactly (passed through as amount charged); the gaps [$1,$10) and ($500,$600] must also be handled — but the promise says amounts outside $10–$500 are \"rejected.\" Wait: it says \"Amounts from $10 to $500 are accepted exactly as sent; outside that range the input is rejected.\" And \"Valid inputs run from $1 to $600.\" So the accept/reject boundary the tool enforces is $10–$500; the $1–$600 defines the tested legal domain. Bugs hide at the exact thresholds of the accepted range and the valid range.\n\nOrdering, most-suspect first — boundaries are the classic off-by-one sites:\n1) 9.99 — just below the $10 accept threshold; must be 'rejected'. Off-by-one (>= vs >) shows here.\n2) 500.01 — just above the $500 accept threshold; must be 'rejected'. Classic upper off-by-one.\n3) 10 — exact lower threshold, must be accepted and returned as 10 (inclusive-boundary bug shows if rejected or altered).\n4) 500 — exact upper threshold, must be accepted and returned as 500.\n5) 1 — floor of valid range; a value inside valid-but-below-accept, must be 'rejected' (tests the $1..$10 reject stretch and that valid floor doesn't crash/accept).\n6) 600 — ceiling of valid range; above accept, must be 'rejected' (tests $500..$600 reject stretch and valid ceiling).\n7) 255.55 — mid-range cents value, must be accepted and returned exactly as sent (tests the interior pass-through and that cents aren't rounded/truncated).\n\nThis covers both exact accept thresholds (just-inside and just-outside), both accepted-range endpoints, both valid-range floor/ceiling, the interior pass-through with cents, and each single-rule stretch. If none deviate, coverage is genuine and SOUND is warranted."
+   },
+   "api_message_id": "msg_011Cd7X7r2dxNKYfsS9eCQCu",
+   "prompt_sha256": "ec40c094937bd4305685191d5d5ab1a898172e8ed3bf2ec359cb9db995e2d8a3",
+   "prompt_chars": 1143
+  },
+  {
+   "file": "agent-a02db9e9d6dab8d63.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 250.5,
+    "why": "Every probe so far sits on an edge (10, 500, 9.99, 500.01, 1, 600). The interior of the accepted $10–$500 band is untested, and no accepted amount with cents has been checked — a bug could silently round or alter a mid-range value while keeping the edges exact. $250.50 covers both the single-rule interior stretch and cents-preservation in one shot before spending a SOUND declaration."
+   },
+   "api_message_id": "msg_011Cd7XDhLBNQ8XH3JRasVXu",
+   "prompt_sha256": "775ffc51a02d117450621453fb3f0c78821bd79b3a3a7d6fb07d82bd5d56967e",
+   "prompt_chars": 1549
+  },
+  {
+   "file": "agent-a06c0298d5880af49.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     10,
+     9.99,
+     500,
+     500.01,
+     1,
+     600
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise specifies: amounts $10–$500 accepted exactly, outside that range rejected, valid inputs $1–$600. My probes test both acceptance boundaries (exact thresholds and just outside: $10/$9.99, $500/$500.01), the full valid range edges ($1 and $600), and cent handling across all tests. These are the exact thresholds, named boundaries, and range edges where bugs hide. If all pass, coverage is complete for sound declaration."
+   },
+   "api_message_id": "msg_011Cd7XeH6buHx1pyfFv6Kxw",
+   "prompt_sha256": "ec40c094937bd4305685191d5d5ab1a898172e8ed3bf2ec359cb9db995e2d8a3",
+   "prompt_chars": 1143
+  },
+  {
+   "file": "agent-a073da0a6d214429e.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Testing lower boundary edge: $9.99 is just below the $10 acceptance threshold. Should be rejected per the promise. This covers the edge of the stated accepted range and verifies the implementation correctly rejects amounts just outside the boundary."
+   },
+   "api_message_id": "msg_011Cd7XosNs8KLLKm31MZjjx",
+   "prompt_sha256": "5164a63afafb67550d0598847e5778fdd2821094483e62523503763f0dd246e2",
+   "prompt_chars": 1203
+  },
+  {
+   "file": "agent-a08cbbed501270461.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "First probe targets the named special amount $0, which sits in maximum rule tension: the promise says $0 owes nothing, yet $0 also falls under the \"$30 fee\" band. A naive implementation would add the $5 fee to $0. If the tool returns 0 it honored the carve-out; if it returns 5 that's a clean early catch."
+   },
+   "api_message_id": "msg_011Cd7X94dx342KYhGaCZ6C5",
+   "prompt_sha256": "58831d50238264354de1cfee8c8bc253ffbb3ceea9ace1dd1a4724c315cc4b86",
+   "prompt_chars": 1162
+  },
+  {
+   "file": "agent-a095fb303e4ac83bf.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     9.99,
+     500.01,
+     10,
+     500,
+     1,
+     600,
+     0.99,
+     600.01,
+     255
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise has two nested ranges and I map every boundary.\n\nACCEPTED-EXACTLY range [10, 500]: inside this band the input passes through unchanged. Outside it (but still valid input) the input is rejected.\nVALID range [1, 600]: inputs in this range are processed at all; outside it they're rejected too (but that's the same 'rejected' output).\n\nNote the two ranges produce identical output ('rejected') for inputs in [1,10) and (500,600], and identical 'rejected' for inputs outside [1,600]. So the observable behavior is: accept-exactly on [10,500], reject everywhere else. The interesting seams are the [10,500] thresholds, because that's the only place output flips between a number and 'rejected'.\n\nProbe order, most-suspect first — off-by-one / boundary errors are the classic deviation, so I test the just-outside points before the just-inside points:\n\n1. 9.99 — just below lower accept threshold; must be 'rejected'. Catches a >= vs > slip or a threshold set at 9.\n2. 500.01 — just above upper accept threshold; must be 'rejected'. Catches <= vs < slip at the top.\n3. 10 — exact lower threshold, named by promise; must return 10 (accepted exactly). Catches an off-by-one that excludes the endpoint.\n4. 500 — exact upper threshold, named by promise; must return 500. Same, top endpoint.\n5. 1 — floor of valid range; below accept band so 'rejected', but confirms the floor doesn't crash/behave oddly.\n6. 600 — ceiling of valid range; 'rejected' expected.\n7. 0.99 — just below valid floor; 'rejected'.\n8. 600.01 — just above valid ceiling; 'rejected'.\n9. 255 — mid-range interior point with cents-free round value near a common byte boundary; confirms the single accept-exactly rule holds through the interior (checks for any hidden special-amount deviation like a rounding or a magic number).\n\nThis covers: both accept thresholds (just inside + just outside), both valid-range edges (just inside + just outside), and one interior stretch sample. If none deviate, the accept-exactly rule and both rejection regimes are verified across every seam the promise names, so declaring SOUND is justified."
+   },
+   "api_message_id": "msg_011Cd7X7iRVZkeqbXunQtWRh",
+   "prompt_sha256": "ec40c094937bd4305685191d5d5ab1a898172e8ed3bf2ec359cb9db995e2d8a3",
+   "prompt_chars": 1143
+  },
+  {
+   "file": "agent-a09b627d7eb10411a.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Starting boundary sweep at the lower edge of the accepted range ($10.00), which the promise states should be accepted exactly. This is a named threshold most likely to expose an off-by-one bug (e.g., rejecting $10 itself or treating it as below the cutoff)."
+   },
+   "api_message_id": "msg_011Cd7XSYhdcUBMfkiVTx8QK",
+   "prompt_sha256": "890f84ea84d8f74bd2b5ded8ff252bbfffcdb0fb816a39182b1e29670c010316",
+   "prompt_chars": 1175
+  },
+  {
+   "file": "agent-a0aaf3b4059d6e8fe.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 200,
+    "why": "Coverage so far nails the $0 special case, both fee-band edges ($0.01 just inside, $29.99 just under the threshold), and the $30 threshold itself. The unchanged stretch ($30–$200) is only sampled at its lower end. The ceiling of the valid range, $200, is untested and is a classic place for a boundary bug (e.g., off-by-one on the upper limit or an unexpected fee/clamp at the max). Probing $200 covers the ceiling and confirms the pass-through rule holds across the full upper stretch before I'd consider declaring SOUND."
+   },
+   "api_message_id": "msg_011Cd7XCTBbeGN7SE67bgeAg",
+   "prompt_sha256": "1f37eb8ce3d0566b3e58d7f8ebb7a6717cac1d3fe4bc67c41969c3427f083b32",
+   "prompt_chars": 1384
+  },
+  {
+   "file": "agent-a0eee7273a5ab09d1.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 600,
+    "why": "Floor coverage (below-floor $1/$9.99, exact-floor $10) is solid, but ceiling coverage only has exact-ceiling $500 and just-above $500.01. The promise names a second boundary — the valid-input ceiling of $600 — which is untested. That's exactly the kind of named special threshold where a bug could hide (e.g., mis-scoped validation that accepts or errors differently at the far end of the 1-600 valid range vs. the 10-500 accept range). Probing $600 closes that gap before declaring sound."
+   },
+   "api_message_id": "msg_011Cd7XXbfMvwDYJGVnhjn4q",
+   "prompt_sha256": "ddb70ffc0dd36851359240f8a1dfeeb0b230c824e37a293c3ab0a2b0e1eeb0ae",
+   "prompt_chars": 1479
+  },
+  {
+   "file": "agent-a11f25607d548594f.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 0.01,
+    "why": "Coverage so far hits the $30 threshold from both sides (29.99/30), the range ceiling (200), and the exact-$0 special case. The one uncovered edge is the boundary between the \"$0 owes nothing\" special case and the \"under $30 adds $5 fee\" rule — i.e., just above zero. A buggy implementation might use amount<=0 (or similar) for the free case, incorrectly exempting small amounts near zero from the fee, or otherwise mishandle the transition right after 0. Probing $0.01 (expected $5.01) closes that gap before declaring sound."
+   },
+   "api_message_id": "msg_011Cd7XViVpXpbYgPq7TJXRC",
+   "prompt_sha256": "9dc79e818dbcddd5fb059db0814ca0be854b7be4a1e296c71a68b482b6634878",
+   "prompt_chars": 1382
+  },
+  {
+   "file": "agent-a120b2154f6903f31.jsonl",
+   "model": "<synthetic>",
+   "status": "no-decision(error)",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": null,
+   "api_message_id": "193e3647-e769-4b40-b220-c6aa4b3d164b",
+   "prompt_sha256": "f72acd5e0a9097c380956797e2d74969a940bb15990d07ca320f68ebcd944081",
+   "prompt_chars": 1411
+  },
+  {
+   "file": "agent-a120bf94e40000267.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "Probe #1 confirmed $30 (boundary, unchanged) is correct. The under-$30 fee rule is where a boundary bug most likely hides (off-by-one/inclusive-exclusive error). Testing $29.99 checks just below the threshold: it should return $34.99 ($29.99 + $5 fee). This targets the exact threshold the promise names before I spend probes on the $0 special case, range edges (0/200), and the fee stretch interior."
+   },
+   "api_message_id": "msg_011Cd7X9Y8BF6Ww8TdKjGjFN",
+   "prompt_sha256": "1a5be551f75212017b352927b6beef15fabea2cbd6813d1d12ea93127ce4e221",
+   "prompt_chars": 1190
+  },
+  {
+   "file": "agent-a1224c6b3c4a840e3.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 200,
+    "why": "Coverage so far hits the under-$30 threshold from both sides ($29.99/$30) and the $0 special case, but not the ceiling of the valid range ($200). Need to confirm the top edge is unchanged as promised before declaring sound."
+   },
+   "api_message_id": "msg_011Cd7XUvoDVwdNP3tnWa1Am",
+   "prompt_sha256": "e0dc65e93f0f6e6da68586f9dce9c16d12643a62c656c6d9af70af195850e559",
+   "prompt_chars": 1318
+  },
+  {
+   "file": "agent-a13dcfcd3b074ca1d.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "First probe. The lower accepted threshold ($10) is a classic off-by-one location. Testing exactly $10 checks whether the boundary the promise names (\"accepted exactly as sent\") holds at its edge before I explore just-inside/just-outside and the valid-range floor/ceiling."
+   },
+   "api_message_id": "msg_011Cd7X926u1yeUorZ9KAV5U",
+   "prompt_sha256": "890f84ea84d8f74bd2b5ded8ff252bbfffcdb0fb816a39182b1e29670c010316",
+   "prompt_chars": 1175
+  },
+  {
+   "file": "agent-a1740221ba5369df6.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Boundaries at the exact accepted thresholds (10 and 500) both passed, but the promise's floor is a common off-by-one/rounding trap. I need to confirm the tool actually rejects just below the floor rather than accepting it (e.g. due to inclusive/exclusive comparison bugs or float rounding on cents). Probing $9.99 tests the just-outside edge of the accepted range at the low end, which is required coverage before I can respectably declare SOUND. Remaining untested critical spots after this: $500.01 (just above high edge), $1 and $600 (valid-input floor/ceiling), and a generic mid-range/cents check."
+   },
+   "api_message_id": "msg_011Cd7XU8HVikk5eSBUi3VGY",
+   "prompt_sha256": "3176ed2ff049eb1a26207ab08ab00cc6057d416a387470535f1b700c57d4a1d7",
+   "prompt_chars": 1267
+  },
+  {
+   "file": "agent-a1be9c61f2481e7ef.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "Only $30 (just at/above the threshold, no fee) has been tested and it matched. The critical untested region is just below the $30 fee threshold, where the +$5 fee rule applies. Probing $29.99 tests the boundary just inside the fee range — a common off-by-one/comparison bug (using < vs <=). Expected output: 34.99."
+   },
+   "api_message_id": "msg_011Cd7X9hQnLac7h13cgYkoW",
+   "prompt_sha256": "1a5be551f75212017b352927b6beef15fabea2cbd6813d1d12ea93127ce4e221",
+   "prompt_chars": 1190
+  },
+  {
+   "file": "agent-a1d19824c34e8ee65.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 8,
+   "decision": {
+    "action": "abstain",
+    "why": "All promise-defined behavior is thoroughly covered. The critical $30 threshold is triple-pinned: $29.99→$34.99 (fee applies just under), $30→$30 (unchanged at exact), $30.01→$30.01 (unchanged just over), ruling out any off-by-one. The $0 special case is confirmed both ways: $0→$0 (no fee) and $0.01→$5.01 (fee just above zero). The fee stretch (0,30) is covered low/mid/high (0.01, 15, 29.99); the unchanged stretch [30,200] is covered by 30, 30.01, 100, 200. Floor ($0) and ceiling ($200) are both tested directly. The only untested region is just outside the valid ceiling ($200.01), which lies outside the promise's stated domain, so no result there could constitute a violation — probing it would be wasted. Every named threshold, special amount, range edge, and single-rule stretch is verified. SOUND."
+   },
+   "api_message_id": "msg_011Cd7XFWJD4i1KVepKMhZxq",
+   "prompt_sha256": "d191d8a71daeccc3c7c05a47b69d484a754dbef1126da5bb59f9c290a4f6bf2a",
+   "prompt_chars": 1642
+  },
+  {
+   "file": "agent-a1e4967c477a0b9fe.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 600,
+    "why": "Accepted-range edges (10, 500) and just-outside (9.99, 500.01) are covered. The valid-range ceiling (600) is untested — a bug could accept amounts above 500 up to the valid ceiling, or handle the very top of the valid range differently. Probing 600 tests the ceiling of the valid range where a single reject rule should apply."
+   },
+   "api_message_id": "msg_011Cd7XBrZFiHagfP64zsiJc",
+   "prompt_sha256": "f72acd5e0a9097c380956797e2d74969a940bb15990d07ca320f68ebcd944081",
+   "prompt_chars": 1411
+  },
+  {
+   "file": "agent-a1e60c95f43cc4fd8.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "$FUNCTION_NAME": "StructuredOutput",
+    "action": "probe",
+    "amount": 1,
+    "why": "Uncovered ground: the valid-range floor at $1. Accepted-band edges ($10/$500, just inside and outside via $9.99/$500.01) and the ceiling ($600) are covered. But the lower stretch — valid inputs from $1 up to just under $10, which should all reject — has only been tested at its top ($9.99). The floor $1 is where an off-by-one or floor-handling bug would hide, so I probe it before considering SOUND."
+   },
+   "api_message_id": "msg_011Cd7XCkf5Gb1dQiJYdzrta",
+   "prompt_sha256": "2bf3896ef32278e841784b4e3e13019db407bff6dd29f00613c2b98790b5c758",
+   "prompt_chars": 1481
+  },
+  {
+   "file": "agent-a22c48e501077d99d.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 10,
+   "decision": {
+    "action": "abstain",
+    "why": "Coverage is complete across every place a bug could hide. Special case $0 (probe #3, correct $0). Fee region \"under $30\": bottom edge $0.01→$5.01 (#6), mid $10→$15 (#5), $20→$25 (#8), and top edge $29.99→$34.99 (#2/#9) all correct. The critical $30 threshold is pinned on both sides: $29.99 gets the fee, $30→$30 (#1) and $30.01→$30.01 (#10) are unchanged — no off-by-one at the boundary. The unchanged stretch $30–$200 is sampled at $30, $30.01, $100 (#7), and ceiling $200 (#4). Floor $0 and ceiling $200 both held. Every named threshold, special amount, range edge (just inside/outside), and single-rule stretch has been probed and matched. Further probes would retread covered ground, so I declare SOUND."
+   },
+   "api_message_id": "msg_011Cd7XHiN414pj96ZGtUgjd",
+   "prompt_sha256": "649cd3f6744494b03eb16fa10b746becaf254aa10691be62e07e4e70d4c25e77",
+   "prompt_chars": 1774
+  },
+  {
+   "file": "agent-a2393831ce8c7b542.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "abstain",
+    "why": "Coverage is complete for the promise's stated rules. Exact named thresholds (1, 10, 500, 600) are all tested. Both edges of the accepted range are probed just-inside and just-outside: $10 (in) vs $9.99 (out), and $500 (in) vs $500.01 (out). The floor and ceiling of the overall valid input domain are probed: $1 (rejected, correct since below accept-floor) and $600 (rejected, correct since above accept-ceiling) — this also rules out a 'too-wide' bug at either end. The interior of the accepted stretch is sampled with $123.45 (arbitrary cents value, confirms cents pass through unmodified) in addition to the two boundary values, giving 3 points across the accepted stretch. The two dead stretches (below accept-floor down to valid-floor, and above accept-ceiling up to valid-ceiling) each have both endpoints tested. Every rule-stretch and every named threshold has been hit with no deviation across 7 probes, so further probing would just be spending budget without covering new ground — declaring SOUND now."
+   },
+   "api_message_id": "msg_011Cd7XZCJErpRjScUyfCbWw",
+   "prompt_sha256": "81ff83401bd337d1a773d09af588b25070311afbb24d14043c0e0b318c47be8f",
+   "prompt_chars": 1619
+  },
+  {
+   "file": "agent-a262ba5b0061168b1.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Probes so far ($10, $500) only confirmed the two accepted-range endpoints return correctly. The promise's key claim is that inputs outside $10–$500 are REJECTED while still being valid inputs (valid range is $1–$600, cents allowed). The most bug-prone spot is just below the lower accepted threshold: $9.99 is a valid input but should be rejected. If the tool returns $9.99 instead of 'rejected', that's an off-by-cent boundary bug at the lower edge. Testing just-outside the accepted floor covers the most information-dense untested region."
+   },
+   "api_message_id": "msg_011Cd7XA5oRQ1FSm8mLCCaps",
+   "prompt_sha256": "3176ed2ff049eb1a26207ab08ab00cc6057d416a387470535f1b700c57d4a1d7",
+   "prompt_chars": 1267
+  },
+  {
+   "file": "agent-a2774b7b3b217ed57.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     10,
+     500,
+     9.99,
+     500.01,
+     1,
+     600
+    ],
+    "reasoning": "Tests both acceptance boundaries ($10.00, $500.00) first to catch common off-by-one errors in comparison operators. Validates boundary behavior with edge cases ($9.99, $500.01). Confirms valid range limits ($1.00, $600.00) are enforced. This sequence covers all named thresholds, edges of the accepted range, and distinct rule application stretches. Ordered by bug likelihood: boundary errors are most common in range-checking code.",
+    "thenAbstain": true
+   },
+   "api_message_id": "msg_011Cd7XeKG5LB4tn1HxdJ3dB",
+   "prompt_sha256": "ec40c094937bd4305685191d5d5ab1a898172e8ed3bf2ec359cb9db995e2d8a3",
+   "prompt_chars": 1143
+  },
+  {
+   "file": "agent-a27ee8c36c4ce5eaf.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "First probe targets the exact threshold named by the promise. \"$30\" is the inclusive-exclusive boundary: the promise says amounts UNDER $30 get a $5 fee, so $30 itself should be unchanged (output $30). A common bug makes the fee apply at $30 (<=) instead of below it (<). Checking the exact threshold is the highest-value single probe."
+   },
+   "api_message_id": "msg_011Cd7X93VVYAQwenVK7hbFg",
+   "prompt_sha256": "58831d50238264354de1cfee8c8bc253ffbb3ceea9ace1dd1a4724c315cc4b86",
+   "prompt_chars": 1162
+  },
+  {
+   "file": "agent-a2865f3f31bdc2b09.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Lower accept edge ($10) and just-below ($9.99) are confirmed. The upper accept threshold is entirely untested and is the likeliest place for an off-by-one bug. Probing $500 (top of the accepted range, should charge exactly $500) before its neighbors $500.01/$499.99, to anchor the upper edge."
+   },
+   "api_message_id": "msg_011Cd7XACQJMkQg5g6zQqPb3",
+   "prompt_sha256": "9a146675056218fda5514a708c1b2051c86e0fc076d336df63f4f112714a6167",
+   "prompt_chars": 1274
+  },
+  {
+   "file": "agent-a289c231b6b4c18ab.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Only 2 of 25 probes used, and coverage so far only hits the floor ($1) and the lower accepted-range edge ($10). The promise names $500 as the upper edge of the accepted range explicitly — that's a prime spot for an off-by-one bug (e.g., using > instead of >= at the boundary) and hasn't been tested at all yet. Abstaining now would be premature since the upper threshold, both just-inside/just-outside edges, the $600 ceiling, and cent handling remain completely unprobed."
+   },
+   "api_message_id": "msg_011Cd7XUobst3j1rCDy64sbV",
+   "prompt_sha256": "38b63c81735630aaaa746eb3119cb34ca793a3f248ad086ff03730ea55548f1f",
+   "prompt_chars": 1271
+  },
+  {
+   "file": "agent-a28b2fcce29140334.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "The $0 special case is the single named special amount in the promise and a classic bug site: an implementation that applies the \"under $30 adds $5\" rule uniformly would return $5 for $0 instead of the promised 0. Probes #1 ($30) and #2 ($29.99) already pin the $30 threshold from both sides, so the highest-value uncovered spot is the $0 exception. Probing it now catches the most likely bug early for maximum score."
+   },
+   "api_message_id": "msg_011Cd7XAgxmcV3h9zmvFNGw4",
+   "prompt_sha256": "2c2579153ad2598769af6479963cb290e35ae82a828edc4c0f5bb2b0f3f6ad1f",
+   "prompt_chars": 1258
+  },
+  {
+   "file": "agent-a29d8c3495df185bb.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     500,
+     10,
+     500.01,
+     9.99,
+     600,
+     1,
+     600.01,
+     0.99,
+     250.5
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise has two nested ranges. The \"accepted exactly as sent\" band is $10-$500 (echo the amount). The \"valid input\" range is $1-$600 (cents allowed); outside the accept band but inside valid range... actually the promise is layered: amounts $10-$500 accepted exactly; outside that range rejected. But valid inputs run $1-$600. This is ambiguous, but the load-bearing thresholds to probe are the named boundaries where a single rule flips.\n\nOrdering, most-suspect first:\n1. 500 — upper accept threshold, just inside; classic off-by-one (should echo 500, bug might reject).\n2. 10 — lower accept threshold, just inside; off-by-one (should echo 10).\n3. 500.01 — just outside upper accept band; should be rejected. Cents boundary probe.\n4. 9.99 — just below lower accept band; should be rejected.\n5. 600 — ceiling of valid range; edge case.\n6. 1 — floor of valid range.\n7. 600.01 — just above ceiling; rejected.\n8. 0.99 — just below floor; rejected.\n9. 250.50 — mid-range with cents, confirms exact echo in the single-rule stretch.\n\nThese cover both named thresholds (10, 500) just-inside and just-outside, the valid-range floor/ceiling (1, 600) and just outside, and one interior point for the accept stretch. If none deviates, coverage is genuine and SOUND is justified."
+   },
+   "api_message_id": "msg_011Cd7X7osAmZ3Kk2f52hLzA",
+   "prompt_sha256": "ec40c094937bd4305685191d5d5ab1a898172e8ed3bf2ec359cb9db995e2d8a3",
+   "prompt_chars": 1143
+  },
+  {
+   "file": "agent-a2d5d864cf71fa6ef.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 200,
+    "why": "Threshold ($30/$29.99) and the $0 special case are well-covered. The ceiling of the valid range ($200) is completely untested — it's the top edge where an off-by-one or range-cap bug could hide, and confirms the \"unchanged\" region holds all the way up. Probing it next before considering SOUND."
+   },
+   "api_message_id": "msg_011Cd7XBKo5B7XgpiFDobTky",
+   "prompt_sha256": "12b0d31454394305eed74666d2b248cc452995eea8126f43c8b652d2eed43c8d",
+   "prompt_chars": 1318
+  },
+  {
+   "file": "agent-a2e0383b337f32355.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 1,
+    "why": "Boundaries of the promise's accept range (10 and 500, both sides) are covered, but the floor of the overall valid input domain ($1) hasn't been probed yet. A bug could hide specifically in how the tool treats the lowest valid input (e.g., accidentally accepting it, or a distinct error path vs. normal rejection). Need to test $1 before declaring sound."
+   },
+   "api_message_id": "msg_011Cd7XVyhsDMBozHRVQEfco",
+   "prompt_sha256": "f72acd5e0a9097c380956797e2d74969a940bb15990d07ca320f68ebcd944081",
+   "prompt_chars": 1411
+  },
+  {
+   "file": "agent-a328265904e62cc12.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Testing the lower boundary of the accepted range ($10–$500). If the promise is sound, $10.00 should be accepted and charged as $10.00, not rejected."
+   },
+   "api_message_id": "msg_011Cd7XnSa6DsXp1VH6qEjj8",
+   "prompt_sha256": "890f84ea84d8f74bd2b5ded8ff252bbfffcdb0fb816a39182b1e29670c010316",
+   "prompt_chars": 1175
+  },
+  {
+   "file": "agent-a331b6faeda87549c.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "First probe targets the lower accept-threshold seam. The promise names $10 as the exact floor of the accepted range; $9.99 is just-outside and should return 'rejected'. If it instead returns a charged amount, that's an off-by-one/boundary bug at the most probable hiding spot. This is a high-value early probe covering the named threshold's outside edge."
+   },
+   "api_message_id": "msg_011Cd7X94BufzGEMYQxZArTY",
+   "prompt_sha256": "890f84ea84d8f74bd2b5ded8ff252bbfffcdb0fb816a39182b1e29670c010316",
+   "prompt_chars": 1175
+  },
+  {
+   "file": "agent-a333c3982e8e4b9ea.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     0,
+     29.99,
+     30,
+     0.01,
+     29,
+     200,
+     100
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise defines several regimes and boundaries. I order probes to hit the most bug-prone spots first, since the referee stops at the first deviation.\n\nRules restated:\n- $0 -> 0 (special case: owes nothing, no $5 fee despite being under $30).\n- 0 < amount < $30 -> amount + $5.\n- amount >= $30 -> amount unchanged.\n- Valid range: $0 to $200, cents allowed.\n\nMost suspect spots (ordered):\n1. $0 -> expect 0. This is the classic collision: $0 is under $30, so a naive \"under 30 adds 5\" implementation returns 5 instead of 0. Highest-probability bug. Expect 0.00.\n2. $29.99 -> just under threshold, should get fee: 34.99. Tests that the under-$30 branch includes values right up to (but not including) 30, and handles cents.\n3. $30.00 -> the threshold itself. Boundary: should be unchanged (30.00), not 35.00. Tests strict vs non-strict comparison (< vs <=).\n4. $0.01 -> smallest nonzero, under 30, should get fee: 5.01. Distinguishes the $0 special case from the very-next value; catches an off-by-one where the \"owes nothing\" branch leaks to 0.01 or where 0 doesn't actually get special-cased.\n5. $29.00 -> mid under-30 stretch, should be 34.00. Interior sample of the fee band.\n6. $200.00 -> ceiling of valid range, unchanged: 200.00. Tests upper edge acceptance.\n7. $100.00 -> interior of the unchanged stretch, 100.00. Samples the large-amount pass-through region.\n\nThis covers: the $0 special amount, the $30 threshold (just inside/at), the fee band interior, the floor-adjacent value, and the ceiling. If none deviate, the tool has been exercised at every place a bug could hide, so declaring SOUND is justified."
+   },
+   "api_message_id": "msg_011Cd7X7sREVKJa6ukXXbgeL",
+   "prompt_sha256": "fe07b06c4e875135f093f2dfb1a9765f5c879b0f96b3673b1ce1fc4e1812067b",
+   "prompt_chars": 1130
+  },
+  {
+   "file": "agent-a35034531d975c53e.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "The promise carves out $0 as a special \"owes nothing\" case, distinct from the general \"under $30 adds $5\" rule. This is the classic special-case-vs-general-rule collision point where a bug would hide (e.g., implementation applies the fee rule to $0 and returns $5 instead of $0, or checks fee threshold before the zero-exception). It's also the floor of the valid range, so this single probe covers both the special-amount check and the range floor. Starting here before spending probes on the $30 threshold or $200 ceiling."
+   },
+   "api_message_id": "msg_011Cd7XSagSThNCnztyfo4Hv",
+   "prompt_sha256": "58831d50238264354de1cfee8c8bc253ffbb3ceea9ace1dd1a4724c315cc4b86",
+   "prompt_chars": 1162
+  },
+  {
+   "file": "agent-a3afa67cdd9a0badd.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 1,
+    "why": "Coverage so far hits both edges of the accepted-without-modification band ($10/$9.99 and $500/$500.01) plus the stated ceiling of valid input ($600, rejected) and a mid-range cents case ($123.45). The one uncovered edge is the floor of the valid input range ($1) — the promise explicitly names $1 as the bottom of valid inputs, so a bug could hide there (e.g. accidentally accepting it, or mishandling it differently than other sub-$10 rejects). Probing $1 closes that gap before I can responsibly declare SOUND."
+   },
+   "api_message_id": "msg_011Cd7XYBTc1HF39GtkTRk2X",
+   "prompt_sha256": "294ebde802feece4018ddb4d42db6a6101d52ab7172929c7fd777a95ea09bbe1",
+   "prompt_chars": 1551
+  },
+  {
+   "file": "agent-a3e0daf6d6bef9762.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     10,
+     500,
+     9.99,
+     500.01,
+     600
+    ],
+    "thenAbstain": true,
+    "reasoning": "These five probes directly test the exact thresholds named in the promise ($10 lower, $500 upper), boundaries just outside the acceptance range in both directions (with cents to verify that detail), and the ceiling of the valid input span. Together they cover: (1) whether the stated boundaries are inclusive/exclusive as promised; (2) off-by-one errors at both edges; (3) cents handling; and (4) the distinction between \"valid input\" (1–600) and \"accepted\" (10–500). If all five produce their expected outputs—accepting $10 and $500 as charged amounts, rejecting the three others—the tool meets its promise across its full behavior space, warranting SOUND declaration."
+   },
+   "api_message_id": "msg_011Cd7XeJH3TPcDeBSR7YtjY",
+   "prompt_sha256": "ec40c094937bd4305685191d5d5ab1a898172e8ed3bf2ec359cb9db995e2d8a3",
+   "prompt_chars": 1143
+  },
+  {
+   "file": "agent-a43423d4d9e5d36ff.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 600,
+    "why": "Coverage gaps remain at the extremes of the valid range and on cents handling. $600 is the ceiling of the stated valid range (1-600) and sits outside the accepted 10-500 band, so it should return 'rejected'. Extremes are prime bug-hiding spots — off-by-one or overflow logic often deviates exactly at the valid-range ceiling where a single rule (reject) applies. Testing it now covers new ground before I consider declaring SOUND."
+   },
+   "api_message_id": "msg_011Cd7XE2SNfcqHnikxYb5yb",
+   "prompt_sha256": "b38127cd2fb7c9e63da77de5bac37ec03a9c28bbccd6acf20419f8492c23415d",
+   "prompt_chars": 1543
+  },
+  {
+   "file": "agent-a43a07d1fdea1c10c.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "Boundary at $30 needs testing from just below: $30 itself was confirmed unchanged, but $29.99 should trigger the +$5 fee (under $30). This is the sharpest place a boundary bug (off-by-one on < vs <=) would hide."
+   },
+   "api_message_id": "msg_011Cd7XUAmaNJiAgd4waHuAz",
+   "prompt_sha256": "37cd69ac4a8957044cc8cd32ac1fa277ec2944e3653f22c8c739132d9b4783ad",
+   "prompt_chars": 1250
+  },
+  {
+   "file": "agent-a4671b554c1961885.jsonl",
+   "model": "<synthetic>",
+   "status": "no-decision(error)",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": null,
+   "api_message_id": "490ee23d-21ec-4d53-ac5e-b0aaa8dfe918",
+   "prompt_sha256": "7fa5ca64647708d82b717cf91a7f042e70eb6ca384566826b5e1de8f52faba3d",
+   "prompt_chars": 1479
+  },
+  {
+   "file": "agent-a4eef8583cbd5e38e.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "The \"under $30 adds $5\" band is only tested at its top edge ($29.99). A bug could keep the fee at the threshold but drop it mid-band, or mishandle small nonzero amounts near the $0 special case. Probing $10 covers the interior of the under-$30 stretch, distinct from both the $0 special and the $29.99 edge."
+   },
+   "api_message_id": "msg_011Cd7XCAhuZoLc3XJfkgECj",
+   "prompt_sha256": "71c94339d42a4ed8265614071d0faa5e38c1b2679a123bb1f1e27f8987e87edb",
+   "prompt_chars": 1382
+  },
+  {
+   "file": "agent-a5342d26fe0b9d5a7.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     30,
+     0,
+     29.99,
+     30.01,
+     0.01,
+     200,
+     199.99
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise has three distinct rule-zones: exact $0 (special-cased to owe nothing), the open stretch (0,30) where a $5 fee is added, and [30,200] where amounts pass through unchanged. Bugs most often hide at the seams between these zones, so I front-load the threshold boundary itself:\n\n1. 30.00 — the exact threshold. Is '<30' or '<=30'? If the implementation mistakenly applies the fee at exactly 30 (off-by-one), this catches it immediately. Highest suspicion since the promise's wording ('under $30') implies strict inequality that's easy to get backwards.\n2. 0.00 — the explicitly named special case. Zero is 'under 30' by the general rule but the promise carves out an exception ('owes nothing'). A common bug is forgetting the special case and just applying the generic <30 fee rule, charging $5 for a $0 order.\n3. 29.99 — just inside the fee zone, one cent below threshold; confirms the fee zone is active right up to the boundary (should be 34.99).\n4. 30.01 — just outside the fee zone, one cent above threshold; confirms unchanged-zone starts correctly (should be 30.01, not 35.01).\n5. 0.01 — smallest nonzero amount, still under 30; should get the fee (5.01), distinguishing it from the true-zero special case and catching any 'amount <= some epsilon' zero-detection bug.\n6. 200.00 — the ceiling of the valid range; unchanged-zone, should pass through as 200.00 (catches any hardcoded cap/clamp bug).\n7. 199.99 — just inside the ceiling, unchanged-zone, sanity check adjacent to the top edge.\n\nTogether these 7 probes hit the floor (0), the named special exact value (0), both sides of the only named numeric threshold (30), the ceiling (200) and its inner neighbor, and representative interior points of both rule-zones (under-30 fee zone and unchanged zone) — satisfying full coverage of where a deviation could hide. If all 7 pass, I declare the tool SOUND."
+   },
+   "api_message_id": "msg_011Cd7XKhDemPQhreHrJanEM",
+   "prompt_sha256": "fe07b06c4e875135f093f2dfb1a9765f5c879b0f96b3673b1ce1fc4e1812067b",
+   "prompt_chars": 1130
+  },
+  {
+   "file": "agent-a545836511370042a.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 8,
+   "decision": {
+    "action": "probe",
+    "amount": 0.99,
+    "why": "Coverage is strong on the accepted-range edges ($9.99/$10 and $500/$500.01, both sides), the valid ceiling ($600 reject), and mid-range accepts with cents ($250, $123.45). The one uncovered named edge is the FLOOR of the valid range ($1). Both sub-$10 rejects so far ($9.99, $5) sit well above $1; nothing probes near the valid-range floor where a bug could hide (sub-$1 handling, an off-by-boundary error, or a floor clamp). Probing $0.99 — just below the $1 valid floor — tests that region cheaply before I could justify declaring SOUND. Expected: 'rejected'."
+   },
+   "api_message_id": "msg_011Cd7XGzk1gT9CZMKxiKd5U",
+   "prompt_sha256": "24a3815174959dbfb65d970468db4cc68a54fb4b35a432176650be3c9cea9fbd",
+   "prompt_chars": 1683
+  },
+  {
+   "file": "agent-a554ad1644676e60a.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "Testing the critical boundary where the fee rule switches from adding $5 (under $30) to unchanged ($30+). If correct, input $30.00 should output $30.00 with no fee applied. This is a transition threshold the promise explicitly names."
+   },
+   "api_message_id": "msg_011Cd7XnJ9q2672HYGqK34Ue",
+   "prompt_sha256": "58831d50238264354de1cfee8c8bc253ffbb3ceea9ace1dd1a4724c315cc4b86",
+   "prompt_chars": 1162
+  },
+  {
+   "file": "agent-a5673e2ff6d669d3f.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 5,
+    "why": "The $10/$500 accepted-range thresholds are tightly covered (probes 1-4). Untested is the mid-stretch of the \"valid but below accepted floor\" zone ($1-$9.99): a bug could accept amounts there instead of rejecting. $9.99 was the very edge; $5 tests the interior of that single-rule stretch where a threshold-shift or off-by-more bug would surface."
+   },
+   "api_message_id": "msg_011Cd7XCJsHxdGCiQhrDNmn8",
+   "prompt_sha256": "c3bf9c45a3f403c1759d8e332a004f07199868a2319d82fdcc56142421535b6e",
+   "prompt_chars": 1411
+  },
+  {
+   "file": "agent-a56e3209691de672b.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     1,
+     600,
+     9.99,
+     10,
+     500,
+     500.01,
+     0.99,
+     600.01,
+     250.5
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise has two nested ranges: a \"valid input\" range [$1, $600] and, within it, an \"accepted exactly\" range [$10, $500]. Anything in [1,600] but outside [10,500] must be rejected; anything outside [1,600] is also presumably rejected (never a valid input). The likeliest bug is conflating these two ranges (e.g., accepting anything in [1,600] rather than only [10,500], or an off-by-one at the 10/500 boundaries).\n\nProbe order, most-suspect-first:\n1. $1.00 - valid-range floor but should be rejected (outside accepted [10,500]); catches the 'valid range treated as accepted range' bug immediately and cheaply.\n2. $600.00 - valid-range ceiling, should be rejected for the same reason - symmetric check.\n3. $9.99 - just below the accepted floor; should be rejected. Catches an off-by-one that accepts down to 9.99 or rounds.\n4. $10.00 - exact accepted floor; should be charged exactly 10.00 (catches inclusive/exclusive boundary bug the other direction).\n5. $500.00 - exact accepted ceiling; should be charged exactly 500.00.\n6. $500.01 - just above accepted ceiling; should be rejected (catches an off-by-one that accepts up to 500.01).\n7. $0.99 - below the valid floor entirely (undefined/invalid input); should be rejected, not silently processed.\n8. $600.01 - above the valid ceiling entirely; should be rejected.\n9. $250.50 - a plain mid-range value with cents, to confirm the 'accepted exactly as sent' promise holds for arbitrary cents in the interior of the range (not just at edges/integers).\n\nTogether these hit every named threshold (10, 500), both edges of the stated accepted range (just inside/outside 10 and 500), the floor and ceiling of the valid range (1 and 600, plus just outside them at 0.99/600.01), and a representative interior point with cents - full coverage for a legitimate SOUND declaration if nothing deviates."
+   },
+   "api_message_id": "msg_011Cd7XKazbYQK2W9Rs7sqaq",
+   "prompt_sha256": "ec40c094937bd4305685191d5d5ab1a898172e8ed3bf2ec359cb9db995e2d8a3",
+   "prompt_chars": 1143
+  },
+  {
+   "file": "agent-a58856f671370bb24.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Only one boundary (lower edge $10) has been tested so far. The promise names two exact thresholds ($10 and $500) plus a valid-input floor/ceiling ($1/$600) that differ from the accepted range — classic spots for off-by-one bugs. $500 is the upper threshold of the accepted range and hasn't been checked at all yet; probing it now is high-yield before declaring soundness, since abstaining without checking this edge would score zero even if the tool is actually buggy there."
+   },
+   "api_message_id": "msg_011Cd7XTK3dAfusAYbEHfdXk",
+   "prompt_sha256": "5164a63afafb67550d0598847e5778fdd2821094483e62523503763f0dd246e2",
+   "prompt_chars": 1203
+  },
+  {
+   "file": "agent-a5a56fcbbed3ce69f.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "probe",
+    "amount": 15,
+    "why": "The fee band (just above $0 to just below $30) is only tested at its two extremes ($0.01 and $29.99), both showing a flat +$5. A bug could still lurk mid-band — a proportional fee or a piecewise sub-rule would survive endpoint checks in some encodings. $15 sits squarely in the middle of the sole stretch where the +$5 rule applies and is the highest-value uncovered ground. The $30 threshold ($29.99/$30/$30.01), $0 special case, $0.01 floor-of-fee, $200 ceiling, and $100 midrange are already pinned, so this is the last meaningful independent check before declaring SOUND."
+   },
+   "api_message_id": "msg_011Cd7XEGSk9q8TvDqZhkPJK",
+   "prompt_sha256": "7c17f8d17c7081194f8455912032c63eb3c63ba45fcdbd58ddffa768da8aa738",
+   "prompt_chars": 1580
+  },
+  {
+   "file": "agent-a5becea1a48ebe6de.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "Testing the exact special case ($0 owes nothing) and floor of valid range. Promise guarantees $0 → $0."
+   },
+   "api_message_id": "msg_011Cd7XnJbNX3qATa8yjJ14r",
+   "prompt_sha256": "58831d50238264354de1cfee8c8bc253ffbb3ceea9ace1dd1a4724c315cc4b86",
+   "prompt_chars": 1162
+  },
+  {
+   "file": "agent-a5ebf880c3d2cbfea.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "abstain",
+    "why": "Coverage is complete per the promise's structure. Named thresholds $10 and $500 both tested and accepted exactly (ruling out off-by-one boundary errors like > vs >=). The immediate edges just outside those thresholds ($9.99, $500.01) were correctly rejected. The floor and ceiling of the entire valid input range ($1, $600) were tested and correctly rejected (valid inputs outside the accepted band). A mid-range value with cents ($123.45) confirmed exact pass-through charging with no rounding/truncation bug. Every distinct rule-stretch (below accepted band, accepted band, above accepted band, plus both range endpoints) has been sampled at its boundary. No further probe targets a plausible untested hiding spot; additional probes would just re-confirm already-covered behavior and cost score under the scoring pressure."
+   },
+   "api_message_id": "msg_011Cd7XZSgfnWtptqSKV7ANy",
+   "prompt_sha256": "f49ceb27b5b73af36f377e23b8433caa1c64271bf6e675f95e34f45e8577d5ed",
+   "prompt_chars": 1619
+  },
+  {
+   "file": "agent-a6270a86cabc898dc.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 100,
+    "why": "The [30, 200] range is untested except at the $30 boundary. $100 is a strategic middle-range probe that tests whether the \"no change\" rule applies correctly throughout this stretch, covering the largest unexplored territory where bugs could hide in range computation."
+   },
+   "api_message_id": "msg_011Cd7XrdLrDyNqQP9fWcVn6",
+   "prompt_sha256": "12b0d31454394305eed74666d2b248cc452995eea8126f43c8b652d2eed43c8d",
+   "prompt_chars": 1318
+  },
+  {
+   "file": "agent-a635819035627664c.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 9,
+   "decision": {
+    "probe": "30.01",
+    "action": "probe",
+    "amount": 30.01,
+    "why": "The $30 threshold is the sharpest bug surface. I've confirmed the fee side is tight ($29.99 -> $34.99) and the exact boundary ($30 -> $30, unchanged). But I haven't tested just above the threshold. A misplaced-threshold bug (e.g. fee applies to amounts <= $30.01, or unchanged region starting one cent late) would slip past all prior probes. Probing $30.01 confirms the unchanged region holds immediately above the boundary before I can declare SOUND."
+   },
+   "api_message_id": "msg_011Cd7XGVTde7wLzbfaTrQvi",
+   "prompt_sha256": "6704ed123681326ca788d86a49b392309554202692d85d3a86bdbd4aa8b6672d",
+   "prompt_chars": 1704
+  },
+  {
+   "file": "agent-a63e9329ab8ef25c7.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 123.45,
+    "why": "The four probes so far nailed the exact threshold edges ($10 in, $9.99 out, $500 in, $500.01 out) but every accepted-case probe used a round dollar figure. No probe yet confirms that cents are passed through exactly for a typical mid-range amount (a common hiding spot for bugs: silent rounding/truncation of cents, or fee-shaving on the charged amount). I also still need to check the floor/ceiling of the stated valid input range ($1 and $600, both should reject since they're outside the 10-500 accepted band) before I could responsibly declare SOUND. Probing $123.45 next to verify exact cents pass-through in the interior of the accepted range; plenty of probe budget (4/25 used) remains to still cover the $1/$600 valid-range edges afterward."
+   },
+   "api_message_id": "msg_011Cd7XVg6hz2XRApRUinDvk",
+   "prompt_sha256": "ccef09ca4c27601eff2d84b3f4c5f235b9060d92b9e74d8557dda7a489b5fced",
+   "prompt_chars": 1411
+  },
+  {
+   "file": "agent-a65715446eb47b1d0.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "Upper boundary verification: must reject $500.01 per promise (outside the $10-$500 acceptance range). Only $500 has been tested as the upper edge; testing just above it is critical to verify the boundary is correctly implemented before declaring sound. This is a named edge of the acceptance range."
+   },
+   "api_message_id": "msg_011Cd7Xqzu7ASNf2zsezjHV9",
+   "prompt_sha256": "f50d83085531595c2ae6dbbb1c328517b67199507e408ac6028a3e1c26594f5f",
+   "prompt_chars": 1338
+  },
+  {
+   "file": "agent-a65d5d8a1c07fe209.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 250.55,
+    "why": "Coverage so far hits both thresholds (10, 500) and their just-outside neighbors (9.99, 500.01) plus the valid-range floor/ceiling (1, 600) — all rejected/accepted as promised. But every accepted probe so far (10, 500) was a whole dollar amount, so I haven't verified the promise's claim that amounts are 'accepted exactly as sent' with cents intact for a mid-range value — a rounding/truncation bug on cents would hide there. Probing a mid-range amount with cents (250.55) checks that stretch before declaring sound."
+   },
+   "api_message_id": "msg_011Cd7XZPq2W2eHkKj65Cfi9",
+   "prompt_sha256": "3d20549dc3354891dd462a11e3649099a04dee7047b519c420d468e33dfc1b60",
+   "prompt_chars": 1549
+  },
+  {
+   "file": "agent-a68de1c935b53284b.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "Testing the upper boundary of the fee zone. The promise states amounts under $30 add a $5 fee; $29.99 should trigger the fee (returning $34.99). This boundary is the most likely place for off-by-one implementation errors."
+   },
+   "api_message_id": "msg_011Cd7XoWtZxfBxPgtNX2tZU",
+   "prompt_sha256": "1a5be551f75212017b352927b6beef15fabea2cbd6813d1d12ea93127ce4e221",
+   "prompt_chars": 1190
+  },
+  {
+   "file": "agent-a6948b1d701b6f8f2.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 0.01,
+    "why": "The transition immediately above the special-cased exact $0 is untested — a classic off-by-one spot where a bug could either still treat tiny amounts as free, or mishandle rounding when adding the $5 fee. Probing $0.01 should return $5.01 per the promise; if it returns $0 or something else, that's a catch. This also fills out coverage of the 'under $30' stretch beyond just its upper edge (29.99), leaving the mid-range under-30 and the $30-$200 unchanged stretch (already bounded by 30 and 200) as remaining coverage to consider next."
+   },
+   "api_message_id": "msg_011Cd7XW2pPk1VNXxZ5fss2s",
+   "prompt_sha256": "315cc88d1840335ddc3227931ce7b24b496c771925ba0a8cc6fb5bff8d08af81",
+   "prompt_chars": 1382
+  },
+  {
+   "file": "agent-a6c09130984dc3781.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 1,
+    "why": "Coverage gaps remain despite 6 clean probes. I've hit the accepted-range floor ($10) and ceiling ($500), just-outside on both sides ($9.99, $501), an interior cents value ($250.5), and the valid ceiling ($600, rejected). The untested edge is the valid-range FLOOR: the promise says valid inputs start at $1, and everything from $1 to $9.99 should reject. I tested $9.99 but not $1 itself — the exact floor where valid-but-below-accepted meets the boundary. Probing $1 covers that edge before considering SOUND."
+   },
+   "api_message_id": "msg_011Cd7XDAbysGSsmmPhR1Y86",
+   "prompt_sha256": "dbab7868e4dc8fc2da942952e807e245eac575db6db8721d9ed03f82f4fc5035",
+   "prompt_chars": 1546
+  },
+  {
+   "file": "agent-a6eae833795c6ca42.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 250,
+    "why": "Edges are well covered: $9.99 rejected, $10 accepted, $500 accepted, $500.01 rejected, $5 rejected — both accepted-range thresholds are pinned just-inside/just-outside. The untested gap is the interior of the accepted range, where the \"accepted exactly as sent\" rule runs. A mid-range probe ($250, cents-free midpoint) checks that the tool returns the amount unaltered rather than silently modifying pass-through values. If this returns $250, I can abstain with strong coverage; if it deviates, that's a catch."
+   },
+   "api_message_id": "msg_011Cd7XDCpvrVkr4bZ5Tpbyy",
+   "prompt_sha256": "7018acf9f8ddc3900eac5c3770545f7c93958affc5f4d35c2093477ed1b4f05a",
+   "prompt_chars": 1479
+  },
+  {
+   "file": "agent-a6f90335fc2f5e8c0.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     0,
+     30,
+     29.99,
+     0.01,
+     200,
+     15,
+     100
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise has three regimes plus a named special case: (1) exactly $0 → $0 (explicitly carved out, separate from the general fee rule); (2) amounts 'under $30' (i.e. (0,30)) → +$5 fee; (3) 'all other amounts' i.e. [30,200] → unchanged. Valid range is [0,200].\n\nOrdering by where a bug is most likely to hide and cheapest to catch first:\n1. $0 - tests the named special case in isolation; an implementation that just does 'if <30 add 5' without special-casing zero would wrongly return $5 here. Highest suspicion.\n2. $30 exactly - the critical threshold boundary; off-by-one (using <= instead of <) would wrongly add the fee here, or the reverse bug could fail to unchange it.\n3. $29.99 - just inside the fee zone, adjacent to the $30 boundary; confirms the fee applies right up to (but not at) 30.\n4. $0.01 - just above the $0 special case and still deep in the fee zone; confirms the special case doesn't accidentally swallow nearby small amounts (e.g. an implementation using amount<=0 instead of ==0).\n5. $200 - the ceiling of the valid range; confirms unchanged behavior holds at the top edge and there's no off-by-one or clamping bug there.\n6. $15 - a generic interior point of the 'under 30' stretch, sanity-checking the +$5 rule away from edges.\n7. $100 - a generic interior point of the '>=30' stretch, sanity-checking 'unchanged' away from edges.\n\nTogether these hit the named exact threshold ($0), both sides of the $30 boundary, both edges of the valid range ($0 and $200), and one interior sample from each of the two rule-stretches — the full coverage needed to responsibly declare SOUND if nothing deviates."
+   },
+   "api_message_id": "msg_011Cd7XKa3JKfrhA1Cab8RBF",
+   "prompt_sha256": "fe07b06c4e875135f093f2dfb1a9765f5c879b0f96b3673b1ce1fc4e1812067b",
+   "prompt_chars": 1130
+  },
+  {
+   "file": "agent-a6fec8b1397263cc3.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "abstain",
+    "why": "All promise-critical points are covered and consistent: lower threshold ($10 accept / $9.99 reject), upper threshold ($500 accept / $501 reject), valid-range floor ($1 reject) and ceiling ($600 reject), and interior accept stretch with cents ($250.5 accept). Both edges of the accepted range are pinned on each side, both reject stretches have their endpoints tested, and cents handling is confirmed. No named threshold or boundary remains where a bug could hide, so SOUND is warranted."
+   },
+   "api_message_id": "msg_011Cd7XDzWncErNmHZMnJpzg",
+   "prompt_sha256": "1235677ed7f6da50b882b1d6011e4dc7b7839c4bf17c0191737f6eb1a09b4e0e",
+   "prompt_chars": 1614
+  },
+  {
+   "file": "agent-a72724c95fa8baa9e.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 1,
+    "why": "Testing the floor of the stated valid input range ($1-$600). Per the promise, $1 is a valid input but falls outside the accepted range ($10-$500), so should be rejected. This covers an explicitly-named threshold not yet probed."
+   },
+   "api_message_id": "msg_011Cd7XrfZJELe3XwPTnjqxj",
+   "prompt_sha256": "648f4ce25a29b660a8935ba5b7f6da7a82828b28af340b07dbd1281745375918",
+   "prompt_chars": 1411
+  },
+  {
+   "file": "agent-a7661b5a24a775d56.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "Test the upper edge of the accepted range. The promise requires amounts above $500 to be rejected. This is a critical threshold that could mask off-by-one bugs or boundary condition errors. After $10, $9.99, and $500 all behaving correctly, the gap just above $500 remains uncovered and is where implementation deviations are most likely to hide."
+   },
+   "api_message_id": "msg_011Cd7XqNcnwjFZEVUzhpXz7",
+   "prompt_sha256": "f50d83085531595c2ae6dbbb1c328517b67199507e408ac6028a3e1c26594f5f",
+   "prompt_chars": 1338
+  },
+  {
+   "file": "agent-a7688ff97ff0b7999.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "First probe should hit the most bug-prone spot: the stated threshold boundary. The promise says amounts UNDER $30 get the $5 fee, and \"all other amounts\" (i.e., >=$30) are unchanged. Probing exactly $30.00 tests whether the implementation correctly treats the boundary as exclusive of the fee (an off-by-one here — charging $35 instead of $30 at the threshold — is the single most common bug shape in this kind of rule). This is more informative as a first probe than $0 or $200, which are simpler edge cases to get right, or an arbitrary interior point which wouldn't distinguish sound from buggy threshold logic."
+   },
+   "api_message_id": "msg_011Cd7XSZEd8c9venngAuFcm",
+   "prompt_sha256": "58831d50238264354de1cfee8c8bc253ffbb3ceea9ace1dd1a4724c315cc4b86",
+   "prompt_chars": 1162
+  },
+  {
+   "file": "agent-a7c9c3f0be38eeaf5.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "Testing the upper boundary just outside the promised accepted range ($10–$500). The promise states amounts above $500 should reject. This is critical edge coverage required before declaring the implementation sound."
+   },
+   "api_message_id": "msg_011Cd7XrjC5b7qY6LWZkGWm5",
+   "prompt_sha256": "b5ae59ffa010249e5e6663ace49c49fbe3c7c57f2523f7d985f4e125fff6db7c",
+   "prompt_chars": 1338
+  },
+  {
+   "file": "agent-a7d8b433d8c3918b4.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Only the two exact-threshold endpoints ($10, $500) have been tested so far; the boundaries just outside the accepted range are unexamined, which is exactly where off-by-one bugs (e.g. using < instead of <=) typically hide. Probing $9.99 checks whether the tool correctly rejects an amount just below the $10 floor, since cents are allowed and this is the nearest possible value below the threshold."
+   },
+   "api_message_id": "msg_011Cd7XUAr2zUSyF5qU8xCeS",
+   "prompt_sha256": "9ca165c057f9aea96699455acc9bc57d232bf10b183e0636264620a9cb86d0d4",
+   "prompt_chars": 1267
+  },
+  {
+   "file": "agent-a7dddd46497549931.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "probe",
+    "amount": 20,
+    "why": "Transcript already pins both sides of the $30 threshold ($29.99->$34.99 with fee, $30->$30 without), the $0 special case, the floor just-inside ($0.01->$5.01), and the ceiling ($200). The only under-sampled region is the interior of the fee band; I have $0.01 and $10 and $29.99, but probing $20 confirms the fee is a flat $5 (expected $25) rather than proportional or triggered only below a lower cutoff. If it returns $25 I have full coverage and can declare SOUND next."
+   },
+   "api_message_id": "msg_011Cd7XEscawjiUjRYj7w6HD",
+   "prompt_sha256": "35496598829b279f35e468b1fde0e86b8aeab8f0070ec294180b4fb3b6ea6358",
+   "prompt_chars": 1574
+  },
+  {
+   "file": "agent-a7ea047606c76013b.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "First probe targets the upper edge of the accepted-exactly range ($500), a named threshold. If it returns 500 exactly, the top boundary holds; if it deviates or rejects, that's a catch. This anchors the most likely bug location before testing the just-outside edge and the valid-range ceiling."
+   },
+   "api_message_id": "msg_011Cd7X92xVb5LjfjhEKVUCW",
+   "prompt_sha256": "890f84ea84d8f74bd2b5ded8ff252bbfffcdb0fb816a39182b1e29670c010316",
+   "prompt_chars": 1175
+  },
+  {
+   "file": "agent-a7ea71a2abca1745f.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "The promise carves out $0 as a named special case (\"owes nothing\") distinct from the general under-$30 fee rule. This is exactly the kind of explicit threshold/special-case the promise calls out, so it's a high-value spot to check for a bug (e.g., implementation might incorrectly apply the $5 fee to $0 since $0 < $30, rather than special-casing it to remain $0). Only 1 of 25 probes used so far, and it tested the boundary at exactly $30 from above; testing $0 now covers a distinct, explicitly-named edge case before moving to the under-$30 interior, the just-under-$30 boundary, and the $200 ceiling."
+   },
+   "api_message_id": "msg_011Cd7XTN3hcbkrKKosUhgWV",
+   "prompt_sha256": "1a5be551f75212017b352927b6beef15fabea2cbd6813d1d12ea93127ce4e221",
+   "prompt_chars": 1190
+  },
+  {
+   "file": "agent-a7ffc1ae5bd7a84ab.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 0.01,
+    "why": "Covered so far: $0 (special-case zero), $29.99 (fee applied just under threshold), $30 (unchanged at threshold). The untested seam is between the $0 special case and the under-$30 fee rule — a bug could let $0's \"owes nothing\" leak into tiny amounts, or fail to apply the $5 fee just above zero. $0.01 is the tightest edge probing that seam: expected $5.01. Ceiling ($200) and mid-band remain, but this boundary is highest-value next."
+   },
+   "api_message_id": "msg_011Cd7XBW5hSyM46JfrLiE36",
+   "prompt_sha256": "c0c91350f3961e5e59827ac3c2d0ff96606ade28597bc71fccdacffce68c748b",
+   "prompt_chars": 1318
+  },
+  {
+   "file": "agent-a89c84184a4cf9fcd.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     0,
+     30,
+     29.99,
+     30.01,
+     0.01,
+     200
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise has three rule zones plus a named special case:\n1. Exact $0 → special-cased to 0 (override of the general \"under 30\" rule, since 0 < 30 too).\n2. (0, 30) → +$5 fee.\n3. [30, 200] → unchanged.\n\nMost likely bug locations, in order of suspicion:\n- $0 exact: a naive implementation might just check `amount < 30 → +5` without special-casing zero, wrongly returning 5 instead of 0. This is the highest-value catch since it's a named exact amount most likely to be forgotten.\n- $30.00 exact: classic off-by-one on the \"under 30\" boundary — could be implemented as `<=30` (wrongly adding fee) instead of `<30`.\n- $29.99: just inside the fee zone, confirms fee is applied correctly just below threshold (paired with the $30 test to bracket the boundary).\n- $30.01: just inside the unchanged zone, confirms no fee just above threshold.\n- $0.01: smallest nonzero amount, confirms fee zone's floor behaves (distinguishes from the $0 special case handling).\n- $200: ceiling of valid range, confirms unchanged rule holds at the top edge.\n\nThis set covers the named special value (0), both sides of the only stated threshold (30), and both ends of the valid range (0 and 200), plus one interior fee-zone check. If all six pass, I'm confident the sparse rule structure (three flat zones with hard edges) has no remaining place to hide a deviation, so declaring SOUND is justified."
+   },
+   "api_message_id": "msg_011Cd7XKbweV22qoMWN9PXPb",
+   "prompt_sha256": "fe07b06c4e875135f093f2dfb1a9765f5c879b0f96b3673b1ce1fc4e1812067b",
+   "prompt_chars": 1130
+  },
+  {
+   "file": "agent-a8b7e145bcccea910.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "abstain",
+    "why": "Coverage is comprehensive across every location a bug could hide: the named special case $0 (probe #2, exact-zero exemption confirmed distinct from the general under-$30 rule), the floor's immediate neighbor $0.01 (probe #5, confirms the +$5 fee applies right at the bottom), the fee-threshold boundary from both sides ($29.99 fee applied, $30 no fee, $30.01 no fee — probes #3, #1, #6, pinning the '<$30' cutoff exactly), and the range ceiling $200 (probe #4, confirms unchanged at the top of the valid range with no off-by-one fee leakage). Two independent points in the fee stretch (0.01->5.01 and 29.99->34.99) both show a flat +$5, ruling out a percentage-based or miscalculated fee. Every stretch named in the promise (zero special-case, under-$30 fee zone, $30-$200 unchanged zone) and every boundary (floor, threshold from both sides, ceiling) has been probed with matching results, so declaring SOUND here is backed by genuine coverage rather than a lucky small sample."
+   },
+   "api_message_id": "msg_011Cd7XYtccie6b2CSuibqKW",
+   "prompt_sha256": "6cee17cbce2ab73a4cec4f92109fad6335f378830d7beed269884f3a66155138",
+   "prompt_chars": 1516
+  },
+  {
+   "file": "agent-a8cb43fd1045c4fb8.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     10,
+     9.99,
+     500,
+     500.01,
+     1,
+     600,
+     499.99,
+     100
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise has two nested ranges: the valid-input domain [$1, $600] and, inside it, the accepted-and-echoed domain [$10, $500]; everything in [$1,$600] outside [$10,$500] must be rejected. Bugs most often hide at boundary comparisons (< vs <=) and at the edges of the outer domain, so I probe in that order of suspicion:\n\n1. 10.00 — exact lower accepted threshold; must be charged as 10.00 (catches off-by-one making it rejected).\n2. 9.99 — just below the lower threshold; must be rejected (catches an inclusive-below bug that accepts it).\n3. 500.00 — exact upper accepted threshold; must be charged as 500.00 (catches off-by-one making it rejected).\n4. 500.01 — just above the upper threshold, with cents; must be rejected (catches an inclusive-above bug, and confirms cents are parsed for comparison not just display).\n5. 1.00 — floor of the valid-input domain; outside the accepted range, so must be rejected (catches a bug that treats 'valid input' as synonymous with 'accepted').\n6. 600.00 — ceiling of the valid-input domain; must be rejected (same class of bug at the other end).\n7. 499.99 — just inside the upper edge; must be echoed exactly as 499.99 (catches cent-rounding or truncation errors near the boundary).\n8. 100.00 — arbitrary mid-range value in the single 'accept-and-echo' stretch; must be echoed exactly (sanity check that the whole interior isn't subtly rescaled, rounded, or fee-adjusted).\n\nThis set covers both named thresholds (10, 500), the immediate outside edges (9.99, 500.01), the true floor/ceiling of valid input (1.00, 600.00), a near-boundary interior point (499.99), and a generic interior point (100.00) — the full set of places a deviation could plausibly hide. If all 8 come back as promised, I'll declare the tool SOUND."
+   },
+   "api_message_id": "msg_011Cd7XQnYm5HVF8WX9z1tw9",
+   "prompt_sha256": "ec40c094937bd4305685191d5d5ab1a898172e8ed3bf2ec359cb9db995e2d8a3",
+   "prompt_chars": 1143
+  },
+  {
+   "file": "agent-a8ce5ef511464136f.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "probe",
+    "amount": 123.45,
+    "why": "Thresholds are well covered (9.99/10 and 500/500.01 bracket both edges, 600 ceiling, 250 mid, 5 deep reject), but every accepted probe was a whole dollar. The promise's 'exactly as sent, cents allowed' claim for interior accepted amounts is untested; a rounding/truncation bug on cents would hide here. $123.45 should return exactly $123.45."
+   },
+   "api_message_id": "msg_011Cd7XEoGeS3X67PWHViqyq",
+   "prompt_sha256": "3ca777c2f19ba5213ce1b0d1e018d98adf27cf338bc42c62ebf9ee32f3a40f03",
+   "prompt_chars": 1613
+  },
+  {
+   "file": "agent-a8dda2af225447e00.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "abstain",
+    "why": "All zones the promise implies have been sampled with edge-focused probes: floor of valid domain ($1, rejected), just below the accepted range ($9.99, rejected), the accepted-range floor threshold exactly ($10, accepted), a mid-range value with cents ($250.55, accepted exactly), the accepted-range ceiling threshold exactly ($500, accepted), just above the accepted range ($500.01, rejected), the ceiling of the valid domain ($600, rejected), and just beyond the domain ($600.01, correctly errors as out-of-domain). Every named threshold, both edges of the accepted band, both ends of the overall valid range, and each distinct rule-stretch (below-band reject, in-band accept-exact-with-cents, above-band-but-in-domain reject, out-of-domain error) returned results matching the promise with no deviation. Further probes would just be re-sampling already-covered stretches, which burns budget without adding coverage."
+   },
+   "api_message_id": "msg_011Cd7XcPwJqKfENyMo2Q9Gs",
+   "prompt_sha256": "bb4e149b5979054e47de0b3ae5cb32b5f51514389e0c8ad72e2e775cae450d7b",
+   "prompt_chars": 1671
+  },
+  {
+   "file": "agent-a8e885d52286546c8.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 600,
+    "why": "Thresholds at $10 and $500 are already well-bracketed (exact value + just-outside on both sides). Still uncovered: the floor ($1) and ceiling ($600) of the stated valid-input range, which is a separate boundary from the accepted-amount range and a classic place for an off-by-one or mis-scoped rejection rule (e.g., treating $600 as accepted, or handling it inconsistently vs $500.01). Probing $600 checks the ceiling edge before I'd consider declaring sound."
+   },
+   "api_message_id": "msg_011Cd7XX1gDEBmbGD5pWkFXL",
+   "prompt_sha256": "30e5fc07627d209e9a91fbb486439bfd8bf72b05bce0268425e41ccdf866c9aa",
+   "prompt_chars": 1481
+  },
+  {
+   "file": "agent-a9516d7f6edadb709.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "Coverage so far only confirms the lower edge ($10 accepted, $9.99 rejected) and the accepted-range ceiling itself ($500 accepted). The symmetric edge — just above the upper threshold — is untested, and that's exactly where an off-by-one or wrong-comparison-operator bug (e.g. using <= 500.01 or rounding cents) would hide. Probing $500.01 checks whether the upper boundary is enforced as strictly as the lower one before I can consider the range edges covered."
+   },
+   "api_message_id": "msg_011Cd7XV2P5JxCeTBz3bCNZR",
+   "prompt_sha256": "726037fa449bac85321e361798b208fe65068b31ea8b7cd8c1fd7329c813e142",
+   "prompt_chars": 1338
+  },
+  {
+   "file": "agent-a95a6d968d03b7e1d.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 501,
+    "why": "Testing just above the stated accepted ceiling ($500). $501 is a valid input (valid range goes to $600) but sits outside the accepted range $10–$500, so the promise requires 'rejected'. This is a prime spot for an off-by-one/boundary bug where the tool might accept $501 or mishandle the just-outside edge. The lower edge ($10 accepted, $9.99 rejected) is already well-covered by probes #2 and #3; the upper edge is the untested high-value boundary."
+   },
+   "api_message_id": "msg_011Cd7XAqNHgsciiCPM6pkoy",
+   "prompt_sha256": "726037fa449bac85321e361798b208fe65068b31ea8b7cd8c1fd7329c813e142",
+   "prompt_chars": 1338
+  },
+  {
+   "file": "agent-a96d8c1b3d4434558.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "why": "First probe targets the exact threshold $30 named by the promise — the boundary between \"under $30 add $5\" and \"all other amounts unchanged.\" At $30 the promise says output should be exactly $30 (no fee, since 30 is not under 30). Off-by-one bugs (using <= instead of <) commonly hide right at a named threshold, so this single point discriminates the most likely deviation before spending probes elsewhere.",
+    "action": "probe",
+    "amount": 30
+   },
+   "api_message_id": "msg_011Cd7X95KdBmhZJ4jDbAjsx",
+   "prompt_sha256": "58831d50238264354de1cfee8c8bc253ffbb3ceea9ace1dd1a4724c315cc4b86",
+   "prompt_chars": 1162
+  },
+  {
+   "file": "agent-a974928730e4992aa.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "The critical untested boundary is the fee threshold. The promise says amounts UNDER $30 add a $5 fee; all others are unchanged. Probe #2 confirmed $29.99 gets the fee (just under). The exact threshold $30 is where an off-by-one/boundary bug most likely hides: a correct implementation returns $30 unchanged, but a buggy \"amount <= 30\" would return $35. This single probe tests the named threshold from the other side. Other coverage still needed later: ceiling $200, just-over boundary, but $30 is the highest-value catch location given the transcript already covers $0 (floor/special) and $29.99 (just under)."
+   },
+   "api_message_id": "msg_011Cd7XAyzhfySwpfNGcob5S",
+   "prompt_sha256": "d01ed3a02757c56b79e4c3411ce264bc63d05511d82a8009003348d90c4fc362",
+   "prompt_chars": 1256
+  },
+  {
+   "file": "agent-a9751e44af386ae56.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "The $0 boundary is now confirmed. The next highest-value spot is the stated $30 threshold itself: the promise says amounts UNDER $30 get the fee, so $30.00 exactly should be charged unchanged (no fee). This is a classic off-by-one location (a buggy implementation might use <= instead of < and wrongly add the $5 fee at exactly $30). I still have 24 probes left to cover the $29.99 just-under-threshold case, the $200 ceiling, and a mid-range unchanged amount, so I have plenty of budget to reach full coverage before considering abstain."
+   },
+   "api_message_id": "msg_011Cd7XTLpHUVXcEyuXUTqAm",
+   "prompt_sha256": "01778054f0bf9fcf672a24be169f123fa33627f5ea568cae49443945f79520a6",
+   "prompt_chars": 1188
+  },
+  {
+   "file": "agent-a9e8673cf43a1f268.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "Boundaries at the floor (10, 9.99) and lower valid limit (1) are covered, and the accepted-range lower/upper anchors (10, 500) are covered, but the upper edge just outside the accepted range (500.01) hasn't been probed yet — that's exactly where an off-by-one or >= vs > bug would hide. Need to test that before declaring sound; still have plenty of probes left (4 of 25 used) so probing is cheap here."
+   },
+   "api_message_id": "msg_011Cd7XWua78xXcA27ohtZFB",
+   "prompt_sha256": "17fad66cdf77eb1d4f901cbb9ff93b508002336021206dacb996db10860c97fc",
+   "prompt_chars": 1406
+  },
+  {
+   "file": "agent-a9ec37d16d22538e5.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 100,
+    "why": "The unchanged band $30–$200 is verified only at its endpoints ($30 and $200). A bug could hide in the interior where the single \"unchanged\" rule applies. Probing $100 (mid-band) tests that stretch; the fee region is already covered at both edges ($0.01 and $29.99), and floor/ceiling/threshold are confirmed."
+   },
+   "api_message_id": "msg_011Cd7XD1zp6DtQ4gCD5QLsA",
+   "prompt_sha256": "b99335a887d973526e5d6f04d22f1ec7bf067d7df40876dd844dbbb0e2bf520f",
+   "prompt_chars": 1448
+  },
+  {
+   "file": "agent-aa231dee7809453cb.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 0.01,
+    "why": "The gap between the $0 special-case and the fee range is untested. $0→$0 is a carve-out; a plausible bug treats a small band near zero as $0, or fails to apply the $5 fee just above the floor. $0.01 should return $5.01 under the promise; probing the bottom edge of the fee stretch, adjacent to the special value, targets where a bug most likely hides."
+   },
+   "api_message_id": "msg_011Cd7XDK9gcGPU1ztJy9kdW",
+   "prompt_sha256": "49ad1a314caa43a012fea579f20d399e78220e4df4a45de01dae2fb63219ca72",
+   "prompt_chars": 1444
+  },
+  {
+   "file": "agent-aa27226ebe21642c4.jsonl",
+   "model": "<synthetic>",
+   "status": "no-decision(error)",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": null,
+   "api_message_id": "0590ef88-09df-4251-b9de-070bfdc98d28",
+   "prompt_sha256": "e9379be2c166ff22e23a973f87e2cf5ae2657f2efd9d65aad80f567235918a00",
+   "prompt_chars": 1312
+  },
+  {
+   "file": "agent-aa4c1854909d2be8a.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 1,
+    "why": "The promise deliberately draws two different ranges: an \"accepted exactly\" window ($10-$500) nested inside a broader \"valid inputs\" window ($1-$600). That double-range structure is the classic spot for a range-confusion bug — e.g., the implementation might accept anything in the $1-$600 valid range instead of restricting acceptance to $10-$500. Testing $1 (the floor of the valid range, but well outside the accepted range) directly probes for that: the promise says this should come back 'rejected', but a range-confusion bug would charge $1 exactly. This is a high-value first branch point before I spend more probes on the individual edges ($9.99/$10/$500/$500.01/$600/cents) that a coverage-complete sweep would still need."
+   },
+   "api_message_id": "msg_011Cd7XTBUxUiJfyLwAsSToP",
+   "prompt_sha256": "5164a63afafb67550d0598847e5778fdd2821094483e62523503763f0dd246e2",
+   "prompt_chars": 1203
+  },
+  {
+   "file": "agent-aa74ed929d0751565.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Only one probe has been used so far, testing the upper accepted-range threshold ($500), which matched. Coverage is far from complete: the promise names an exact accepted range ($10-$500) nested inside a broader valid range ($1-$600). I still need to check the lower threshold ($10), both just-inside/just-outside edges of $10 and $500, and the floor/ceiling of the valid range ($1, $600). Abstaining now would be premature — declaring SOUND without that coverage scores zero. Probing $10 next tests the other named exact threshold, mirroring the $500 check and likely to reveal an off-by-one/boundary bug (e.g., > vs >=) if one exists."
+   },
+   "api_message_id": "msg_011Cd7XTHNAnCvZvqVumxA1j",
+   "prompt_sha256": "05ece658efd8598b03702ad5194d0b32b01d91522bc9a0d78e410b1533895f8e",
+   "prompt_chars": 1205
+  },
+  {
+   "file": "agent-aad4a569457ba476c.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Testing the lower boundary of the \"accepted exactly as sent\" range ($10-$500). This is one of the exact thresholds the promise names and must be verified for full coverage. Expecting output: $10 (charged exactly as sent)."
+   },
+   "api_message_id": "msg_011Cd7XnMYyBS7yRnJ8yQDcg",
+   "prompt_sha256": "890f84ea84d8f74bd2b5ded8ff252bbfffcdb0fb816a39182b1e29670c010316",
+   "prompt_chars": 1175
+  },
+  {
+   "file": "agent-aafffb6c72d761034.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Testing the exact lower threshold of the promised accepted range ($10). $9.99 just below was correctly rejected; now checking the just-inside edge to confirm $10 is accepted exactly as sent, per the promise."
+   },
+   "api_message_id": "msg_011Cd7X9jJPMeEiTvqh4BLwv",
+   "prompt_sha256": "291a29bd4fd5b124c86bbee40a7ec554bf3ceca1f2acf1cc862e1803f8676a2a",
+   "prompt_chars": 1212
+  },
+  {
+   "file": "agent-ab044bf031ec4423e.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Only the lower accepted edge ($10) is covered so far. The upper accepted edge ($500) is the highest-value untested threshold named by the promise — a classic off-by-one boundary where an implementation might use > vs >= or reject/clamp at the top of the accepted band. Testing it before abstaining is essential for coverage."
+   },
+   "api_message_id": "msg_011Cd7X9VFnfBdqWA5qwhuhF",
+   "prompt_sha256": "5164a63afafb67550d0598847e5778fdd2821094483e62523503763f0dd246e2",
+   "prompt_chars": 1203
+  },
+  {
+   "file": "agent-ab3a0d815df005e63.jsonl",
+   "model": "<synthetic>",
+   "status": "no-decision(error)",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": null,
+   "api_message_id": "9786ccdf-46ab-47f9-be00-c125baed0710",
+   "prompt_sha256": "648f4ce25a29b660a8935ba5b7f6da7a82828b28af340b07dbd1281745375918",
+   "prompt_chars": 1411
+  },
+  {
+   "file": "agent-ab7f24258e375bee7.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Starting at the upper edge of the promised accepted range ($10-$500). This boundary is a classic off-by-one spot (e.g., using < instead of <= 500), so testing whether exactly $500.00 is accepted as charged $500.00 gives high-value information for one probe. I'll follow up with $500.01 (just outside), $9.99/$10.00 (lower edge), and the $1/$600 valid-input floor/ceiling to build full coverage before considering SOUND."
+   },
+   "api_message_id": "msg_011Cd7XSXUhtXJPuk4vx4EXb",
+   "prompt_sha256": "890f84ea84d8f74bd2b5ded8ff252bbfffcdb0fb816a39182b1e29670c010316",
+   "prompt_chars": 1175
+  },
+  {
+   "file": "agent-ab916e32ecfafc6a3.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Test the lower boundary of the accepted range. The promise states $10–$500 are accepted. $10 is the exact threshold and must be accepted/charged as $10.00."
+   },
+   "api_message_id": "msg_011Cd7XnKSibKEjzy6Un9gkq",
+   "prompt_sha256": "890f84ea84d8f74bd2b5ded8ff252bbfffcdb0fb816a39182b1e29670c010316",
+   "prompt_chars": 1175
+  },
+  {
+   "file": "agent-aba4fdb9cf6b7427f.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "The promise carves out an explicit exception at exactly $0 (\"owes nothing\") that overrides the general \"under $30 adds $5 fee\" rule. That's the classic spot for an implementer to forget the special case and let the generic under-$30 branch fire, charging $5 instead of $0. It's a zero-cost, high-information first probe: cheap to test, and either confirms a bug immediately or rules out the most tempting exception-handling mistake before I spend probes on the $30 threshold, the $200 ceiling, or interior amounts."
+   },
+   "api_message_id": "msg_011Cd7XSaP5j5wY8HVhFpXvo",
+   "prompt_sha256": "58831d50238264354de1cfee8c8bc253ffbb3ceea9ace1dd1a4724c315cc4b86",
+   "prompt_chars": 1162
+  },
+  {
+   "file": "agent-aba6502fb2c1ba703.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 0.01,
+    "why": "The $30 threshold is well-covered (30→30, 29.99→34.99), and the floor/ceiling of the valid range ($0, $200) are confirmed. The uncovered stretch is the interior of the fee region just above the $0 special case. $0.01 is the smallest positive input: it should return $5.01 (under $30, so +$5 fee). This is a prime spot for a bug where the special $0 handling bleeds into small positive amounts, or where the fee is gated by an incorrect lower bound. Testing it probes the just-above-zero edge that neither the threshold nor the floor probe covers."
+   },
+   "api_message_id": "msg_011Cd7XCD3o3Dwuid7gvToCF",
+   "prompt_sha256": "71c94339d42a4ed8265614071d0faa5e38c1b2679a123bb1f1e27f8987e87edb",
+   "prompt_chars": 1382
+  },
+  {
+   "file": "agent-abcac7ca35ed91b3e.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 250.5,
+    "why": "Both accepted-range edges are already pinned on both sides ($10/$9.99 and $500/$501). What remains untested is the broad interior stretch where the single \"accepted exactly as sent\" rule applies — a rounding, capping, or fee bug would only surface on a mid-range amount with cents, not on the boundaries. Probing $250.50 covers that stretch and tests cents handling in one shot."
+   },
+   "api_message_id": "msg_011Cd7XBV3CRaYMBqqrZqxL7",
+   "prompt_sha256": "0b9f97fe423eb1ec14e5218da5368b64470967e55539ddccc2a849cbf53db9c5",
+   "prompt_chars": 1408
+  },
+  {
+   "file": "agent-ac025889d2860d3bc.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "I've confirmed the lower accept edge ($10), lower reject edge ($9.99), and the $500 accept point — but never tested above $500. The promise says >$500 must reject, yet valid inputs run to $600, so a bug that keeps charging past $500 would be invisible so far. Probing $500.01 tests the upper rejection edge just outside the accepted range — the highest-value untested threshold."
+   },
+   "api_message_id": "msg_011Cd7XAqgPZ5hHXzmzHm4EE",
+   "prompt_sha256": "b5ae59ffa010249e5e6663ace49c49fbe3c7c57f2523f7d985f4e125fff6db7c",
+   "prompt_chars": 1338
+  },
+  {
+   "file": "agent-ac04663405dc7d675.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "Only $0 has been tested so far. The most information-dense next probe is the named threshold itself: exactly $30, the boundary between \"under $30 adds $5 fee\" and \"all other amounts unchanged.\" This tests whether the implementation correctly treats $30 as NOT under $30 (expect $30 unchanged, no fee) versus an off-by-one bug that still charges a fee at the boundary. Still need to cover: just under $30 (e.g. $29.99), just above $0, ceiling $200, and a mid-range unchanged value — but this boundary is the single highest-value spot to check first."
+   },
+   "api_message_id": "msg_011Cd7XTKtDz1R2S3V1ibZTH",
+   "prompt_sha256": "01778054f0bf9fcf672a24be169f123fa33627f5ea568cae49443945f79520a6",
+   "prompt_chars": 1188
+  },
+  {
+   "file": "agent-ac11fda9b3417cb26.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "Need to test the fee-threshold boundary just below $30, where the promise says a $5 fee applies (expected $34.99). So far only $30 (no fee, matches) and $0 (no fee, matches) have been tested — the untested edges are: just under $30, just above $0 (small amounts should still get the fee, unlike the special-cased $0), and the $200 ceiling. Probing $29.99 covers the most critical untested threshold first since fee-boundary bugs are the classic hiding spot (e.g., using <= instead of < or an off-by-cent error)."
+   },
+   "api_message_id": "msg_011Cd7XU9b8M9V4TNkscFiw8",
+   "prompt_sha256": "80ab5ac53d072479096954a9894e211b62daf72b78452c388f457b1bd24e36c4",
+   "prompt_chars": 1250
+  },
+  {
+   "file": "agent-ac24b86264d3d5fcb.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "Coverage so far confirms both named thresholds from inside ($10, $500) and just-outside-low ($9.99), but the symmetric just-outside-high edge of the accepted range hasn't been tested. Off-by-one bugs are just as likely to hide at 500.01 (should be rejected) as at 9.99 was. Probing there before declaring SOUND closes the last high-value gap; floor ($1) and ceiling ($600) of the valid range can follow if budget allows, but the accepted-range upper edge is the highest-priority untested boundary right now."
+   },
+   "api_message_id": "msg_011Cd7XVBD8yRwcE83dZJ8MB",
+   "prompt_sha256": "b5ae59ffa010249e5e6663ace49c49fbe3c7c57f2523f7d985f4e125fff6db7c",
+   "prompt_chars": 1338
+  },
+  {
+   "file": "agent-ac55cc618ce901796.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "$0 already matches. The critical structural boundary is the $30 threshold: amounts under $30 get a +$5 fee, $30 and above are unchanged. $29.99 is just under the threshold and should return $34.99 — this tests the fee rule and the exact cutoff location in one shot, the most likely place for an off-by-one/boundary bug to hide."
+   },
+   "api_message_id": "msg_011Cd7XAHjGiL1uQqpSuPjK5",
+   "prompt_sha256": "01778054f0bf9fcf672a24be169f123fa33627f5ea568cae49443945f79520a6",
+   "prompt_chars": 1188
+  },
+  {
+   "file": "agent-ac5b588af20d1585c.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Both accepted-range edges ($10, $500) matched. The highest-value untested spot is just outside a named threshold. $9.99 sits just below the $10 floor and must be rejected; if it charges, that's an off-by-one boundary bug caught early."
+   },
+   "api_message_id": "msg_011Cd7XA58EtGMADGQu6WoLq",
+   "prompt_sha256": "9ca165c057f9aea96699455acc9bc57d232bf10b183e0636264620a9cb86d0d4",
+   "prompt_chars": 1267
+  },
+  {
+   "file": "agent-ac5d2912bdefcf726.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Probes so far only hit exact boundary values ($10, $500) and the floor ($1), all of which passed. The classic off-by-one bug hides just outside a stated boundary: $9.99 is one cent below the accepted floor and, per the promise, must be rejected. Testing it checks whether the implementation uses a strict/inclusive comparison correctly at the lower edge (e.g., a bug using > instead of >= could wrongly accept $9.99). This is essential coverage before I could credibly declare SOUND — I still also need $500.01 (upper edge just outside), $600 (ceiling of valid range), and ideally something just outside the valid range entirely, so I'm not abstaining yet, just probing the highest-value untested edge first."
+   },
+   "api_message_id": "msg_011Cd7XVsmgF7NdUKLQpD95d",
+   "prompt_sha256": "81f7ac0e6f46ffc8b9f8c6d3fb51b932168388e932ce59b559ccdb3211801eec",
+   "prompt_chars": 1335
+  },
+  {
+   "file": "agent-ac6622cfbb76403ae.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "The $0 special case is the highest-value untested spot: the promise says $0 owes nothing, yet $0 is also \"under $30\" where a $5 fee applies. A naive implementation would return $5 for $0 instead of $0. Probes #1 ($30, boundary of no-fee) and #2 ($29.99, fee applies just under threshold) already confirmed the under-$30 rule and the $30 boundary. Testing $0 targets the carve-out exception where a bug most plausibly hides before I spend probes on the range edges ($200, >$200) and a mid-small amount."
+   },
+   "api_message_id": "msg_011Cd7XAAvVyZ1ckraK4oh6s",
+   "prompt_sha256": "2c2579153ad2598769af6479963cb290e35ae82a828edc4c0f5bb2b0f3f6ad1f",
+   "prompt_chars": 1258
+  },
+  {
+   "file": "agent-acbb68cbfaae2ee8d.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 600,
+    "why": "The valid-range ceiling ($600) is untested. Accepted-range edges are covered ($10/$9.99 at the floor, $500/$501 at the ceiling) and midrange with cents ($250.5). But $600 sits in the 'valid input but above accepted range' stretch AND is the exact valid ceiling the promise names — a classic spot for an off-by-one that accepts high amounts or mishandles the valid/accepted boundary. Probing it tests both the named ceiling and the upper reject stretch in one shot."
+   },
+   "api_message_id": "msg_011Cd7XCKmcbbDHZXN3u2SCe",
+   "prompt_sha256": "b8386fe933c3c7ea748cb2be0c78354abc434b113a4b8e3e5273116b8d0f221a",
+   "prompt_chars": 1476
+  },
+  {
+   "file": "agent-acc0ca80097662d82.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 30.01,
+    "why": "Threshold and range edges are well-covered (0, 0.01, 29.99, 30, 100, 200), but the region just ABOVE the $30 cutoff is untested. $30.01 should return $30.01 unchanged; a bug using <= 30 instead of < 30, or a fee applied to the wrong side, would surface here as $35.01. This is the highest-value remaining probe before I could declare SOUND."
+   },
+   "api_message_id": "msg_011Cd7XDawx4KXTDxkvdCzMt",
+   "prompt_sha256": "c67e0762a3ea26034284c39799d49607cd5a462489213ac3c018babae15d733c",
+   "prompt_chars": 1512
+  },
+  {
+   "file": "agent-acd63952e4d333a6b.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Test the upper accept threshold. This is a named boundary in the promise; if it fails to accept at exactly $500, the tool has a bug. If it succeeds, I move to testing $500.01 to verify the rejection boundary."
+   },
+   "api_message_id": "msg_011Cd7XoXCRSpN15p1T6vQSQ",
+   "prompt_sha256": "5164a63afafb67550d0598847e5778fdd2821094483e62523503763f0dd246e2",
+   "prompt_chars": 1203
+  },
+  {
+   "file": "agent-ace0fb30fdb6ef302.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     0,
+     29.99,
+     30,
+     0.01,
+     200
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise carves the domain into: a $0 special case (output 0), an \"under $30\" band that adds $5 (0.01–29.99), and everything else unchanged (30–200), with valid range floor 0 and ceiling 200. Bugs hide at boundaries and special cases, so I ordered probes by suspicion. (1) $0 first: it's the special exception that overrides the \"under $30 adds $5\" rule — the likeliest collision (buggy impl outputs $5 instead of $0). (2) $29.99: just inside the under-$30 band, expected 34.99; catches a threshold off-by-one that would leave it unchanged. (3) $30: exactly the named threshold, expected 30 unchanged; catches a `<=30` vs `<30` error that would wrongly add $5. (4) $0.01: smallest nonzero, expected 5.01; verifies the $0-vs-under-$30 split from the other side. (5) $200: ceiling of the valid range, expected 200 unchanged. These cover the special amount, both sides of the $30 threshold, the low edge of the fee band, and the range ceiling. The floor $0 is covered by probe 1. Every distinct rule-stretch and named boundary is hit, so if none deviates, declaring SOUND is justified."
+   },
+   "api_message_id": "msg_011Cd7X7iEqEF27xWnVxhAGP",
+   "prompt_sha256": "fe07b06c4e875135f093f2dfb1a9765f5c879b0f96b3673b1ce1fc4e1812067b",
+   "prompt_chars": 1130
+  },
+  {
+   "file": "agent-ad285731d20312448.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "Test the special $0 case explicitly named in the promise (\"$0 owes nothing\"). This is a distinct rule from the fee logic and hasn't been verified yet. It's a high-value probe because the promise treats $0 as categorically different, and bugs in conditional branching often hide at the edges and special cases."
+   },
+   "api_message_id": "msg_011Cd7XpyZxbj6BFTniMDF1C",
+   "prompt_sha256": "2c2579153ad2598769af6479963cb290e35ae82a828edc4c0f5bb2b0f3f6ad1f",
+   "prompt_chars": 1258
+  },
+  {
+   "file": "agent-ad9dfcdd4eb9b8f79.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "why": "Coverage is strong at the boundaries: floor $0, ceiling $200, threshold both sides ($29.99->+5, $30->unchanged), and multiple under-$30 fee samples. The untested stretch is the interior of the unchanged region strictly between $30 and $200 — every point tested there is an endpoint. Probing $100 checks whether the identity rule truly holds mid-band (no stray fee or scaling) before declaring SOUND.",
+    "action": "probe",
+    "amount": 100
+   },
+   "api_message_id": "msg_011Cd7XE8XFQDMbKs2MCKCcx",
+   "prompt_sha256": "6df8be53aa528f7e3bb9ee9b5cb736472351bbf0c1a258a1db84e8ed4d61b830",
+   "prompt_chars": 1510
+  },
+  {
+   "file": "agent-adb0365220cb9d695.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Test the upper acceptance threshold ($500). The promise states $10–$500 are accepted exactly. This is a critical named boundary not yet covered. If the tool rejects $500 or accepts $500.01 in later probes, that would be a bug. This probe directly tests whether the tool correctly implements the upper edge of the acceptance range."
+   },
+   "api_message_id": "msg_011Cd7XpPxP1JYSdCaEgW2vn",
+   "prompt_sha256": "f0b89c8b48f95fa22f0e690970312b6b75a8df388abcde42936f8bd5585819b6",
+   "prompt_chars": 1274
+  },
+  {
+   "file": "agent-adcebcefb36cba826.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "probe",
+    "amount": 499.99,
+    "why": "Strong coverage exists: range edges (10, 500), just-outside (9.99, 500.01), valid floor (1) and ceiling (600), and a cents-bearing interior point (250.5). The main untested spot is just INSIDE the upper accepted boundary — an off-by-one/strict-vs-inclusive bug would let 500 pass but wrongly reject 499.99, or vice versa. Probing 499.99 tests the interior side of the $500 threshold before committing to SOUND."
+   },
+   "api_message_id": "msg_011Cd7XEfPdSJqv6coFF1cAu",
+   "prompt_sha256": "888870d5d90120d83518864a5ef0b817998a51330de254fe5918ea891704a717",
+   "prompt_chars": 1617
+  },
+  {
+   "file": "agent-add97f979e7f34525.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "abstain",
+    "why": "All promise-relevant edges are covered by the 5 probes. The $30 threshold is pinned from both sides: $29.99→$34.99 (just under, fee applied) and $30→$30 (exactly at threshold, unchanged) — this rules out both a missing fee and an off-by-one <= error. The $0 special case is confirmed ($0→$0), and it's distinguished from the fee rule by $0.01→$5.01 (just above zero, fee applies), proving the zero case isn't just \"amount+5\". The valid-range floor ($0) and ceiling ($200→$200, unchanged) are both hit. The two single-rule stretches (fee band below $30, identity band at/above $30) are each sampled interior and at their boundary. No untested region remains where a bug could hide, so declaring SOUND is justified."
+   },
+   "api_message_id": "msg_011Cd7XDSG52TBNuRYch1xCr",
+   "prompt_sha256": "63d041a3006bb62c792d3f154d76cf3fe2a08f55c4279178603832445a15de4a",
+   "prompt_chars": 1448
+  },
+  {
+   "file": "agent-add9a81762ddbfe17.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "abstain",
+    "why": "Coverage is thorough: exact $0 special case tested (interaction with the under-$30 rule confirmed — exception is truly only for exact zero, since $0.01 got the fee), both sides of the $30 threshold tested ($29.99 fee-applied, $30 unchanged), and both ends of the valid range tested (floor $0, ceiling $200, both unchanged as promised). The two single-rule stretches (under-$30 fee zone via $0.01 and $29.99; $30-$200 unchanged zone via $30 and $200) each have two consistent confirming samples, making a hidden alternate threshold within either stretch unlikely. All named special amounts and stated range edges are covered with passing results, so declaring SOUND is justified rather than spending more probes on low-marginal-value midpoints."
+   },
+   "api_message_id": "msg_011Cd7XY2ydBYg5uzxA3HE9z",
+   "prompt_sha256": "64805e2211fc6cf08e45e59a09aa1fb604207116a9102e02af90bb94447bee4b",
+   "prompt_chars": 1448
+  },
+  {
+   "file": "agent-ade01d88bc0e06b2b.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 500,
+    "why": "Test the upper acceptance boundary. This is a critical threshold where the promise must hold exactly. Off-by-one and boundary-comparison bugs most commonly appear at stated limit values. $500 is the promised upper edge of \"accepted exactly as sent\" — if the tool rejects it or modifies it, the promise is broken."
+   },
+   "api_message_id": "msg_011Cd7XpjbLB9pEEnVsUHRBy",
+   "prompt_sha256": "f0b89c8b48f95fa22f0e690970312b6b75a8df388abcde42936f8bd5585819b6",
+   "prompt_chars": 1274
+  },
+  {
+   "file": "agent-adec03f566d0ccea7.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "abstain",
+    "why": "Coverage of all bug-prone boundary locations is complete and every result matched the promise. Tested: the floor ($0 exact, the one named special case), floor+epsilon ($0.01, confirming the fee applies immediately above zero rather than $0 also getting the $5 fee), the threshold-minus-epsilon ($29.99, confirming the fee zone's upper edge), the threshold itself ($30, confirming it's correctly excluded from 'under $30' and thus unchanged), and the ceiling ($200, confirming the top of the valid range is unchanged). That covers the floor, the ceiling, the only named special amount, and both sides of the only stated threshold — the exact set of locations where this kind of promise typically hides a bug. All five probes matched exactly. Declaring SOUND rather than spending further probes on interior points of the uniform 'unchanged' zone, which carry much lower risk than the edges already tested."
+   },
+   "api_message_id": "msg_011Cd7XXRd7vBdc896CzoHRA",
+   "prompt_sha256": "64805e2211fc6cf08e45e59a09aa1fb604207116a9102e02af90bb94447bee4b",
+   "prompt_chars": 1448
+  },
+  {
+   "file": "agent-ae0cf0450f1a26ccf.jsonl",
+   "model": "<synthetic>",
+   "status": "no-decision(error)",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": null,
+   "api_message_id": "ce1bf938-2278-4cb7-a9a6-bed051c8ed5f",
+   "prompt_sha256": "a8b13f574e900fbe32acc3ab28b424d1607f09c38fbf532755efb106328b37a8",
+   "prompt_chars": 1384
+  },
+  {
+   "file": "agent-ae0e96bbec97fd28c.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "Testing the exact $30 boundary is critical. The promise states \"under $30\" gets a $5 fee and \"all other amounts\" (>= $30) are unchanged. This probe directly tests whether the implementation correctly handles this threshold with a comparison operator (should be >=, not >)."
+   },
+   "api_message_id": "msg_011Cd7XnHTuMfvqNfyGxnDzU",
+   "prompt_sha256": "58831d50238264354de1cfee8c8bc253ffbb3ceea9ace1dd1a4724c315cc4b86",
+   "prompt_chars": 1162
+  },
+  {
+   "file": "agent-ae1481d0e6244cb70.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 600,
+    "why": "Coverage so far hits the promise's named thresholds ($10, $500) and their immediate outside neighbors ($9.99, $500.01), plus the valid-range floor ($1, correctly rejected). But the valid-range ceiling ($600) — the other required edge per the scoring rules — hasn't been probed yet. A bug could plausibly widen acceptance toward the valid-input ceiling (e.g., mistakenly accepting up to $600 instead of $500), so this is a real place a deviation could hide. Probing $600 closes that gap before I'd have full coverage to declare SOUND."
+   },
+   "api_message_id": "msg_011Cd7XX2wcNDdSqFg8SQfhD",
+   "prompt_sha256": "1d9ab91cb8e81bf4fbb25a125cce609a048360df9c5db7d2a213dd0d6ce856ab",
+   "prompt_chars": 1479
+  },
+  {
+   "file": "agent-ae33fa2fb8c67fdd7.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 200,
+    "why": "Coverage so far hit the low-end threshold (0), the exact $30 boundary, and just-under-threshold ($29.99 with fee). Still untested: the ceiling of the valid range ($200) and the normal 30-200 'unchanged' stretch with a representative value. Probing $200 next checks the upper edge for off-by-one/clamping bugs before declaring sound."
+   },
+   "api_message_id": "msg_011Cd7XV1RXgkLGkcpsxmsy9",
+   "prompt_sha256": "42af311bfb3a4fc6f106072d7558051c9fea4c2a3d8ca38787a258616de5efd8",
+   "prompt_chars": 1318
+  },
+  {
+   "file": "agent-ae4bf4da0248c636e.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "why": "Only the upper accepted edge ($500) is confirmed. The lower accepted threshold ($10) is a prime spot for an off-by-one/boundary bug and is completely uncovered. Probing $10 tests whether the stated accepted floor is honored exactly.",
+    "action": "probe",
+    "amount": 10
+   },
+   "api_message_id": "msg_011Cd7X9aEgFG7m74GHUGETZ",
+   "prompt_sha256": "05ece658efd8598b03702ad5194d0b32b01d91522bc9a0d78e410b1533895f8e",
+   "prompt_chars": 1205
+  },
+  {
+   "file": "agent-ae62f30a2406110f1.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     30,
+     29.99,
+     0,
+     0.01,
+     200
+    ],
+    "reasoning": "These five probes test all critical boundaries and regions where bugs could hide. The $30 boundary (probes 30.00 and 29.99) is most suspect because off-by-one errors are extremely common there—a misplaced comparison operator (< vs ≤) would be caught immediately. The special $0 case is the second most likely place for a bug (easy to forget the explicit exception). Probes $0.01 and $29.99 verify the $5 fee applies throughout the entire under-$30 range. Finally, $200.00 tests the upper boundary of valid inputs. Together, these cover all thresholds named in the promise ($0, $30), boundary transitions where rules change, and the valid input range floor/ceiling. Cents are validated through $0.01 and $29.99 inputs.",
+    "thenAbstain": true
+   },
+   "api_message_id": "msg_011Cd7XeH4NLSHu4RcnAXRWV",
+   "prompt_sha256": "fe07b06c4e875135f093f2dfb1a9765f5c879b0f96b3673b1ce1fc4e1812067b",
+   "prompt_chars": 1130
+  },
+  {
+   "file": "agent-ae68d05692284d1ba.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 6,
+   "decision": {
+    "action": "probe",
+    "amount": 123.45,
+    "why": "All six probes so far tested only round-dollar boundary values ($10, $500, $9.99, $500.01, $1, $600). None have verified that cents are actually passed through exactly for a mid-range non-integer amount — a classic hidden bug is silently rounding/truncating cents or applying a fee even when accepting the amount. Probing $123.45 (well inside the $10-$500 accepted band, with cents) tests whether the tool truly charges 'exactly as sent' as promised, rather than just checking dollar-boundary logic. This closes the biggest uncovered gap before considering SOUND."
+   },
+   "api_message_id": "msg_011Cd7XYHm82PEmBbULdWApk",
+   "prompt_sha256": "909026aaee4dd4fed038d2f4326400580c930e9c21f2b77b6d291620f03a7c52",
+   "prompt_chars": 1549
+  },
+  {
+   "file": "agent-ae69643cb80131dd9.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     30,
+     29.99,
+     0,
+     0.01,
+     200
+    ],
+    "reasoning": "Testing the three distinct regions of the promise: the $30 boundary (most suspect for off-by-one errors), the special $0 case, and the fee application region. Probes ordered by likelihood of catching boundary bugs, with coverage of both regions where the rule applies ($0.01-$29.99 with fee, $30-$200 unchanged) and the special case ($0 itself).",
+    "thenAbstain": true
+   },
+   "api_message_id": "msg_011Cd7XeJTTaeFVzUWEwnPjm",
+   "prompt_sha256": "fe07b06c4e875135f093f2dfb1a9765f5c879b0f96b3673b1ce1fc4e1812067b",
+   "prompt_chars": 1130
+  },
+  {
+   "file": "agent-ae6c6e3029551a5d1.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 200,
+    "why": "Threshold ($30/$29.99) and the $0 special case are covered, but the ceiling of the valid range is untested. Probing $200 checks the upper boundary — it should return $200 unchanged (over $30, no fee). This covers the top edge of the range before I could responsibly abstain."
+   },
+   "api_message_id": "msg_011Cd7XBX1WpJTGhjKdwobXb",
+   "prompt_sha256": "12b0d31454394305eed74666d2b248cc452995eea8126f43c8b652d2eed43c8d",
+   "prompt_chars": 1318
+  },
+  {
+   "file": "agent-ae70be44b192303cb.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 8,
+   "decision": {
+    "action": "abstain",
+    "why": "All bug-hiding sites are covered and consistent with the promise. Accepted-band edges are pinned on both sides: $9.99 rejected vs $10 accepted (lower), $500 accepted vs $500.01 rejected (upper). Interior single-rule stretch verified with exact pass-through ($250, and $123.45 confirming cents are preserved). Out-of-band and domain ceiling confirmed ($5 and $600 rejected). No untested threshold or region remains, so declaring SOUND."
+   },
+   "api_message_id": "msg_011Cd7XHdNfWvujAVEzdoRgU",
+   "prompt_sha256": "9480669d305c0d656a6aef99556a154b780f7f682626c3c7828eda4fc6163ea0",
+   "prompt_chars": 1733
+  },
+  {
+   "file": "agent-aebc1d42def98a622.jsonl",
+   "model": "<synthetic>",
+   "status": "no-decision(error)",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": null,
+   "api_message_id": "6612deb8-25ce-4676-8f06-155d3f75fd20",
+   "prompt_sha256": "5f836ca26e0ebba8d02e15dd487a48396773e1d65bd1b7a21870cfbb5853425e",
+   "prompt_chars": 1382
+  },
+  {
+   "file": "agent-aee77da14df208df2.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 200,
+    "why": "Need to cover the ceiling of the valid range ($200, unchanged expected) before declaring sound. Also still need to check the near-zero edge ($0.01) to confirm the fee rule applies correctly right above the special-cased $0, distinct from the $29.99 threshold check already done. Probing the ceiling first."
+   },
+   "api_message_id": "msg_011Cd7XV2YzdiWG9rXHZPi6d",
+   "prompt_sha256": "42af311bfb3a4fc6f106072d7558051c9fea4c2a3d8ca38787a258616de5efd8",
+   "prompt_chars": 1318
+  },
+  {
+   "file": "agent-aeeff845bd042c6d3.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 500.01,
+    "why": "The low edge is well covered ($9.99 rejected, $10 accepted) and $500 accepts from just-inside. The untested high-value spot is the upper accepted ceiling from just-outside: per the promise, amounts above $500 (but still valid inputs up to $600) must be rejected. $500.01 is the minimal step past the ceiling — a common off-by-one/inclusive-boundary bug would charge it instead of rejecting. Highest-information single probe before considering the $600 ceiling and the $501-$600 reject stretch."
+   },
+   "api_message_id": "msg_011Cd7XAu62J27CM8Gh9v1gj",
+   "prompt_sha256": "096e1988f4e31289f2e8f662478ec4921c1922858907b9cceddc121e92987a65",
+   "prompt_chars": 1338
+  },
+  {
+   "file": "agent-af2637a0f482aae98.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "thenAbstain": true,
+    "probes": [
+     0,
+     29.99,
+     30,
+     0.01,
+     29,
+     5,
+     200,
+     100
+    ],
+    "reasoning": "The promise has these regions and boundaries where a bug could hide:\n\n- $0 is a named special case: owes nothing, output should be 0 (NOT 0 + $5 fee even though 0 < 30). This is the highest-risk spot: a naive \"amount < 30 adds 5\" implementation would return 5 for input 0, violating the special case. Probe first.\n- $29.99: just under the $30 threshold, should get the +$5 fee -> 34.99. Tests the top edge of the fee band and that cents are handled.\n- $30: exactly at the threshold; \"under $30\" means 30 is NOT under, so no fee -> 30. Classic off-by-one / boundary (< vs <=) spot.\n- $0.01: just above the $0 special case, still under $30, should get fee -> 5.01. Tests that the special-case-vs-fee boundary is exactly at 0, not a wider zero-ish band, and cents.\n- $29: mid fee band, no cents -> 34. Interior coverage of the fee stretch.\n- $5: another interior fee-band point (round number, common test) -> 10.\n- $200: ceiling of valid range, unchanged -> 200. Edge of valid range.\n- $100: interior of the no-fee stretch, unchanged -> 100.\n\nOrdering: most-suspect first. The $0 special-case override is the single likeliest deviation, then the two threshold edges (29.99, 30), then the lower boundary (0.01), then interior/range-edge coverage. The referee stops at the first deviation, so front-loading the special case and thresholds maximizes catch-in-few-probes.\n\nthenAbstain = true: these probes cover the named special amount ($0), the exact threshold from both sides ($29.99 / $30), the lower boundary of the special case ($0.01), both stretches where a single rule applies (fee band via 29, 5; unchanged band via 100), and the valid-range ceiling ($200). The valid-range floor is $0, already probed. So if nothing deviates, coverage genuinely justifies declaring SOUND."
+   },
+   "api_message_id": "msg_011Cd7X7m8i8dCKqtS7NpABo",
+   "prompt_sha256": "fe07b06c4e875135f093f2dfb1a9765f5c879b0f96b3673b1ce1fc4e1812067b",
+   "prompt_chars": 1130
+  },
+  {
+   "file": "agent-af2a81e239ed02d4c.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 5,
+   "decision": {
+    "action": "probe",
+    "amount": 30.01,
+    "why": "Coverage so far hits the floor ($0), near-floor ($0.01), the $30 threshold itself, and just-below the threshold ($29.99), plus the ceiling ($200). But I haven't tested just ABOVE the $30 threshold — the promise draws a hard line at 'under $30', so both sides of that exact boundary need checking (a bug could easily implement <= instead of < or vice versa in a way that only shows up right above 30, e.g. still charging a fee at $30.01 due to a rounding/off-by-cent error). Probing $30.01 closes that last edge before I'd be justified declaring SOUND."
+   },
+   "api_message_id": "msg_011Cd7XX4LTRNcnkyeKeLPC6",
+   "prompt_sha256": "3b9d01c635c9bc4e5709e7997190abf50ea127457d8930632752233009cf58f6",
+   "prompt_chars": 1448
+  },
+  {
+   "file": "agent-af3d5afdc04ce633a.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "action": "probe",
+    "amount": 10,
+    "why": "Starting at the lower edge of the accepted range ($10.00) since boundary conditions are the most likely place for an off-by-one bug (e.g., using > instead of >=). This is the first probe of the round."
+   },
+   "api_message_id": "msg_011Cd7XSY3wBjiENThsp7d6B",
+   "prompt_sha256": "890f84ea84d8f74bd2b5ded8ff252bbfffcdb0fb816a39182b1e29670c010316",
+   "prompt_chars": 1175
+  },
+  {
+   "file": "agent-af401518ea4810f43.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Testing the edge just below the $10 lower threshold of the accepted range. The promise states $10–$500 are accepted; amounts below $10 should be rejected. This is a critical boundary test needed before declaring SOUND."
+   },
+   "api_message_id": "msg_011Cd7XoJtWEjamwZ65krrVH",
+   "prompt_sha256": "5164a63afafb67550d0598847e5778fdd2821094483e62523503763f0dd246e2",
+   "prompt_chars": 1203
+  },
+  {
+   "file": "agent-af4d941d58d846505.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 3,
+   "decision": {
+    "action": "probe",
+    "amount": 30.01,
+    "why": "Test the $30 threshold from above. The promise names $30 as the boundary where \"all other amounts are unchanged\"—meaning no $5 fee. Probing $30.01 will confirm the fee rule correctly turns off for amounts >= $30, closing the most critical gap in threshold coverage. A bug here (e.g., using <= instead of <) would incorrectly charge $35.01 instead of $30.01."
+   },
+   "api_message_id": "msg_011Cd7XqYEzDQyPkDZLT4iCT",
+   "prompt_sha256": "bd62f6d9efcc34bb0178f08eeef6d218d9b610f1a577f9d4271470c0461a21fa",
+   "prompt_chars": 1316
+  },
+  {
+   "file": "agent-af547acb2be00af79.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 30,
+    "why": "Testing the exact $30 threshold named in the promise. The rule changes from \"add $5\" to \"unchanged\" at this boundary—a classic bug location. Current coverage only tests $0 and $0.01; the $30 transition is untested."
+   },
+   "api_message_id": "msg_011Cd7XpUP3NhXXBnJivseM9",
+   "prompt_sha256": "9fc95851bd22ebd3a49951b26a50305e25137877d04532e0f5e652592cfc6ec1",
+   "prompt_chars": 1254
+  },
+  {
+   "file": "agent-af5de1370b78228fe.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 9.99,
+    "why": "Testing the critical lower boundary edge. The promise says $10–$500 are accepted; $9.99 must be rejected. This covers a named threshold edge and reveals off-by-one bugs at the lower acceptance limit."
+   },
+   "api_message_id": "msg_011Cd7XpsLAbDcmriH2EVRdH",
+   "prompt_sha256": "3176ed2ff049eb1a26207ab08ab00cc6057d416a387470535f1b700c57d4a1d7",
+   "prompt_chars": 1267
+  },
+  {
+   "file": "agent-af6b92186c68fa0f2.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 0.01,
+    "why": "Critical edge case: testing if the \"$0 owes nothing\" rule is exact to $0 alone, or extends slightly. If $0.01 returns $5.01 (add $5), the rule is exact. If it returns $0.01, there's a hidden rule for small amounts."
+   },
+   "api_message_id": "msg_011Cd7Xo8f6f1bu28Zd2DpyJ",
+   "prompt_sha256": "01778054f0bf9fcf672a24be169f123fa33627f5ea568cae49443945f79520a6",
+   "prompt_chars": 1188
+  },
+  {
+   "file": "agent-af7505f3e0756927a.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "reasoning": "\nThe probes are ordered by likelihood of revealing deviations:\n\n1. **$0.00** (tests special case): The promise explicitly calls $0 \"owes nothing.\" This is distinct from the \"under $30\" rule. If $0 accidentally falls through to the fee logic, it will output $5 instead of $0.\n\n2. **$30.00** (critical boundary): The most common implementation error is boundary-condition mistakes (< vs ≤). Testing $30 directly will catch if the code incorrectly applies the $5 fee to this amount.\n\n3. **$0.01** (floor of fee zone): Tests whether the fee is correctly applied to the first cent above $0, and confirms fee amount is $5 (not $1, not $6, etc.).\n\n4. **$29.99** (ceiling of fee zone): Tests the upper edge of \"under $30\" to confirm the fee applies up to but not beyond $29.99, and checks precision handling.\n\n5. **$200.00** (stated upper boundary): Confirms the implementation respects the stated valid range and doesn't apply unexpected logic at the ceiling.\n\nCoverage: These probes verify the special case ($0), the exact threshold ($30), both edges of the \"under $30\" zone ($0.01 and $29.99), and the boundary of the valid range ($0, $200). If all pass, the implementation's logic is sound across all rule zones.\n\nAbstain decision: I will declare SOUND if no deviations are revealed, because these probes comprehensively cover every threshold, boundary, special case, and rule zone mentioned in or implied by the promise.\n",
+    "probes": [
+     0,
+     30,
+     0.01,
+     29.99,
+     200
+    ],
+    "thenAbstain": true
+   },
+   "api_message_id": "msg_011Cd7XeHvxXCV7iBhyuWeJe",
+   "prompt_sha256": "fe07b06c4e875135f093f2dfb1a9765f5c879b0f96b3673b1ce1fc4e1812067b",
+   "prompt_chars": 1130
+  },
+  {
+   "file": "agent-af7eed0ad4864633a.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 4,
+   "decision": {
+    "action": "probe",
+    "amount": 0.01,
+    "why": "The $0 special case and the \"under $30 adds $5\" rule share a boundary right above zero. We've confirmed exact $0 -> $0 and the upper edge of the under-$30 band ($29.99 -> $34.99, $30 -> $30), but haven't tested the lower edge of that band. A buggy implementation might treat some small-but-nonzero amount as still \"free\" (off-by-threshold on the zero special case) or otherwise mishandle the transition right after $0. Probing $0.01 (expected $5.01) closes that remaining gap before declaring sound."
+   },
+   "api_message_id": "msg_011Cd7XW3yLutVZQwMWDTMdz",
+   "prompt_sha256": "315cc88d1840335ddc3227931ce7b24b496c771925ba0a8cc6fb5bff8d08af81",
+   "prompt_chars": 1382
+  },
+  {
+   "file": "agent-af93d35c8225fa7a7.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "Coverage so far only confirms the $0 special case and the exact $30 boundary (both landing on the \"no fee\" side). The promise's fee rule applies to \"amounts under $30,\" so the untested and most bug-prone spot is just below that threshold. Probing $29.99 checks whether the fee correctly applies right up to (but not including) $30, which is exactly the kind of off-by-one boundary flip a buggy implementation would get wrong (e.g., treating <=30 as unchanged instead of <30)."
+   },
+   "api_message_id": "msg_011Cd7XU8YNu7L9qyW9a8izG",
+   "prompt_sha256": "37cd69ac4a8957044cc8cd32ac1fa277ec2944e3653f22c8c739132d9b4783ad",
+   "prompt_chars": 1250
+  },
+  {
+   "file": "agent-af97b49548c9e836d.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 7,
+   "decision": {
+    "action": "probe",
+    "amount": 600.01,
+    "why": "Coverage so far nicely brackets the accepted range ($10/$9.99, $500/$500.01) and hits the valid-range floor/ceiling exactly ($1, $600), but nothing has been sent outside the stated valid-input range ($1-$600). A bound-check bug (e.g. using <= instead of < at the $600 ceiling) would only show up by testing just beyond it. Probing $600.01 checks whether the tool correctly rejects/handles input beyond its declared valid range before I'd be willing to call this sound."
+   },
+   "api_message_id": "msg_011Cd7XaRrqcvG9dFkE8crJ7",
+   "prompt_sha256": "dc88e69701e9019d3991e4225091dabffcac13368fce9c77cc94ebff7b7c1852",
+   "prompt_chars": 1619
+  },
+  {
+   "file": "agent-afa11de9ed9cec78f.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 8,
+   "decision": {
+    "action": "abstain",
+    "why": "Coverage is complete across every place a bug could hide: accepted-range thresholds hit exactly and matched ($10, $500), just-inside accepts ($499.99, $250.5), just-outside rejects ($9.99, $500.01), the valid-range floor ($1 -> rejected) and ceiling ($600 -> rejected), and both reject stretches are bracketed. All 8 probes matched the promise with no anomaly, so declaring SOUND."
+   },
+   "api_message_id": "msg_011Cd7XFQnZvyrjs7jLVbVZp",
+   "prompt_sha256": "0683d81cd69662eb9ada5100938294f89ee81c3a98fdae315b9bd77f5bd3f33c",
+   "prompt_chars": 1687
+  },
+  {
+   "file": "agent-afa14fd06ac925abe.jsonl",
+   "model": "claude-sonnet-5",
+   "status": "ok",
+   "kind": "oneshot-plan",
+   "prompt_round_family": "gift-prose",
+   "probes_shown_in_prompt": 0,
+   "decision": {
+    "probes": [
+     5,
+     550,
+     10,
+     500,
+     9.99,
+     500.01,
+     1,
+     600,
+     0.5,
+     700,
+     250.33
+    ],
+    "thenAbstain": true,
+    "reasoning": "The promise nests two ranges: a \"valid input\" range ($1–$600) and, inside it, an \"accepted as sent\" range ($10–$500); everything valid but outside $10–$500 must be REJECTED, not charged. The classic failure mode for this shape is conflating the two ranges — e.g. an implementation that treats the whole $1–$600 band as chargeable and only rejects outside that, ignoring the inner $10–$500 restriction entirely. So I front-load probes that sit inside $1–$600 but outside $10–$500 (5.00 and 550.00): if the tool wrongly charges these instead of rejecting, that's the single most likely and cheapest-to-reach bug, caught in probe 1 or 2.\n\nNext I check the named thresholds themselves for inclusive/exclusive errors: 10.00 and 500.00 must be ACCEPTED and charged exactly (a boundary coded as > instead of >=, or < instead of <=, would reject one of these).\n\nThen, since cents are explicitly allowed, I check cent-level precision right at the accepted-range edges: 9.99 (must reject) and 500.01 (must reject) — a common bug is rounding/truncating cents so these get misclassified.\n\nThen I hit the floor and ceiling of the valid-input range itself: 1.00 and 600.00 — both must be REJECTED (valid inputs, but outside $10–$500), distinct from the generic reject-stretch, since these are named exact figures (\"$1 to $600\") that could have their own off-by-one handling.\n\nThen I step just outside the valid-input range altogether: 0.50 and 700.00 — inputs outside $1–$600 should presumably also come back 'rejected' (not crash, not silently accepted), covering the outermost stretches.\n\nFinally, 250.33 checks mid-range fidelity — that an accepted amount with cents is echoed back exactly, not rounded — covering the \"single rule applies\" middle stretch.\n\nTogether these 11 probes cover: the two nested exact thresholds (10, 500) and their named outer edges (1, 600), the just-inside/just-outside boundary on both ends of the accepted range (10.00/9.99, 500.00/500.01), each distinct stretch (below $1, $1–$9.99, $10–$500, $500.01–$600, above $600), and cent-precision fidelity in the accepted zone. If all 11 come back exactly as specified, I have genuine coverage of every place this promise's structure could hide a bug, so I'll declare SOUND rather than abstain-without-cause."
+   },
+   "api_message_id": "msg_011Cd7XL4iiRgMqDnCJYTYVW",
+   "prompt_sha256": "ec40c094937bd4305685191d5d5ab1a898172e8ed3bf2ec359cb9db995e2d8a3",
+   "prompt_chars": 1143
+  },
+  {
+   "file": "agent-afb14a90c25388450.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 2,
+   "decision": {
+    "action": "probe",
+    "amount": 15,
+    "why": "The promise's $5 fee for amounts under $30 is completely untested. Probing $15 (well clear of the $30 threshold, expecting output $20) tests whether the core fee rule applies. This is the highest-risk rule gap — both prior probes avoided triggering it."
+   },
+   "api_message_id": "msg_011Cd7XqnbvzDx8FWC66RS9S",
+   "prompt_sha256": "80ab5ac53d072479096954a9894e211b62daf72b78452c388f457b1bd24e36c4",
+   "prompt_chars": 1250
+  },
+  {
+   "file": "agent-afc233dfbf101092a.jsonl",
+   "model": "claude-haiku-4-5-20251001",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 1,
+   "decision": {
+    "action": "probe",
+    "amount": 0,
+    "why": "Testing the stated $0 special case (owes nothing). This is a named exception in the promise and a high-risk place for implementation bugs (forgotten conditional). Must verify before covering other boundaries."
+   },
+   "api_message_id": "msg_011Cd7XoJm4oMrhCkADYVbBW",
+   "prompt_sha256": "1a5be551f75212017b352927b6beef15fabea2cbd6813d1d12ea93127ce4e221",
+   "prompt_chars": 1190
+  },
+  {
+   "file": "agent-afca65a68dfa73b0d.jsonl",
+   "model": "claude-opus-4-8",
+   "status": "ok",
+   "kind": "iterative-decision",
+   "prompt_round_family": "cart-prose",
+   "probes_shown_in_prompt": 8,
+   "decision": {
+    "action": "probe",
+    "amount": 29.99,
+    "why": "The fee applies \"under $30\" — the critical boundary. Probe #2 already tested $29.99->$34.99 (fee applied, correct just below threshold), and probe #1 tested $30->$30 (no fee, correct at threshold). But I have NOT tested just above the boundary combined with the exact threshold behavior at $29.99 was covered. Re-examining: threshold $30 is covered (no fee), $29.99 covered (fee). The floor $0->$0 covered, $0.01->$5.01 covered (just inside fee range, special near-zero). Ceiling $200 covered. Mid-range $100 covered. $10, $20 covered in fee range. The one untested spot is just ABOVE $30 — e.g. $30.01 — to confirm no fee leaks above threshold. Probing there instead."
+   },
+   "api_message_id": "msg_011Cd7XFqqxLmAUfQHvF71q5",
+   "prompt_sha256": "1ff33ff5d1bd1f2fd515389d0929854e88f20b6a73b72c1c12c32bb218be2d6c",
+   "prompt_chars": 1636
+  }
+ ]
+}

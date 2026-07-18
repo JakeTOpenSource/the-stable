@@ -1,0 +1,7 @@
+# Cloudflare Pages config for The Stable (the agent-facing witness/gate suite). Static — no
+# build step. Only public/ is served; stable/, witness-suite/, bridge/, and experiments/ stay
+# in the repo but are NOT deployed. No secrets here — auth is your `wrangler login` or the
+# CLOUDFLARE_API_TOKEN env var, which you set and I never see.
+name = "the-stable"
+pages_build_output_dir = "public"
+compatibility_date = "2026-07-18"

@@ -88,6 +88,11 @@ selfTest("scoreboard custody", "stable/make-scoreboard-data.js", "--check");
 // The replication's published verdict (DOCTRINE DENIED, 2026-07-17) is a CLAIM — so it is
 // gate-checked like every other claim: the replay must reproduce the exact tallies forever.
 selfTest("bridge/replay-replication", "bridge/replay-replication.js", "--self-test");
+// The deadlock trial (2026-07-18): the witness's own scenarios, and the INDEPENDENT verifier
+// that recomputes the GRANTED verdict with a different cycle-detection algorithm. Both must
+// hold forever, or the published claim is no longer true.
+selfTest("deadlock/witness", "experiments/deadlock-2026-07-18/witness.js", "--self-test");
+selfTest("deadlock/replay", "experiments/deadlock-2026-07-18/replay-deadlock.js", "--self-test");
 
 // --- publication hygiene: no local-machine identity in the publishable tree ---------------
 // Semantic classes, not a blacklist (2026-07-17 privacy sweep): absolute filesystem paths,

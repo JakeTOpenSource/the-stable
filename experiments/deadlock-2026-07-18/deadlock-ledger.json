@@ -1,0 +1,117 @@
+{
+ "_meta": {
+  "trial": "circular-deadlock-2026-07-18",
+  "preregistration": "PREREGISTRATION.md",
+  "deterministic": true,
+  "note": "Scripted actors (no models). The witness is the claim under test; token-dollar economy vs real flailing models is a separately-budgeted run, not included here."
+ },
+ "cycleTasks": [
+  {
+   "actor": "A",
+   "hold": "N1",
+   "want": "N2"
+  },
+  {
+   "actor": "B",
+   "hold": "N2",
+   "want": "N3"
+  },
+  {
+   "actor": "C",
+   "hold": "N3",
+   "want": "N1"
+  }
+ ],
+ "governed": {
+  "requestSequence": [
+   {
+    "actor": "A",
+    "resource": "N1"
+   },
+   {
+    "actor": "B",
+    "resource": "N2"
+   },
+   {
+    "actor": "C",
+    "resource": "N3"
+   },
+   {
+    "actor": "A",
+    "resource": "N2"
+   },
+   {
+    "actor": "B",
+    "resource": "N3"
+   },
+   {
+    "actor": "C",
+    "resource": "N1"
+   }
+  ],
+  "steps": 6,
+  "trippedAtStep": 6,
+  "cycle": [
+   "A",
+   "B",
+   "C",
+   "A"
+  ],
+  "cleanOpen": true,
+  "ledger": [
+   {
+    "op": "grant",
+    "actor": "A",
+    "resource": "N1"
+   },
+   {
+    "op": "grant",
+    "actor": "B",
+    "resource": "N2"
+   },
+   {
+    "op": "grant",
+    "actor": "C",
+    "resource": "N3"
+   },
+   {
+    "op": "block",
+    "actor": "A",
+    "resource": "N2",
+    "holder": "B"
+   },
+   {
+    "op": "block",
+    "actor": "B",
+    "resource": "N3",
+    "holder": "C"
+   },
+   {
+    "op": "deadlock",
+    "actor": "C",
+    "resource": "N1",
+    "cycle": [
+     "A",
+     "B",
+     "C",
+     "A"
+    ]
+   },
+   {
+    "op": "trip",
+    "cycle": [
+     "A",
+     "B",
+     "C",
+     "A"
+    ],
+    "to": "OPEN"
+   }
+  ]
+ },
+ "baseline": {
+  "steps": 78,
+  "cap": 25,
+  "froze": true
+ }
+}

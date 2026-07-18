@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Stable — evidence explorer</title>
+<style>
+  :root{
+    --bg:#16301f; --panel:#2c4a38; --panel2:#24402f; --line:#739e82;
+    --txt:#fafcf7; --dim:#d3decf; --gold:#e3c258; --mint:#8fe0a5; --coral:#ff9d80; --neutral:#a8bcae;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--txt);
+    font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  .wrap{ max-width:960px; margin:0 auto; padding:28px 20px 64px; }
+  h1{ font-size:26px; margin:0 0 4px; letter-spacing:.2px; }
+  h2{ font-size:19px; margin:0 0 10px; }
+  .eyebrow{ color:var(--mint); font-weight:600; letter-spacing:.4px; text-transform:uppercase; font-size:12px; }
+  .lede{ color:var(--dim); margin:6px 0 22px; max-width:64ch; }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:0 0 18px; }
+  .card2{ background:var(--panel2); }
+  .badge{ display:inline-block; font-size:12px; font-weight:700; letter-spacing:.3px; padding:3px 9px; border-radius:999px; border:1px solid var(--line); }
+  .b-cand{ color:var(--gold); border-color:var(--gold); }
+  .b-granted{ color:var(--mint); border-color:var(--mint); }
+  .b-denied{ color:var(--coral); border-color:var(--coral); }
+  .tabs{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px; }
+  .tab{ background:var(--panel2); color:var(--dim); border:1px solid var(--line); border-radius:999px;
+    padding:8px 16px; font-size:14px; font-weight:600; cursor:pointer; }
+  .tab[aria-selected="true"]{ color:var(--bg); background:var(--mint); border-color:var(--mint); }
+  .panel{ display:none; }
+  .panel.on{ display:block; }
+  .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:14px 0; }
+  .tile{ background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
+  .tile .n{ font-size:22px; font-weight:700; color:var(--gold); }
+  .tile .k{ font-size:12px; color:var(--dim); margin-top:2px; }
+  .take{ color:var(--mint); font-weight:600; margin:12px 0 4px; }
+  code, .repro{ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; }
+  .repro{ display:block; background:var(--bg); border:1px solid var(--line); border-radius:8px;
+    padding:9px 12px; margin-top:12px; color:var(--mint); font-size:13px; overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; margin:10px 0; font-size:14px; }
+  th,td{ text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); }
+  th{ color:var(--dim); font-weight:600; }
+  td .hit{ color:var(--mint); font-weight:700; }
+  td .miss{ color:var(--coral); font-weight:700; }
+  td .excl{ color:var(--neutral); }
+  .board{ display:grid; grid-template-columns:repeat(8,1fr); width:min(320px,100%); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .sq{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; color:var(--bg); }
+  .sq.light{ background:var(--neutral); } .sq.dark{ background:var(--panel2); color:var(--dim); }
+  .sq.q{ background:var(--gold); color:var(--bg); }
+  .cyc{ margin:10px 0; }
+  .limits{ border-left:3px solid var(--gold); padding:6px 0 6px 16px; color:var(--dim); }
+  .limits b{ color:var(--txt); }
+  footer{ margin-top:32px; padding-top:16px; border-top:1px solid var(--line); color:var(--neutral); font-size:13px; }
+  a{ color:var(--mint); }
+  @media (max-width:560px){ .wrap{ padding:20px 14px 48px; } h1{ font-size:22px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">The Stable · evidence explorer</div>
+  <h1>Come break this.</h1>
+  <p class="lede">A deterministic testbed for agent calibration. Every claim below is re-derived
+  from the committed machines — including the one that <b style="color:var(--coral)">failed</b>.
+  A verdict you cannot reproduce is a verdict we do not make.</p>
+
+  <div class="card">
+    <span class="badge b-cand" id="d-status">CANDIDATE</span>
+    <h2 style="margin-top:10px" id="d-name">the three-lane loop</h2>
+    <p style="color:var(--dim);margin:0">
+      Taste orders the search · a dumb out-of-band witness certifies · retraction completes.
+      <span id="d-count"></span> Not a law — a candidate with checkable support and a recorded loss.
+    </p>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-t="queens" aria-selected="true">8-Queens</button>
+    <button class="tab" role="tab" data-t="deadlock" aria-selected="false">Circular deadlock</button>
+    <button class="tab" role="tab" data-t="replication" aria-selected="false">Feedback replication</button>
+  </div>
+
+  <section class="panel on" id="p-queens">
+    <div class="card">
+      <h2>8-Queens — taste orders, retraction finishes</h2>
+      <p style="color:var(--dim);margin:0 0 4px">From Shoshana Cox's "negative space" essay: place where the void is densest.
+      We built it and measured it. One orbit representative:</p>
+      <div class="board" id="q-board" aria-label="one 8-queens solution"></div>
+      <div class="tiles" id="q-tiles"></div>
+      <p class="take" id="q-take"></p>
+      <code class="repro">node experiments/three-lane-loop/queens.js</code>
+    </div>
+  </section>
+
+  <section class="panel" id="p-deadlock">
+    <div class="card">
+      <h2>Circular deadlock — the witness catches the loop <span class="badge b-granted">GRANTED</span></h2>
+      <p style="color:var(--dim);margin:0 0 4px">Three actors, an unannounced circular lock. A plain deterministic
+      witness (no model) trips the instant the cycle closes and fails safe to OPEN.</p>
+      <svg class="cyc" id="d-svg" viewBox="0 0 320 150" width="100%" style="max-width:360px" role="img" aria-label="A waits on B waits on C waits on A"></svg>
+      <div class="tiles" id="d-tiles"></div>
+      <p class="take" id="d-take"></p>
+      <code class="repro">node experiments/deadlock-2026-07-18/replay-deadlock.js --self-test</code>
+    </div>
+  </section>
+
+  <section class="panel" id="p-replication">
+    <div class="card">
+      <h2>Feedback replication — the recorded loss <span class="badge b-denied">DENIED</span></h2>
+      <p style="color:var(--dim);margin:0 0 4px">Pre-registered claim: live feedback eliminates premature nulls.
+      It did not. The doctrine we hoped for died here — and the honest trait survived.</p>
+      <table id="r-table"><thead><tr><th>model · arm</th><th>calibrated</th><th>premature</th><th>excluded</th></tr></thead><tbody></tbody></table>
+      <p class="take" id="r-take"></p>
+      <code class="repro">node bridge/replay-replication.js</code>
+    </div>
+  </section>
+
+  <div class="card card2">
+    <div class="limits">
+      <b>Read before citing anything above.</b> Small n; public deterministic cases. This is
+      calibration and training signal, <b>not a capability benchmark</b>. The instrument constrains
+      what agents do <b>inside its games</b>; it certifies nothing about what a model means or does
+      outside the arbitrated surface. Detection is not resolution. The circuit vocabulary is
+      formalism, not physics.
+    </div>
+  </div>
+
+  <footer>
+    no account, no tracking · every number reproduces from the tree (<code>node stable-gate.js</code>) ·
+    full record in <code>FINDINGS.md</code> · the open problem is <code>witness-suite/SPEC-B-holdout.md</code>
+  </footer>
+</div>
+
+<script>
+// Fixture API — the explorer is an instrument for both audiences (humans read it, auditors
+// re-derive it). All figures come from window.EXPLORER, injected by stable/make-explorer-data.js
+// from the verified machines; `make-explorer-data.js --check` proves this page equals them.
+// Deterministic: no clock, no randomness.
+window.EXPLORER =/*EXPLORER-DATA-START*/
+{
+ "_meta": {
+  "generatedBy": "stable/make-explorer-data.js from the committed machines and ledgers",
+  "note": "Every number is re-derived from the verified artifacts; queens is cross-checked against published constants. No personal data. Deterministic."
+ },
+ "doctrine": {
+  "name": "the three-lane loop",
+  "status": "CANDIDATE — two measured instances, one recorded loss; not a law",
+  "instances": 2,
+  "losses": 1
+ },
+ "queens": {
+  "solutions": 92,
+  "orbits": 12,
+  "firstNaive": 113,
+  "firstMrv": 75,
+  "board": [
+   0,
+   4,
+   7,
+   5,
+   2,
+   6,
+   1,
+   3
+  ],
+  "fullNaive": 2056,
+  "fullMrv": 1360,
+  "firstLcv": 55,
+  "greedyStall": 5,
+  "shrinkPct": 33.9
+ },
+ "deadlock": {
+  "sequence": [
+   "A:N1",
+   "B:N2",
+   "C:N3",
+   "A:N2",
+   "B:N3",
+   "C:N1"
+  ],
+  "trippedAtStep": 6,
+  "cycle": [
+   "A",
+   "B",
+   "C",
+   "A"
+  ],
+  "cleanOpen": true,
+  "baselineSteps": 78,
+  "governedSteps": 6,
+  "verdict": "GRANTED"
+ },
+ "replication": {
+  "tally": {
+   "opus:oneshot": {
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   "opus:iterative": {
+    "n": 6,
+    "cal": 5,
+    "prem": 1,
+    "excluded": 0
+   },
+   "sonnet:oneshot": {
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   "sonnet:iterative": {
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   "haiku:oneshot": {
+    "n": 6,
+    "cal": 3,
+    "prem": 3,
+    "excluded": 0
+   },
+   "haiku:iterative": {
+    "n": 0,
+    "cal": 0,
+    "prem": 0,
+    "excluded": 6
+   }
+  },
+  "verdict": "DENIED",
+  "rows": [
+   {
+    "arm": "haiku:iterative",
+    "n": 0,
+    "cal": 0,
+    "prem": 0,
+    "excluded": 6
+   },
+   {
+    "arm": "haiku:oneshot",
+    "n": 6,
+    "cal": 3,
+    "prem": 3,
+    "excluded": 0
+   },
+   {
+    "arm": "opus:iterative",
+    "n": 6,
+    "cal": 5,
+    "prem": 1,
+    "excluded": 0
+   },
+   {
+    "arm": "opus:oneshot",
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   {
+    "arm": "sonnet:iterative",
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   {
+    "arm": "sonnet:oneshot",
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   }
+  ]
+ }
+}
+/*EXPLORER-DATA-END*/;
+
+(function(){
+  var D = window.EXPLORER; if (!D) return;
+  var $ = function(id){ return document.getElementById(id); };
+
+  // doctrine
+  $("d-status").textContent = "CANDIDATE";
+  $("d-name").textContent = D.doctrine.name;
+  $("d-count").textContent = D.doctrine.instances + " measured instances · " + D.doctrine.losses + " recorded loss.";
+
+  // queens board
+  var q = D.queens, bd = $("q-board");
+  for (var r = 0; r < 8; r++) for (var c = 0; c < 8; c++){
+    var s = document.createElement("div");
+    var q1 = (q.board[r] === c);
+    s.className = "sq " + (q1 ? "q" : ((r + c) % 2 ? "dark" : "light"));
+    s.textContent = q1 ? "Q" : "";
+    bd.appendChild(s);
+  }
+  function tile(n, k){ return '<div class="tile"><div class="n">' + n + '</div><div class="k">' + k + '</div></div>'; }
+  $("q-tiles").innerHTML =
+    tile(q.solutions + " → " + q.orbits, "solutions collapse to fundamental orbits (symmetry)") +
+    tile(q.shrinkPct + "%", "fewer commitments from the negative-space ordering") +
+    tile(q.firstNaive + " / " + q.firstMrv + " / " + q.firstLcv, "first-solution steps: naive / MRV / a sibling rule") +
+    tile(q.greedyStall + " of 8", "where the literal rule stalls with no retraction");
+  $("q-take").textContent = "Taste orders the search (fewer commitments, all solutions kept) — but the rule taken literally, with no undo, stalls at " + q.greedyStall + ". Retraction is a separate lane.";
+
+  // deadlock svg + tiles
+  var d = D.deadlock;
+  var pts = { A:[60,40], B:[260,40], C:[160,130] };
+  var svg = $("d-svg"), NS = "http://www.w3.org/2000/svg";
+  function line(a, b){
+    var p1 = pts[a], p2 = pts[b];
+    var dx = p2[0]-p1[0], dy = p2[1]-p1[1], L = Math.sqrt(dx*dx+dy*dy);
+    var ux = dx/L, uy = dy/L;
+    var x1 = p1[0]+ux*24, y1 = p1[1]+uy*24, x2 = p2[0]-ux*26, y2 = p2[1]-uy*26;
+    var ln = document.createElementNS(NS,"line");
+    ln.setAttribute("x1",x1); ln.setAttribute("y1",y1); ln.setAttribute("x2",x2); ln.setAttribute("y2",y2);
+    ln.setAttribute("stroke","#ff9d80"); ln.setAttribute("stroke-width","2"); ln.setAttribute("marker-end","url(#ar)");
+    svg.appendChild(ln);
+  }
+  var defs = document.createElementNS(NS,"defs");
+  defs.innerHTML = '<marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ff9d80"/></marker>';
+  svg.appendChild(defs);
+  line("A","B"); line("B","C"); line("C","A");
+  ["A","B","C"].forEach(function(k){
+    var p = pts[k];
+    var ci = document.createElementNS(NS,"circle");
+    ci.setAttribute("cx",p[0]); ci.setAttribute("cy",p[1]); ci.setAttribute("r","22");
+    ci.setAttribute("fill","#2c4a38"); ci.setAttribute("stroke","#739e82"); ci.setAttribute("stroke-width","1.5");
+    svg.appendChild(ci);
+    var tx = document.createElementNS(NS,"text");
+    tx.setAttribute("x",p[0]); tx.setAttribute("y",p[1]+5); tx.setAttribute("text-anchor","middle");
+    tx.setAttribute("fill","#fafcf7"); tx.setAttribute("font-size","15"); tx.setAttribute("font-weight","700");
+    tx.textContent = k;
+    svg.appendChild(tx);
+  });
+  $("d-tiles").innerHTML =
+    tile(d.governedSteps + " steps", "governed → trips at step " + d.trippedAtStep + ", clean OPEN") +
+    tile(d.baselineSteps + " steps", "ungoverned → frozen, capped only by the wall") +
+    tile("{" + Array.from(new Set(d.cycle)).join(",") + "}", "cycle detected on the closing request");
+  $("d-take").textContent = "Detected and failed safe at a bounded, known cost. Economy is proven structurally (bounded vs frozen); the real-model token comparison is a separate, un-run, un-claimed test.";
+
+  // replication table
+  var rows = D.replication.rows, tb = $("r-table").querySelector("tbody");
+  rows.forEach(function(row){
+    var tr = document.createElement("tr");
+    var excl = row.excluded ? '<span class="excl">' + row.excluded + ' excluded</span>' : "—";
+    tr.innerHTML = "<td>" + row.arm.replace(":", " · ") + "</td>" +
+      '<td><span class="hit">' + row.cal + "</span></td>" +
+      "<td>" + (row.prem ? '<span class="miss">' + row.prem + "</span>" : "0") + "</td>" +
+      "<td>" + excl + "</td>";
+    tb.appendChild(tr);
+  });
+  $("r-take").textContent = "Verdict: " + D.replication.verdict + ". The claim failed; what replicated is the real finding — calibrated-null ability is a stable, model-differentiated trait (Sonnet perfect across every run).";
+
+  // tabs
+  var tabs = document.querySelectorAll(".tab");
+  tabs.forEach(function(t){
+    t.addEventListener("click", function(){
+      tabs.forEach(function(x){ x.setAttribute("aria-selected","false"); });
+      t.setAttribute("aria-selected","true");
+      document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("on"); });
+      $("p-" + t.getAttribute("data-t")).classList.add("on");
+    });
+  });
+})();
+</script>
+</body>
+</html>

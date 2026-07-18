@@ -1,0 +1,139 @@
+{
+ "_meta": {
+  "generatedBy": "stable/make-explorer-data.js from the committed machines and ledgers",
+  "note": "Every number is re-derived from the verified artifacts; queens is cross-checked against published constants. No personal data. Deterministic."
+ },
+ "doctrine": {
+  "name": "the three-lane loop",
+  "status": "CANDIDATE — two measured instances, one recorded loss; not a law",
+  "instances": 2,
+  "losses": 1
+ },
+ "queens": {
+  "solutions": 92,
+  "orbits": 12,
+  "firstNaive": 113,
+  "firstMrv": 75,
+  "board": [
+   0,
+   4,
+   7,
+   5,
+   2,
+   6,
+   1,
+   3
+  ],
+  "fullNaive": 2056,
+  "fullMrv": 1360,
+  "firstLcv": 55,
+  "greedyStall": 5,
+  "shrinkPct": 33.9
+ },
+ "deadlock": {
+  "sequence": [
+   "A:N1",
+   "B:N2",
+   "C:N3",
+   "A:N2",
+   "B:N3",
+   "C:N1"
+  ],
+  "trippedAtStep": 6,
+  "cycle": [
+   "A",
+   "B",
+   "C",
+   "A"
+  ],
+  "cleanOpen": true,
+  "baselineSteps": 78,
+  "governedSteps": 6,
+  "verdict": "GRANTED"
+ },
+ "replication": {
+  "tally": {
+   "opus:oneshot": {
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   "opus:iterative": {
+    "n": 6,
+    "cal": 5,
+    "prem": 1,
+    "excluded": 0
+   },
+   "sonnet:oneshot": {
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   "sonnet:iterative": {
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   "haiku:oneshot": {
+    "n": 6,
+    "cal": 3,
+    "prem": 3,
+    "excluded": 0
+   },
+   "haiku:iterative": {
+    "n": 0,
+    "cal": 0,
+    "prem": 0,
+    "excluded": 6
+   }
+  },
+  "verdict": "DENIED",
+  "rows": [
+   {
+    "arm": "haiku:iterative",
+    "n": 0,
+    "cal": 0,
+    "prem": 0,
+    "excluded": 6
+   },
+   {
+    "arm": "haiku:oneshot",
+    "n": 6,
+    "cal": 3,
+    "prem": 3,
+    "excluded": 0
+   },
+   {
+    "arm": "opus:iterative",
+    "n": 6,
+    "cal": 5,
+    "prem": 1,
+    "excluded": 0
+   },
+   {
+    "arm": "opus:oneshot",
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   {
+    "arm": "sonnet:iterative",
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   },
+   {
+    "arm": "sonnet:oneshot",
+    "n": 6,
+    "cal": 6,
+    "prem": 0,
+    "excluded": 0
+   }
+  ]
+ }
+}

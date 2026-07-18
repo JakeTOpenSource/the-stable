@@ -85,6 +85,9 @@ selfTest("stable/versus-compiler", "stable/run-versus-compiler.js", "--self-test
 selfTest("stable/versus-match", "stable/run-versus-match.js", "--self-test");
 selfTest("stable/versus-balance", "stable/run-versus-balance.js", "--self-test", 60000);
 selfTest("scoreboard custody", "stable/make-scoreboard-data.js", "--check");
+// The public explorer page: its numbers must equal the verified machines, forever (the
+// display cannot lie — same custody as the scoreboard).
+selfTest("explorer custody", "stable/make-explorer-data.js", "--check");
 // The replication's published verdict (DOCTRINE DENIED, 2026-07-17) is a CLAIM — so it is
 // gate-checked like every other claim: the replay must reproduce the exact tallies forever.
 selfTest("bridge/replay-replication", "bridge/replay-replication.js", "--self-test");

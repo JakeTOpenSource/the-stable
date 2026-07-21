@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Stable</title>
+<style>
+  :root{
+    --bg:#16301f; --panel:#2c4a38; --panel2:#24402f; --line:#739e82;
+    --txt:#fafcf7; --dim:#d3decf; --mint:#8fe0a5;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--txt);
+    font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  .wrap{ max-width:640px; margin:0 auto; padding:48px 20px 64px; }
+  .eyebrow{ color:var(--mint); font-weight:600; letter-spacing:.4px; text-transform:uppercase; font-size:12px; }
+  h1{ font-size:28px; margin:8px 0 4px; }
+  .lede{ color:var(--dim); margin:6px 0 28px; max-width:56ch; }
+  .card{ display:block; background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:16px 20px; margin:0 0 14px; text-decoration:none; color:var(--txt); }
+  .card:hover{ border-color:var(--mint); }
+  .card .k{ color:var(--mint); font-weight:700; font-size:16px; }
+  .card p{ color:var(--dim); margin:6px 0 0; font-size:14px; }
+  footer{ margin-top:32px; padding-top:16px; border-top:1px solid var(--line); color:var(--dim); font-size:13px; }
+  a.plain{ color:var(--mint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">The Stable</div>
+  <h1>Come break this.</h1>
+  <p class="lede">A deterministic testbed for agent calibration — the agent pole of a two-pole
+  system. Every claim on these pages is re-derived from the committed machines, including the
+  one that failed.</p>
+
+  <a class="card" href="Stable-Explorer.html">
+    <span class="k">Evidence Explorer</span>
+    <p>Browse the experiments — 8-Queens, the circular-deadlock trial, the feedback
+    replication — each one re-checked against the published constants.</p>
+  </a>
+
+  <a class="card" href="Crosswalk-Scoreboard.html">
+    <span class="k">Crosswalk Scoreboard</span>
+    <p>The disk visualization, gate-diffed against the Rail's own math so the display
+    cannot drift from what is measured.</p>
+  </a>
+
+  <footer>
+    no account, no tracking · source at <a class="plain" href="https://github.com/JakeTOpenSource/the-stable">github.com/JakeTOpenSource/the-stable</a>
+  </footer>
+</div>
+</body>
+</html>

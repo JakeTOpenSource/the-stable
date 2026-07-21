@@ -75,7 +75,10 @@ node replay-deadlock.js --self-test  # independent verifier: recomputes the GRAN
 The real-agent token baseline this section used to flag as unrun has been run: see
 `REALAGENT-PREREGISTRATION.md` and `REALAGENT-RESULTS.md`. Verdict: candidate GRANTED for
 Sonnet 5 (governed cost 2,370 real output tokens vs. baseline 2,879 — a clean, matching-shape
-comparison); INCONCLUSIVE for Haiku (the governed arm's actors declined to complete the fixed
-request sequence, so its lower token count isn't priced against the same event). The more
-interesting result: no real-agent condition reproduced the scripted baseline's mindless
-infinite flailing — every real actor settled into a cautious `wait` pattern instead.
+comparison); INCONCLUSIVE for Haiku (two of its governed-arm actors declined to complete the
+fixed request sequence, so its lower token count isn't priced against the same event). The more
+interesting result: no real-agent *baseline* condition reproduced the scripted baseline's
+mindless infinite flailing — both models' baseline actors settled into a cautious `wait`
+pattern after one refused request. The governed arm diverged by model instead: Sonnet requested
+straight through to the trip exactly as scripted, while Haiku's B and C preemptively reasoned
+about deadlock risk they were never told about and chose to wait.

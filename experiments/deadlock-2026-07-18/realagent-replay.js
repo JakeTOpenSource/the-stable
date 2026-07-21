@@ -14,6 +14,7 @@ const path = require("path");
 const { Witness } = require(path.join(__dirname, "witness.js"));
 
 const LEDGER = JSON.parse(fs.readFileSync(path.join(__dirname, "realagent-ledger.json"), "utf8"));
+const DECISIONS = JSON.parse(fs.readFileSync(path.join(__dirname, "realagent-decision-logs.json"), "utf8"));
 const CYCLE = LEDGER.cycleTasks;
 
 // Replay one model's recorded governed-arm decisions through a FRESH, real witness.js instance.
@@ -46,9 +47,11 @@ for (const model of Object.keys(LEDGER.governed)){
   check(model + ": independent cleanOpen matches recorded",
         replay.cleanOpen === recorded.cleanOpen,
         replay.cleanOpen + " vs " + recorded.cleanOpen);
-  check(model + ": independent request-sequence op count matches recorded",
-        replay.ledger.length === recorded.requestSequence.length,
-        replay.ledger.length + " vs " + recorded.requestSequence.length);
+  // Content, not just count (a Fable advisor pass proved the length-only version could pass
+  // with a silently corrupted transcript — e.g. a "deadlock" op rewritten to a plain "block").
+  check(model + ": independent request-sequence CONTENT matches recorded exactly",
+        JSON.stringify(replay.ledger) === JSON.stringify(recorded.requestSequence),
+        JSON.stringify(replay.ledger) + " vs " + JSON.stringify(recorded.requestSequence));
 }
 
 // Sanity: the token comparison in REALAGENT-RESULTS.md rests on these totals — recompute them
@@ -56,19 +59,63 @@ for (const model of Object.keys(LEDGER.governed)){
 for (const model of Object.keys(LEDGER.governed)){
   const g = LEDGER.governed[model];
   const sum = g.outputTokensPerDecision.reduce((a, b) => a + b, 0);
-  check(model + ": governed outputTokensTotal recomputes", sum === g.outputTokensTotal, sum + " vs " + g.outputTokensTotal);
+  check(model + ": governed outputTokensTotal recomputes from ledger arrays", sum === g.outputTokensTotal, sum + " vs " + g.outputTokensTotal);
 }
 for (const model of Object.keys(LEDGER.baseline)){
   const b = LEDGER.baseline[model];
   const sum = b.perRoundOutputTokens.reduce((a, b2) => a + b2, 0);
-  check(model + ": baseline outputTokensTotal recomputes", sum === b.outputTokensTotal, sum + " vs " + b.outputTokensTotal);
+  check(model + ": baseline outputTokensTotal recomputes from ledger arrays", sum === b.outputTokensTotal, sum + " vs " + b.outputTokensTotal);
 }
+
+// Provenance: the ledger's arrays are themselves claims about the raw decision-logs records —
+// a Fable advisor pass noted nothing checked that logs->ledger step. Recompute the ledger's
+// per-decision/per-round arrays, decisions, and totals straight from realagent-decision-logs.json
+// and require exact agreement, closing the logs->ledger link the same way the ledger->replay
+// link is closed above.
+function recordsFor(arm, model){ return DECISIONS.records.filter(r => r.arm === arm && r.model === model); }
+
 for (const model of Object.keys(LEDGER.governed)){
-  check(model + ": governed cheaper than baseline in real output tokens (this run)",
-        LEDGER.governed[model].outputTokensTotal < LEDGER.baseline[model].outputTokensTotal,
-        LEDGER.governed[model].outputTokensTotal + " vs " + LEDGER.baseline[model].outputTokensTotal);
+  const g = LEDGER.governed[model];
+  const recs = recordsFor("governed", model);
+  const tokensFromLogs = recs.map(r => r.outputTokens);
+  const decisionsFromLogs = recs.map(r => r.decision && r.decision.action);
+  check(model + ": governed per-decision tokens match decision-logs",
+        JSON.stringify(tokensFromLogs) === JSON.stringify(g.outputTokensPerDecision),
+        JSON.stringify(tokensFromLogs) + " vs " + JSON.stringify(g.outputTokensPerDecision));
+  check(model + ": governed decisions match decision-logs",
+        JSON.stringify(decisionsFromLogs) === JSON.stringify(g.decisions),
+        JSON.stringify(decisionsFromLogs) + " vs " + JSON.stringify(g.decisions));
+}
+for (const model of Object.keys(LEDGER.baseline)){
+  const b = LEDGER.baseline[model];
+  const recs = recordsFor("baseline", model);
+  const byRound = {};
+  for (const r of recs) byRound[r.round] = (byRound[r.round] || 0) + r.outputTokens;
+  const perRoundFromLogs = Object.keys(byRound).sort((a, c) => a - c).map(k => byRound[k]);
+  check(model + ": baseline per-round tokens match decision-logs",
+        JSON.stringify(perRoundFromLogs) === JSON.stringify(b.perRoundOutputTokens),
+        JSON.stringify(perRoundFromLogs) + " vs " + JSON.stringify(b.perRoundOutputTokens));
+  const sumFromLogs = recs.reduce((a, r) => a + r.outputTokens, 0);
+  check(model + ": baseline outputTokensTotal matches decision-logs sum", sumFromLogs === b.outputTokensTotal, sumFromLogs + " vs " + b.outputTokensTotal);
+}
+
+// The "cheaper" comparison is only a fair, same-event claim where the governed arm actually
+// completed all 3 requests (a Fable advisor pass caught this being asserted unconditionally,
+// including for Haiku, where it isn't). Derive fairness from the data — not from naming a
+// model — the same "enforced, not assumed" discipline the project applies elsewhere.
+for (const model of Object.keys(LEDGER.governed)){
+  const g = LEDGER.governed[model];
+  const sameEventComparison = g.decisions.every(d => d === "request");
+  if (sameEventComparison){
+    check(model + ": governed cheaper than baseline in real output tokens (same-event comparison)",
+          g.outputTokensTotal < LEDGER.baseline[model].outputTokensTotal,
+          g.outputTokensTotal + " vs " + LEDGER.baseline[model].outputTokensTotal);
+  } else {
+    console.log("note: " + model + "'s governed arm did not issue all 3 requests (decisions " +
+      JSON.stringify(g.decisions) + ") — skipping the cheaper-than-baseline check; not a same-event comparison.");
+  }
 }
 
 console.log("checks: " + ok + "/" + n + " hold");
 if (fails.length){ console.log("FAIL — " + fails.length + " break(s):"); fails.forEach(f => console.log("  x " + f)); process.exit(1); }
-console.log("GREEN — the canonical witness.js, replayed independently of the workflow harness's inlined copy, reproduces every recorded governed-arm outcome; token totals recompute exactly from the per-decision arrays.");
+console.log("GREEN — the canonical witness.js, replayed independently of the workflow harness's inlined copy, reproduces every recorded governed-arm outcome; the ledger's arrays recompute exactly from the raw decision-logs; token totals recompute exactly.");

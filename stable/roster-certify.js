@@ -78,13 +78,20 @@ function canon(o){
 // (1) `certify-seamC`'s range clause still visits `lo` before `hi` under ascending order and the
 // reverse under descending — an inherent property of range-type deviations, not fixable by
 // repositioning the seam, and not fully eliminated (a small residual ordering effect remains from
-// this one declaration). (2) The DOMINANT remaining source of CERTIFY failures has nothing to do
-// with probe order at all: under unbounded probing (`after-cap`/`never`), every ordering
-// eventually catches every seeded bug (fair total collapses low) while both sound declarations
-// eventually exhaust their candidate list and trip the surge/stall protector, paying a flat
-// `openB` penalty each regardless of how much real coverage they'd already earned — this accounts
-// for far more of the remaining failures than the ascending/descending effect ever did, and this
-// rebuild does not address it.
+// this one declaration). (2) [historical note, superseded same day] the first write of this
+// comment said unbounded probing drives both sound declarations into the surge/stall trip and
+// "this rebuild does not address it" — the THIRD PASS below then addressed the generator's share
+// of that problem: an exhausted finite ordering now abstains instead of repeat-probing into the
+// trip (see the unbounded-exhaustion break in playAgainst). PARTIALLY addressed, not closed:
+// with the trip-inflation gone, a residual, structural version of the same shape remains —
+// `certify-soundB` (range clause) needs 5 distinct productive probes (par=5) for a calibrated
+// null, but the short candidate lists of `boundary-targeted` and `ranked-exact` supply only ~4
+// distinct points, so those orderings can NEVER earn a calibrated null on soundB no matter how
+// honest their play — they exhaust at partial coverage and score premature null (flat builder
+// credit 10). That is a candidate-list-length vs. par mismatch, varying by clause type
+// (soundA's threshold clause happens to have exactly par-many candidates under boundary-targeted,
+// a coincidence, not a design), and it still accounts for every remaining after-cap/never
+// violation (80 of the 240 unbounded grid points, all boundary-targeted/ranked-exact).
 var CERTIFY_POOL = {
   seamA: { id: "certify-seamA", domain: { min: 1, max: 300 },
     clauses: [ { type: "threshold", op: ">=", t: 100, effect: { kind: "percentOff", value: 15 } } ],
@@ -185,9 +192,22 @@ function makePolicy(ordering, abstainTiming, seed){
     else if (abstainTiming === "after-3") probeLimit = 3;
     else if (abstainTiming === "after-5") probeLimit = 5;
     else if (abstainTiming === "after-par") probeLimit = compiled.par;
-    else probeLimit = Infinity;   // "after-cap" and "never" — the cap/stall mechanics end it
+    else probeLimit = Infinity;   // "after-cap" and "never" — genuinely unbounded
+    // Unbounded + a finite ordering (every ordering except "none") must STOP once every
+    // genuinely-new candidate has been tried, rather than repeat the last one forever — a
+    // real bug found 2026-07-21: repeating a stale probe earns no new coverage, so the surge
+    // gauge's lag counter climbs every probe and eventually trips, converting what should be a
+    // cheap, honest abstain (calibrated or premature null) into a more expensive "tripped"
+    // verdict, regardless of how much real coverage was already earned. "none" is exempt: its
+    // candidates are never stale (each call is a fresh random draw), so genuine unbounded
+    // flailing is still exercised there, which is the point of that ordering.
+    var unbounded = (abstainTiming === "after-cap" || abstainTiming === "never");
     var i = 0;
-    while (!session.over() && i < probeLimit){ session.probe(nextCandidate(i)); i++; }
+    while (!session.over() && i < probeLimit){
+      if (unbounded && ordering !== "none" && i >= candidates.length) break;
+      session.probe(nextCandidate(i));
+      i++;
+    }
     if (!session.over()) session.abstain();
   }
   return { id: id, ordering: ordering, abstainTiming: abstainTiming, seed: seed, playAgainst: playAgainst };
@@ -246,7 +266,7 @@ if (require.main === module && process.argv.indexOf("--self-test") >= 0){
   GRID.forEach(function(p){ if (ids[p.id]) dupId = p.id; ids[p.id] = true; });
   check("every grid id is unique", dupId === null, "duplicate: " + dupId);
   var dbc = distinctBehaviorCount();
-  check("distinct-behavior count is 155 (trace-verified, not asserted from prose)", dbc === 155, "got " + dbc);
+  check("distinct-behavior count is 154 (trace-verified, not asserted from prose)", dbc === 154, "got " + dbc);
 
   console.log("checks: " + ok + "/" + n + " hold");
   if (fails.length){ console.log("FAIL — " + fails.length + " break(s):"); fails.forEach(function(f){ console.log("  x " + f); }); process.exit(1); }

@@ -19,7 +19,7 @@
    "illegalW": 12
   },
   "scale_fixture_sha256": "2ed3fb9aca2290a6d77a8630eb1bd402d67bb54272426f98102458459d3efb1e",
-  "certify_roster_sha256": "adda1b6735b354189ab3a4cda21c364f7761db6bac43245368383d977359cbf9"
+  "certify_roster_sha256": "2312b8d77f1e3ca5f2aed682e67931a14bc2ea889031055c393531b7acfa339b"
  },
  "signoff_log": [
   {
@@ -74,6 +74,15 @@
    "ratification_token": "JT-2026-07-21",
    "note": "Result: ascending-scan and descending-scan now hold at the IDENTICAL rate (63% each, was 13%/63%) — the asymmetry Jake asked to be fixed is gone. Overall CERTIFY: 740/1120 hold (66.1%), up from 520/1120 (46.4%) before this fix. Disclosed, not fixed by this change: certify-seamC's range clause still carries an inherent, small lo/hi ordering effect (structural to range-type deviations, not repositionable away); and the dominant remaining failure driver is unrelated to ordering entirely — under unbounded probing (after-cap/never) every ordering eventually catches every seam while both sound declarations trip the surge/stall protector and pay a flat penalty regardless of coverage earned, which accounts for far more of the remaining red than ascending/descending ever did. This ratifies the rebuilt roster's existence and hash, not a claim that CERTIFY passes. Full trace: witness-suite/SPEC-B-RESULTS.md.",
    "governed_sha256": "c7887a3f7f2fea5633a1ace3d5a5ded4e9095cfad2cbefe27c78adf17c63baa5"
+  },
+  {
+   "date": "2026-07-21",
+   "action": "RATIFIED — witness-policy generator fixed so exhausted finite orderings ABSTAIN instead of repeat-probing into the surge/stall trip under unbounded abstain-timings (Jake directed chasing the stall-protector penalty). certify_roster_sha256 re-pinned to the fixed generator.",
+   "scale": "0.3",
+   "ratified": true,
+   "ratification_token": "JT-2026-07-21",
+   "note": "The diagnosed bug was in the GENERATOR, not the knob or the surge protector: a policy that had already earned full coverage (e.g. soundA at 3 probes, coverage 1.0) kept repeating its last exhausted candidate forever, feeding the stall gauge until it tripped — converting a clean calibrated null into a 'tripped' verdict. Fixed: unbounded timings (after-cap/never) with any finite ordering now break at candidate-list exhaustion and abstain on their real coverage; 'none' (seeded-random) is exempt, its candidates are never exhausted, so genuine unbounded flailing is still exercised. Adversarially verified before signing: zero tripped verdicts remain across all 240 unbounded non-random policies; exactly those 240 policies changed, zero bounded-timing policies affected; seam declarations byte-identical except midpoint-only (which now collapses in 1 probe instead of tripping at 6 — correct, an exhausted 1-candidate witness has nothing left to try). CERTIFY: 860/1120 hold (76.8%), up from 740/1120. Disclosed, reduced-not-closed: 80 of the 240 unbounded points still fail — every boundary-targeted and ranked-exact entry — root-caused to a candidate-list-length vs. par mismatch (soundB needs par=5 distinct productive probes but those orderings supply ~4 candidates, so they can never earn its calibrated null regardless of play quality). Same disclosure standard as every prior bias found today. This ratifies the fixed generator's hash, not a claim that CERTIFY passes.",
+   "governed_sha256": "81aaba5efaaf6468243852ba590eb431def3b2214348c2476d4daf495dc9f21e"
   }
  ]
 }

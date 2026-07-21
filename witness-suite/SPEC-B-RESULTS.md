@@ -1,12 +1,14 @@
-# Spec B — results (2026-07-21, widened and then rebuilt same day)
+# Spec B — results (2026-07-21, widened, rebuilt, and generator-fixed same day)
 
-**Current verdict: CERTIFY FAILS on the ratified knob — 740/1120 hold (66.1%).** Three runs
+**Current verdict: CERTIFY FAILS on the ratified knob — 860/1120 hold (76.8%).** Four runs
 happened today, in order, each an honest data point kept below rather than overwritten: 150/240
-(62.5%, first run) → 520/1120 (46.4%, widened grid, same certify pool) → **740/1120 (66.1%,
-widened grid, rebuilt certify pool)**. The jump between the last two isn't the knob getting
-better — it's a real construction bug in the certify pool being fixed (see "The certify pool
-rebuild" below). The knob still does not generalize to the held-out grid; the rate just got more
-honest as the instrument measuring it improved.
+(62.5%, first run) → 520/1120 (46.4%, widened grid, same certify pool) → 740/1120 (66.1%,
+widened grid, rebuilt certify pool) → **860/1120 (76.8%, generator's stall-inflation bug
+fixed)**. None of the three jumps is the knob getting better — each is a real instrumentation
+bug being found (every one by an adversarial review pass) and removed. The knob still does not
+generalize to the held-out grid; the rate has gotten more honest each time the instrument
+measuring it improved, and the failures that remain are the ones the instrument can now stand
+behind.
 
 **First run (240 points), for the record:** 150/240 held; worst case `ranked-exact@after-cap`,
 seed 0 — fair scores 3, defensive scores 25, a 22-point gap. This was predicted before the run (an
@@ -182,23 +184,65 @@ independent recomputation of the full 8-timing × 20-seed breakdown for both ord
   version had `par=4`; the new threshold-only version has `par=3` — a side effect of moving to a
   single-clause declaration, orthogonal to the ascending/descending fix, not itself investigated
   further.
-- **The dominant remaining failure driver has nothing to do with probe order, and this rebuild
-  does not touch it.** Under unbounded probing (`after-cap`/`never`), every ordering — including
-  the otherwise-strong `boundary-targeted` — eventually catches every seeded bug (fair total
-  collapses to ~1), while both sound declarations eventually exhaust their finite candidate list
-  and trip the surge/stall protector, paying a flat `openB=12` penalty each *regardless of how
-  much real coverage they'd already earned*. This single mechanism accounts for far more of the
-  remaining 380/1120 failures than the ascending/descending effect ever did. It is a separate,
-  unaddressed question: whether a witness that runs out of new things to probe should be
-  penalized as harshly as one that never covered anything.
+- **The dominant remaining failure driver has nothing to do with probe order — and it was chased
+  next, same day. See "The stall-inflation fix," below.** (Original disclosure, kept for the
+  record: under unbounded probing, every ordering eventually catches every seeded bug while both
+  sound declarations exhaust their finite candidate list and trip the surge/stall protector,
+  paying a flat `openB=12` regardless of real coverage earned.)
+
+## The stall-inflation fix (2026-07-21, fourth pass, chases the disclosure above)
+
+Jake: "chase the stall-protector penalty next." The diagnostic that opened the chase settled it
+in one trace: under `boundary-targeted@after-cap`, `certify-soundA` had **already achieved 100%
+coverage at 3 probes — exactly its par** — and was then driven to a `tripped` verdict anyway,
+because the policy generator kept re-probing its last exhausted candidate forever, feeding the
+stall gauge until it fired. The bug was in the **generator** (`playAgainst`'s documented
+"exhausted: repeat last" fallback), not in the `/3` knob and not in the surge protector, which
+was doing its job correctly against genuinely stalled play. The generator was manufacturing
+stalled play out of finished play.
+
+**The fix:** under unbounded abstain-timings (`after-cap`/`never`), any *finite* ordering now
+stops at candidate-list exhaustion and abstains on whatever coverage it actually earned —
+calibrated null if complete, premature null if not — instead of repeat-probing into the trip.
+`none` (seeded-random) is deliberately exempt: its candidates are fresh draws every probe, never
+exhausted, so genuine unbounded flailing is still exercised and still trips, which is that
+ordering's entire diagnostic point.
+
+**Adversarially verified before shipping** (same discipline as every pass today): zero `tripped`
+verdicts remain across all 240 unbounded non-random policies; a full-grid before/after diff shows
+exactly those 240 policies changed and zero bounded-timing policies affected; the three seam
+declarations' outcomes are byte-identical everywhere except `midpoint-only`, which now collapses
+in 1 probe instead of tripping at 6 — the correct consequence (an exhausted one-candidate witness
+genuinely has nothing left to try). Distinct behaviors: 155 → 154 (two former repeat-then-trip
+traces now converge).
+
+**Result: 860/1120 hold (76.8%), up from 740/1120 (66.1%).** New worst violation:
+`boundary-targeted@after-2-seed0` (fair 1 vs. defensive 20, gap 19) — a *bounded*-timing case,
+untouched by this fix and pre-existing: an efficient witness catches both reachable seams in 1
+probe each (builder credit ~0) while 2 probes can't reach either sound declaration's par, so both
+score the flat `prematureB=10`. That is a genuine finding about the knob's flat premature-null
+reward against efficient low-budget witnesses, not an instrumentation artifact — three
+adversarial passes have now failed to explain it away.
+
+**Reduced, not closed — the honest residue:** before this fix, 200 of the 240 unbounded
+non-random grid points were violations; after it, **80 still are** — every `boundary-targeted`
+and `ranked-exact` entry under `after-cap`/`never`. Root cause, same *shape* as every bias found
+today but one level deeper: `certify-soundB` (range clause) requires par=5 distinct productive
+probes for a calibrated null, but those two orderings' candidate lists only supply ~4 distinct
+points — so they can *never* earn soundB's calibrated null no matter how honest their play; they
+exhaust at partial coverage and concede the flat `prematureB=10`. (`soundA` fully resolves under
+`boundary-targeted` only because its threshold clause happens to yield exactly par-many
+candidates — a coincidence of clause type, not a designed property.) This is a candidate-list-
+length vs. par mismatch, disclosed here to the same standard as every prior bias rather than
+absorbed into the headline number.
 
 ## Falsification / soundness checks on the mechanism itself (separate from the knob's own result)
 
 - Disjointness enforced at load, not assumed: no shared declaration id, no shared canonical
   content, between the certify pool and the tune roster (`run-versus-balance.js`).
 - `roster-certify.js --self-test`: 9/9 — every certify declaration legal, quota respected, grid
-  well-formed, distinct-behavior count trace-verified (155, up from 52 on the narrower grid)
-  rather than asserted from prose.
+  well-formed, distinct-behavior count trace-verified (currently 154; was 52 on the narrower
+  grid, 155 before the stall-inflation fix converged two traces) rather than asserted from prose.
 - The generator's white-box design (the runner hands each policy `compiled.par`/`boundaries`
   directly, rather than the original design's black-box `witness(session)`-only shape) is a
   disclosed deviation, not an accident — these are stress instruments for the scoring surface

@@ -112,11 +112,15 @@ recomputes; the DENIED verdict was independently re-derived twice from raw cells
   `bridge/replay-replication.js`;
 - label conflation: "Spec B par root-cause closed" — the *par-derivation* item cited in the
   0.2 ratification note is closed by derived par; Spec B itself (the held-out certification
-  roster) was a separate design. **Update (2026-07-21): Spec B is now built and run** —
-  `witness-suite/SPEC-B-RESULTS.md`. The /3 sound-reward divisor, tuned and certified on the
-  same six scripted players, does NOT generalize to the held-out policy grid (150/240 hold,
-  worst gap 22 points in the defensive pool's favor) — the exact standing consequence this
-  section used to only warn about is now a measured, gate-pinned finding, not a prediction.
+  roster) was a separate design. **Update (2026-07-21): Spec B is now built and run four
+  times** — `witness-suite/SPEC-B-RESULTS.md` carries the full sequence (150/240 → 520/1120 →
+  740/1120 → 860/1120), each jump an instrumentation bug found by an adversarial pass and
+  removed, never the knob improving. Current, gate-pinned state: the /3 sound-reward divisor,
+  tuned and certified on the same six scripted players, does NOT generalize to the held-out
+  policy grid — 860/1120 hold (76.8%), worst violation an efficient boundary-targeted witness
+  on a 2-probe budget (gap 19) that three adversarial passes failed to explain away as an
+  artifact. The exact standing consequence this section used to only warn about is now a
+  measured finding, not a prediction.
 
 ---
 

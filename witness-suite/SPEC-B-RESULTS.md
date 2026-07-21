@@ -103,19 +103,36 @@ exactly at its `domain.min` (0), and `certify-seamC`'s sits near its `domain.max
 the 450 ceiling)** — an accidental artifact of where the deviations were placed when these
 declarations were hand-built, not a property of the scoring engine.
 
-- `ascending-scan` (starts at `domain.min`) catches `seamB` almost for free — 1 probe, builder
-  score ~0 — but has to work through most of the candidate list before reaching `seamC`'s bug near
-  the far end, so under any short abstain-timing (`after-1` through `after-5`) it misses `seamC`
-  entirely: a **false pass**, worth a flat 15 points to the builder regardless of how few probes
-  were spent. Net for short timings: ~0 (seamB, caught) + 15 (seamC, missed) = 15.
-- `descending-scan` is the mirror image — it reaches `seamC` quickly but takes just as long to
-  reach `seamB`'s bug at the opposite end, so short timings miss `seamB` instead. But because
-  BOTH bugs sit far from where descending starts under the shortest timings (`after-1`
-  through `after-3`), it misses BOTH: two false passes, 15 + 15 = 30 — nearly double ascending's
-  15, which alone accounts for most of the gap.
-- The two orderings converge again once the timing is generous enough to reach both ends
-  (`after-cap`/`never`): both eventually catch every seam, and the comparison shifts entirely to
-  the sound declarations' overshoot penalties, where the two orderings end up closer.
+- `ascending-scan` (starts at `domain.min`) catches `seamB` for free — 1 probe, builder score
+  exactly 0 — but needs 7 probes to reach `seamC`'s bug, so under any short abstain-timing
+  (`after-1` through `after-5`) it misses `seamC` entirely: a **false pass**, worth a flat 15
+  points to the builder regardless of how few probes were spent. Net for short timings: 0 (seamB,
+  caught) + 15 (seamC, missed) = 15.
+- `descending-scan` is NOT a mirror image — the two bugs aren't symmetric, so neither is the
+  cost. Descending reaches `seamC`'s bug in 4 probes (faster than ascending's 7, since 400 sits
+  closer to `domain.max` than `domain.min` is far from it) but doesn't reach `seamB`'s bug until
+  probe 10 — the very last candidate, because that bug sits *exactly at* an extreme (`domain.min`)
+  while `seamC`'s only sits *near* one. Under the shortest timings (`after-1` through `after-3`),
+  descending is still short of both, so it misses both: 15 + 15 = 30, exactly double ascending's
+  15 (not "nearly" — verified exact, both by direct computation and by an independent adversarial
+  re-derivation).
+- **`after-cap`/`never` do NOT converge by shifting to the sound side, as an earlier draft of
+  this note claimed — that framing was checked and was wrong.** At those timings `soundA`/`soundB`
+  both register `tripped` (the surge/VSWR protector fires, not a full calibrated-null coverage),
+  which pays a flat `openB=12` each — **24 total, identical for both orderings.** The sound
+  declarations contribute *nothing* to the residual difference between orderings here. What
+  narrows the gap is still entirely `seamB`+`seamC`: ascending, having reached both bugs by now,
+  totals 0+6=6; descending totals 9+3=12 (its late `seamB` catch, at probe 10, still costs more
+  than a catch would if it had happened earlier — `probes-1` grows with the probe count). Gap
+  (sound − seam) is 24−6=18 for ascending vs. 24−12=12 for descending — narrower, but for the
+  same reason as everywhere else in this analysis: the seam declarations, not the sound ones.
+
+**How much of the gap this actually explains:** not "most of it" — all of it, exactly. An
+adversarial pass verified the identity `(defensive total) − (fair total) = (soundA+soundB) −
+(seamB+seamC)` holds with zero exceptions across the full 1120-point grid (every ordering, every
+abstain-timing, every seed) — not an approximation from a sampled subset. For `ascending-scan`
+vs. `descending-scan` specifically, this reduced form alone reproduces every hold/fail flip at
+every abstain-timing exactly. The mechanism above is the complete explanation, not a partial one.
 
 **What this actually means:** the 5× swing isn't telling us something new about the `/3` divisor —
 it's exposing that these 5 certify declarations weren't built with their deviations placed

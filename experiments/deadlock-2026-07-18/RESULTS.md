@@ -70,9 +70,12 @@ node run-deadlock.js                 # runs both arms, writes deadlock-ledger.js
 node replay-deadlock.js --self-test  # independent verifier: recomputes the GRANTED verdict (10/10)
 ```
 
-## Next honest step
+## Next honest step — RUN (2026-07-21)
 
-The registered-but-unrun piece: a **budgeted real-agent baseline** (Sonnet 5 / Haiku actors,
-capped) to measure whether real models flailing in prose actually cost more than the witness's
-deterministic check — the one falsification condition (3) currently proven only structurally.
-Small, pre-budgeted, and it converts "bounded vs capped" into "cheaper in real tokens."
+The real-agent token baseline this section used to flag as unrun has been run: see
+`REALAGENT-PREREGISTRATION.md` and `REALAGENT-RESULTS.md`. Verdict: candidate GRANTED for
+Sonnet 5 (governed cost 2,370 real output tokens vs. baseline 2,879 — a clean, matching-shape
+comparison); INCONCLUSIVE for Haiku (the governed arm's actors declined to complete the fixed
+request sequence, so its lower token count isn't priced against the same event). The more
+interesting result: no real-agent condition reproduced the scripted baseline's mindless
+infinite flailing — every real actor settled into a cautious `wait` pattern instead.

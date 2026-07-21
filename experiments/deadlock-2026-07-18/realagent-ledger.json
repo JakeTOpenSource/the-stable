@@ -1,0 +1,65 @@
+{
+ "_meta": {
+  "trial": "circular-deadlock-2026-07-18 / realagent addendum 2026-07-21",
+  "preregistration": "REALAGENT-PREREGISTRATION.md",
+  "deterministic": false,
+  "note": "Real Sonnet 5 / Haiku actors replace the scripted ones from deadlock-ledger.json. The witness arbitrating the governed arm is the same algorithm as witness.js (inlined in the workflow harness; independently re-verified by realagent-replay.js against the actual required witness.js). Metering is real output tokens per decision via the workflow harness's own token accounting; input-side cost is not metered (disclosed in the preregistration)."
+ },
+ "cycleTasks": [
+  { "actor": "A", "hold": "N1", "want": "N2" },
+  { "actor": "B", "hold": "N2", "want": "N3" },
+  { "actor": "C", "hold": "N3", "want": "N1" }
+ ],
+ "governed": {
+  "claude-sonnet-5": {
+   "requestSequence": [
+    { "op": "grant", "actor": "A", "resource": "N1" },
+    { "op": "grant", "actor": "B", "resource": "N2" },
+    { "op": "grant", "actor": "C", "resource": "N3" },
+    { "op": "block", "actor": "A", "resource": "N2", "holder": "B" },
+    { "op": "block", "actor": "B", "resource": "N3", "holder": "C" },
+    { "op": "deadlock", "actor": "C", "resource": "N1", "cycle": ["A", "B", "C", "A"] },
+    { "op": "trip", "cycle": ["A", "B", "C", "A"], "to": "OPEN" }
+   ],
+   "decisions": ["request", "request", "request"],
+   "trippedAtStep": 3,
+   "cycle": ["A", "B", "C", "A"],
+   "cleanOpen": true,
+   "outputTokensPerDecision": [502, 568, 1300],
+   "outputTokensTotal": 2370
+  },
+  "claude-haiku-4-5-20251001": {
+   "requestSequence": [
+    { "op": "grant", "actor": "A", "resource": "N1" },
+    { "op": "grant", "actor": "B", "resource": "N2" },
+    { "op": "grant", "actor": "C", "resource": "N3" },
+    { "op": "block", "actor": "A", "resource": "N2", "holder": "B" }
+   ],
+   "decisions": ["request", "wait", "wait"],
+   "trippedAtStep": -1,
+   "cycle": null,
+   "cleanOpen": false,
+   "outputTokensPerDecision": [1341, 1591, 1530],
+   "outputTokensTotal": 4462,
+   "note": "B and C both chose 'wait' rather than 'request' on their only decision, reasoning generically about deadlock risk without being told one exists. The cycle never closed, the witness never tripped, and cleanOpen is false because there is nothing to clean — the run simply stopped one request short of the topology closing. This is a real divergence from the fixed 3-request shape the token comparison assumes; see REALAGENT-RESULTS.md."
+  }
+ },
+ "baseline": {
+  "claude-sonnet-5": {
+   "roundsRun": 3,
+   "resolved": false,
+   "remainingActive": ["A", "B", "C"],
+   "perRoundOutputTokens": [820, 909, 1150],
+   "outputTokensTotal": 2879,
+   "note": "No actor ever chose 'abstain'; all three requested once (round 1, all blocked) then 'waited' every subsequent round. Capped at 3 rounds per the preregistration, not because anyone stopped."
+  },
+  "claude-haiku-4-5-20251001": {
+   "roundsRun": 3,
+   "resolved": false,
+   "remainingActive": ["A", "B", "C"],
+   "perRoundOutputTokens": [1323, 1580, 2149],
+   "outputTokensTotal": 5052,
+   "note": "Same shape as Sonnet's baseline: one request each in round 1, then 'wait' every round after. No abstain."
+  }
+ }
+}

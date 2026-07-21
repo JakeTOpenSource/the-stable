@@ -96,6 +96,10 @@ selfTest("bridge/replay-replication", "bridge/replay-replication.js", "--self-te
 // hold forever, or the published claim is no longer true.
 selfTest("deadlock/witness", "experiments/deadlock-2026-07-18/witness.js", "--self-test");
 selfTest("deadlock/replay", "experiments/deadlock-2026-07-18/replay-deadlock.js", "--self-test");
+// The real-agent token addendum (2026-07-21): independent replay of the recorded real-model
+// decisions through the canonical witness.js (not the workflow harness's inlined copy), plus a
+// recompute of the token totals the results doc cites.
+selfTest("deadlock/realagent-replay", "experiments/deadlock-2026-07-18/realagent-replay.js", "--self-test");
 
 // --- publication hygiene: no local-machine identity in the publishable tree ---------------
 // Semantic classes, not a blacklist (2026-07-17 privacy sweep): absolute filesystem paths,

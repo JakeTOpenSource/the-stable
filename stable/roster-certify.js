@@ -23,25 +23,15 @@
 //
 // - "none" ordering = seeded-random probing (an LCG, same construction as
 //   run-versus-balance.js's flailPlay), which is the ONLY ordering where the seed axis does
-//   real work. The three named orderings (ranked-exact, ascending-scan, midpoint-only) are
-//   fully deterministic from the declaration alone, so seed is a label, not a variable, for
-//   them — distinctBehaviorCount() below reports the real number of distinct behaviors (52 of
-//   240 grid points, verified by full probe-trace comparison against every CERTIFY_POOL
-//   declaration, not guessed from the symbolic rules), not the raw grid size, so nothing here
-//   overclaims coverage the way this project's honest-limit culture forbids.
-//
-// - "immediate" abstain-timing probes zero times, full stop — one behavior across every
-//   ordering and every seed, not 40 (or 240).
-//
-// - "after-cap" and "never" are behaviorally IDENTICAL given how openHidden's cap/stall
-//   mechanics actually work (both just mean "keep probing until the session concludes on its
-//   own") — kept as separately-named grid entries per the spec's letter (so a missing
-//   archetype still shows in a diff), but collapsed into one bucket ("unbounded") for the
-//   distinct-behavior count.
-//
-// - ranked-exact and ascending-scan are ALSO behaviorally identical under after-1 specifically
-//   (both always probe domain.min first against every declaration in this pool) — a second,
-//   empirically-verified collapse, not assumed from the orderings' names.
+//   real work; the six named orderings are fully deterministic from the declaration alone, so
+//   seed is a label, not a variable, for them. Several named orderings/timings ALSO collapse
+//   into identical behavior against this pool (e.g. "immediate" probes zero times regardless of
+//   ordering or seed; "after-cap" and "never" both just mean "probe until the session concludes
+//   on its own"). distinctBehaviorCount() below does NOT hand-enumerate these collapses — it
+//   runs every grid point against every CERTIFY_POOL declaration through the real engine and
+//   buckets by the resulting probe trace, so the reported number (see the self-test) is
+//   provably correct rather than reasoned about, closing exactly the class of off-by-one a
+//   symbolic collapse rule invited when this file was first reviewed.
 //
 // - Once an ordering's candidate list is exhausted, further probes (if the round hasn't
 //   concluded) repeat the last candidate — a legal, unproductive probe, letting the
@@ -50,6 +40,7 @@
 "use strict";
 var path = require("path");
 var vc = require(path.join(__dirname, "versus-compiler.js"));
+var vm = require(path.join(__dirname, "versus-match.js"));
 
 // ---- canonical serialization (shared by the disjointness check and the certify-roster hash) --
 function canon(o){
@@ -85,14 +76,33 @@ var CERTIFY_BUILDS = {
 };
 
 // ---- the witness-policy grammar: probe-ordering x abstain-timing x seed --------------------
-var ORDERINGS = ["ranked-exact", "ascending-scan", "midpoint-only", "none"];
-var ABSTAIN = ["immediate", "after-1", "after-2", "after-par", "after-cap", "never"];
-var SEEDS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+// Widened 2026-07-21 (turning the single-run 150/240 result into a rate, Jake directed): three
+// new orderings and two new abstain-timings, none of them redundant padding —
+// - descending-scan: same candidate SET as ascending-scan, reverse order. Tests whether probe
+//   ORDER (not just which values get covered) changes the outcome under a short abstain-timing.
+// - extremes-first: domain.min then domain.max, then the rest of ascending-scan's set — the
+//   witness-suite's own v0.3.1 doctrine ("domain extremes are first-class targets") as a policy.
+// - boundary-targeted: WHITE-BOX — probes compiled.boundaries (the compiler's own structural
+//   rule-change points) directly, rather than regex-parsing prose for "$" values like
+//   ranked-exact does. For these declarations the values often coincide, but the SOURCE differs
+//   (structure vs. prose), which is exactly the distinction versus-compiler.js's own boundaries
+//   comment draws — a genuinely different witness model, not a relabeled duplicate.
+// - after-3 / after-5: finer granularity between after-2 and after-par/after-cap.
+var ORDERINGS = ["ranked-exact", "ascending-scan", "midpoint-only", "descending-scan", "extremes-first", "boundary-targeted", "none"];
+var ABSTAIN = ["immediate", "after-1", "after-2", "after-3", "after-5", "after-par", "after-cap", "never"];
+var SEEDS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
 
 function prosemoney(spec){
   var nums = {}; var m; var re = /\$(\d+(?:\.\d+)?)/g;
   while ((m = re.exec(spec))) nums[parseFloat(m[1])] = true;
   return Object.keys(nums).map(Number).sort(function(a, b){ return a - b; });
+}
+function ascendingSet(compiled){
+  var domain = compiled.domain;
+  var cands = {};
+  prosemoney(compiled.spec).forEach(function(n){ cands[n - 1] = true; cands[n] = true; cands[n + 1] = true; });
+  cands[domain.min] = true; cands[domain.max] = true;
+  return Object.keys(cands).map(Number).filter(function(v){ return v >= domain.min && v <= domain.max; });
 }
 function candidatesFor(ordering, compiled){
   var domain = compiled.domain;
@@ -100,12 +110,24 @@ function candidatesFor(ordering, compiled){
     return prosemoney(compiled.spec).filter(function(v){ return v >= domain.min && v <= domain.max; });
   }
   if (ordering === "ascending-scan"){
-    var cands = {};
-    prosemoney(compiled.spec).forEach(function(n){ cands[n - 1] = true; cands[n] = true; cands[n + 1] = true; });
-    cands[domain.min] = true; cands[domain.max] = true;
-    return Object.keys(cands).map(Number)
-      .filter(function(v){ return v >= domain.min && v <= domain.max; })
+    return ascendingSet(compiled).sort(function(a, b){ return a - b; });
+  }
+  if (ordering === "descending-scan"){
+    return ascendingSet(compiled).sort(function(a, b){ return b - a; });
+  }
+  if (ordering === "extremes-first"){
+    var rest = ascendingSet(compiled)
+      .filter(function(v){ return v !== domain.min && v !== domain.max; })
       .sort(function(a, b){ return a - b; });
+    return [domain.min, domain.max].concat(rest);
+  }
+  if (ordering === "boundary-targeted"){
+    var seen = {}; var ordered = [];
+    (compiled.boundaries || []).slice().sort(function(a, b){ return a - b; }).forEach(function(x){
+      if (!seen[x]){ seen[x] = true; ordered.push(x); }
+    });
+    [domain.min, domain.max].forEach(function(x){ if (!seen[x]){ seen[x] = true; ordered.push(x); } });
+    return ordered;
   }
   if (ordering === "midpoint-only"){
     return [ Math.round((domain.min + domain.max) / 2 * 100) / 100 + 0.37 ];
@@ -129,6 +151,8 @@ function makePolicy(ordering, abstainTiming, seed){
     if (abstainTiming === "immediate") probeLimit = 0;
     else if (abstainTiming === "after-1") probeLimit = 1;
     else if (abstainTiming === "after-2") probeLimit = 2;
+    else if (abstainTiming === "after-3") probeLimit = 3;
+    else if (abstainTiming === "after-5") probeLimit = 5;
     else if (abstainTiming === "after-par") probeLimit = compiled.par;
     else probeLimit = Infinity;   // "after-cap" and "never" — the cap/stall mechanics end it
     var i = 0;
@@ -146,24 +170,27 @@ ORDERINGS.forEach(function(ordering){
 });
 
 // The HONEST coverage number: real distinct behaviors, not raw grid size (see header).
-// Verified empirically (2026-07-21, adversarial pre-ship review) by running every grid point
-// against every CERTIFY_POOL declaration and comparing full probe traces, not just guessed from
-// the symbolic rules below: ranked-exact and ascending-scan produce IDENTICAL traces under
-// after-1, because every compiled spec here names its own domain.min, which is both orderings'
-// first candidate. This is an observed property of these 5 declarations, not a proven property
-// of the compiler in general — re-verify by trace if CERTIFY_POOL ever changes.
-function behaviorBucket(ordering, abstainTiming, seed){
-  if (abstainTiming === "immediate") return "immediate";
-  var normalizedAbstain = (abstainTiming === "after-cap" || abstainTiming === "never") ? "unbounded" : abstainTiming;
-  if (normalizedAbstain === "after-1" && (ordering === "ranked-exact" || ordering === "ascending-scan")){
-    return "after-1-domain-min";   // empirically identical trace, both orderings
-  }
-  if (ordering === "none") return "none@" + normalizedAbstain + "-seed" + seed;
-  return ordering + "@" + normalizedAbstain;
+// PROVABLY correct, not hand-derived: a symbolic "which orderings/timings should collapse"
+// rule was tried first and an adversarial review caught it overcounting by one (53 asserted,
+// 52 real) — exactly the class of error a rule invites as the grammar grows. Replaced with an
+// empirical trace comparison: run each policy against every CERTIFY_POOL declaration through the
+// real engine (vm.openHidden), concatenate the resulting probe ledgers, and bucket by that exact
+// string. Two policies are "the same behavior" iff they produce byte-identical probe sequences
+// against every declaration in this pool — no symbolic reasoning to get subtly wrong.
+function traceFor(policy){
+  var parts = [];
+  Object.keys(CERTIFY_POOL).sort().forEach(function(k){
+    var v = vc.validate(CERTIFY_POOL[k]);
+    var session = vm.openHidden(v.compiled, function(){});
+    policy.playAgainst(v.compiled, session);
+    if (!session.over()) session.abstain();
+    parts.push(k + ":" + session._result().ledger.join(","));
+  });
+  return parts.join("|");
 }
 function distinctBehaviorCount(){
   var seen = {};
-  GRID.forEach(function(p){ seen[behaviorBucket(p.ordering, p.abstainTiming, p.seed)] = true; });
+  GRID.forEach(function(p){ seen[traceFor(p)] = true; });
   return Object.keys(seen).length;
 }
 
@@ -183,14 +210,14 @@ if (require.main === module && process.argv.indexOf("--self-test") >= 0){
   });
   var soundCount = CERTIFY_BUILDS.defensive.filter(function(d){ return d.deviation === null; }).length;
   check("defensive pool respects SOUND_QUOTA (<=2 sound)", soundCount <= 2, "sound count " + soundCount);
-  check("grid has exactly 240 entries", GRID.length === 240, "got " + GRID.length);
+  check("grid has exactly 1120 entries", GRID.length === 1120, "got " + GRID.length);
   var ids = {}; var dupId = null;
   GRID.forEach(function(p){ if (ids[p.id]) dupId = p.id; ids[p.id] = true; });
   check("every grid id is unique", dupId === null, "duplicate: " + dupId);
   var dbc = distinctBehaviorCount();
-  check("distinct-behavior count is 52 (computed, not asserted from prose)", dbc === 52, "got " + dbc);
+  check("distinct-behavior count is 155 (trace-verified, not asserted from prose)", dbc === 155, "got " + dbc);
 
   console.log("checks: " + ok + "/" + n + " hold");
   if (fails.length){ console.log("FAIL — " + fails.length + " break(s):"); fails.forEach(function(f){ console.log("  x " + f); }); process.exit(1); }
-  console.log("GREEN — certify pool legal, quota respected, grid well-formed (240 grid points, " + dbc + " distinct behaviors, disclosed honestly).");
+  console.log("GREEN — certify pool legal, quota respected, grid well-formed (1120 grid points, " + dbc + " distinct behaviors, disclosed honestly).");
 }

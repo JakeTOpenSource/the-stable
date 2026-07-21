@@ -111,7 +111,7 @@ selfTest("stable/versus-match", "stable/run-versus-match.js", "--self-test");
 // the three engine-level invariants it used to gate on are independently covered forever by
 // run-versus-match.js's own self-test above, so demoting TUNE loses no real coverage).
 selfTestRequires("stable/versus-balance (CERTIFY)", "stable/run-versus-balance.js", "--self-test",
-  "CERTIFY: FAIL — 150/240 generated policies hold; worst violation: ranked-exact@after-cap-seed0 (fair 3 vs defensive 25, defense wins by 22)", 60000);
+  "CERTIFY: FAIL — 520/1120 generated policies hold; worst violation: boundary-targeted@after-cap-seed0 (fair 1 vs defensive 24, defense wins by 23)", 60000);
 selfTest("scoreboard custody", "stable/make-scoreboard-data.js", "--check");
 // The public explorer page: its numbers must equal the verified machines, forever (the
 // display cannot lie — same custody as the scoreboard).

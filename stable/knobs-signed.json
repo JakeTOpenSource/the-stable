@@ -19,7 +19,7 @@
    "illegalW": 12
   },
   "scale_fixture_sha256": "2ed3fb9aca2290a6d77a8630eb1bd402d67bb54272426f98102458459d3efb1e",
-  "certify_roster_sha256": "21c7d63c4d751a5b669d56945046d18544be7dc6f69aafd1470c6dad155730de"
+  "certify_roster_sha256": "8ec4d9be2d80badaff6b008517ca30eb62655d202ee89ac4a4c40ccce126de99"
  },
  "signoff_log": [
   {
@@ -56,6 +56,15 @@
    "ratification_token": "JT-2026-07-21",
    "note": "This ratifies that the CERTIFY ROSTER EXISTS, is frozen, and is disjoint (by id and by canonical declaration content) from the tune roster it was never fit to — it does NOT ratify that the current knob passes certification against it. First real run: CERTIFY FAILS (150/240 generated policies hold; worst gap 22 points in the defensive pool's favor) — Jake directed 'build it anyway, let it fail,' treating a red CERTIFY as the mechanism's first real finding rather than a reason not to ship the mechanism. Full results: witness-suite/SPEC-B-RESULTS.md. Consequence stated plainly: wiring CERTIFY into the gate as specifically-required-green (per the original design) means stable-gate.js goes red until either the knob is revised or the certify grid's scope is reconsidered — a deliberate, visible act, not a silent one. Corrected framing (a cross-project Fable advisor pass, 2026-07-21): Spec B is Check's externality clause enforced by mechanism, NOT an instance of the Witness Ledger's Candidate I (ordering drift) — that category already has a live, calibrated detector elsewhere (Delta Atlas's Priority Tracer); do not re-cite Spec B as evidence for it.",
    "governed_sha256": "edf077ae0322c7bc98477f3c4eeba0b54888741f0d7f1a852d80f946639f3774"
+  },
+  {
+   "date": "2026-07-21",
+   "action": "RATIFIED — Spec B's certify grid widened (Jake directed, 'turn it into a rate'). certify_roster_sha256 updated: 3 new probe-orderings (descending-scan, extremes-first, boundary-targeted), 2 new abstain-timings (after-3, after-5), seeds doubled 10->20. Grid 240->1120 points.",
+   "scale": "0.3",
+   "ratified": true,
+   "ratification_token": "JT-2026-07-21",
+   "note": "Wider result: 520/1120 hold (46.4%), down from 150/240 (62.5%) on the narrower grid — the knob's failure is MORE pronounced at scale, not less. Breakdown by ordering shows the failure concentrated in the targeted/structured probing strategies (ranked-exact, ascending-scan, extremes-first, boundary-targeted: 13-25% hold) and nearly absent in lazy ones (midpoint-only, random 'none': 100% hold) — meaning the imbalance is worst against exactly the kind of careful, targeted witness a real model tends to be, not an edge-case artifact of a narrow or unrealistic grid. Full breakdown: witness-suite/SPEC-B-RESULTS.md. This ratifies the WIDER roster's existence and hash, not a claim that the knob passes — same non-claim as the prior entry, now measured at greater scale.",
+   "governed_sha256": "e8e9e1da2309b295aeda5b0e574d3f0aad21f9e349deb850d3ec78a1e49135d6"
   }
  ]
 }

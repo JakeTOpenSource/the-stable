@@ -1,11 +1,12 @@
-# Spec B — results (2026-07-21, widened same day)
+# Spec B — results (2026-07-21, widened and then rebuilt same day)
 
-**Verdict: CERTIFY FAILS on the ratified knob, and fails HARDER at scale.** First run: 150/240
-generated policies held (62.5%). Jake then directed widening the grid to turn the single sample
-into a rate — 3 new probe-orderings, 2 new abstain-timings, seeds doubled — and the wider run came
-back worse, not better: **520/1120 hold (46.4%)**. See "The widened run" below for the full
-breakdown; the original 240-point run is kept below it, unedited, as the first data point in an
-append-only record, not overwritten.
+**Current verdict: CERTIFY FAILS on the ratified knob — 740/1120 hold (66.1%).** Three runs
+happened today, in order, each an honest data point kept below rather than overwritten: 150/240
+(62.5%, first run) → 520/1120 (46.4%, widened grid, same certify pool) → **740/1120 (66.1%,
+widened grid, rebuilt certify pool)**. The jump between the last two isn't the knob getting
+better — it's a real construction bug in the certify pool being fixed (see "The certify pool
+rebuild" below). The knob still does not generalize to the held-out grid; the rate just got more
+honest as the instrument measuring it improved.
 
 **First run (240 points), for the record:** 150/240 held; worst case `ranked-exact@after-cap`,
 seed 0 — fair scores 3, defensive scores 25, a 22-point gap. This was predicted before the run (an
@@ -138,15 +139,58 @@ every abstain-timing exactly. The mechanism above is the complete explanation, n
 it's exposing that these 5 certify declarations weren't built with their deviations placed
 evenly across the domain, so a probe order that happens to start from the "wrong" end pays an
 outsized false-pass penalty that has nothing to do with witness quality. This is a real
-construction weakness in the certify pool itself, not a finding about the knob. Left as documented
-and unfixed for now — regenerating the pool with deviation placement varied deliberately across
-the domain (not clustered near one end each) is the natural next step if the certify roster gets
-revised again.
+construction weakness in the certify pool itself, not a finding about the knob. **Jake directed
+fixing it the same day — see "The certify pool rebuild," below** — rather than leaving it
+documented and unfixed.
 
-By abstain-timing: `immediate` is trivial by construction (0 probes, 100% hold, not a real test).
-`after-1` through `after-3` hold ~43%; `after-5` drops to 29%; `after-par` is the best of the
-"real" timings at 57%; `after-cap`/`never` (unbounded, full exploration) are worst at 29% — more
-probing room for the defensive pool's overshoot-based reward, the more the gap widens.
+By abstain-timing (this widened-grid, pre-rebuild run): `immediate` is trivial by construction (0
+probes, 100% hold, not a real test). `after-1` through `after-3` hold ~43%; `after-5` drops to
+29%; `after-par` is the best of the "real" timings at 57%; `after-cap`/`never` (unbounded, full
+exploration) are worst at 29% — more probing room for the defensive pool's overshoot-based
+reward, the more the gap widens.
+
+## The certify pool rebuild (2026-07-21, third pass, fixes the asymmetry above)
+
+Jake: "fix the pool's construction now." Rebuilt all 5 `CERTIFY_POOL` declarations:
+
+- **First fix:** the three fair-pool seams (`seamA`/`seamB`/`seamC`) were repositioned to the
+  INTERIOR of their domains — ~33%, ~50%, ~67% of the way across — instead of sitting at (`seamB`)
+  or near (`seamC`) a domain extreme. `namedCase` was dropped from the pool entirely: its "special
+  value" is naturally the domain floor (e.g. "$0 owes nothing"), which reintroduces exactly the
+  floor-clustering this rebuild exists to remove. This alone moved the overall rate from 46.4% to
+  69.6% and closed most of the ascending/descending gap (13%/63% → 75%/63%).
+- **Second fix, same day (a follow-up adversarial review caught a subtler recurrence of the same
+  bug):** the first-pass rebuild gave `seamB`'s threshold a `flatFee` effect, whose dollar value
+  (originally 8) showed up as its own "$" figure in the compiled prose. The candidate-list
+  generator (`ascendingSet`/`prosemoney`) picks up *every* dollar figure in the spec text, not
+  just the seam's own threshold — so this planted an unrelated decoy candidate cluster near the
+  domain floor that `ascending-scan` reached before the real seam at 75. Same floor-clustering
+  problem, re-entering through the prose-derived candidate list instead of the declared seam
+  position. Fixed by switching the effect to `percentOff` (renders as "12% off" — no dollar
+  figure to leak).
+
+**Result, verified: `ascending-scan` and `descending-scan` now hold at the IDENTICAL rate — 63%
+each** (was 13% vs. 63%). The asymmetry Jake asked to be fixed is gone, confirmed by an
+independent recomputation of the full 8-timing × 20-seed breakdown for both orderings.
+
+**Disclosed, not eliminated:**
+- `certify-seamC`'s range clause still visits `lo` before `hi` under ascending order and the
+  reverse under descending — an inherent property of range-type deviations (the deviation lives
+  on only one side of a two-sided clause), not fixable by repositioning the seam's percentage
+  alone. A small residual ordering effect from this one declaration remains.
+- Dropping `namedCase` incidentally changed `soundA`'s difficulty: the old namedCase+threshold
+  version had `par=4`; the new threshold-only version has `par=3` — a side effect of moving to a
+  single-clause declaration, orthogonal to the ascending/descending fix, not itself investigated
+  further.
+- **The dominant remaining failure driver has nothing to do with probe order, and this rebuild
+  does not touch it.** Under unbounded probing (`after-cap`/`never`), every ordering — including
+  the otherwise-strong `boundary-targeted` — eventually catches every seeded bug (fair total
+  collapses to ~1), while both sound declarations eventually exhaust their finite candidate list
+  and trip the surge/stall protector, paying a flat `openB=12` penalty each *regardless of how
+  much real coverage they'd already earned*. This single mechanism accounts for far more of the
+  remaining 380/1120 failures than the ascending/descending effect ever did. It is a separate,
+  unaddressed question: whether a witness that runs out of new things to probe should be
+  penalized as harshly as one that never covered anything.
 
 ## Falsification / soundness checks on the mechanism itself (separate from the knob's own result)
 
@@ -162,11 +206,14 @@ probing room for the defensive pool's overshoot-based reward, the more the gap w
 
 ## Honest limits
 
-- **Partially addressed: sensitivity to the grammar's own choices.** Widening the grid (3 more
-  orderings, 2 more abstain-timings, 2× seeds) made the finding worse, not better — some evidence
-  this isn't an artifact of an arbitrarily narrow first grammar. Not fully addressed: both runs
-  share the same 5 certify declarations; whether the ~46% hold rate is stable across a
-  *different* certify pool (not just a wider policy grid) is still open.
+- **Now addressed on both axes: sensitivity to the grammar's choices AND to the certify pool's own
+  construction.** Widening the grid (3 more orderings, 2 more abstain-timings, 2× seeds) moved the
+  rate from 62.5% to 46.4% on the same pool — worse, not better, some evidence the finding isn't
+  an artifact of an arbitrarily narrow grammar. Rebuilding the pool itself (same grid, different
+  declarations) moved the rate again, to 66.1% — proving the rate genuinely IS sensitive to how
+  the certify pool is built, which is exactly why the rebuild's own construction choices are
+  documented above rather than treated as beyond question. The knob still fails on every version
+  tried; the specific percentage has moved with the instrument each time it improved.
 - **This does not re-litigate the deterministic core elsewhere in the repo** (the deadlock trial,
   the replication trial) — it is scoped to this one knob, in this one game.
 - **Not a Candidate I detector** (see above) — do not cite this result as ordering-drift evidence

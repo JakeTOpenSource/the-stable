@@ -52,23 +52,54 @@ function canon(o){
 // ---- certify-only declarations — new ids, new numbers, disjoint from run-versus-balance.js's
 // POOL (asserted there). Same structural shape as the tune BUILDS (fair = 3 seamed; defensive
 // = 2 sound + 1 seamed, respecting SOUND_QUOTA=2), fresh content. -----------------------------
+//
+// REBUILT 2026-07-21 (Jake directed, after chasing the ascending/descending-scan asymmetry to
+// its root): the first version placed seamB's bug exactly at its domain.min and seamC's bug near
+// its domain.max — unintentional, and it meant any ordering starting from one end got a free
+// catch while missing the other, purely from where the bugs happened to sit, not from anything
+// about witness quality. Fixed by deliberately spreading all three fair-pool seams across the
+// INTERIOR of their domains (~33%, ~50%, ~67% of the way across), none at either extreme, so no
+// scan direction gets a structural head start. Dropped `namedCase` from this pool entirely: its
+// "special value" is naturally the domain floor (e.g. $0 = "owes nothing"), which recreates
+// exactly the floor-clustering this rebuild exists to remove — `threshold` and `range` clauses
+// place their seam anywhere via the threshold/lo/hi values, with no such coupling.
+//
+// SECOND PASS, same day (adversarial review caught a subtler recurrence of the same bug): the
+// first version of this rebuild gave seamB's threshold a `flatFee` effect, whose dollar value (8)
+// showed up as its own "$" figure in the compiled prose — ascendingSet()/prosemoney() pick up
+// EVERY dollar figure in the spec text, not just the seam's own threshold, so this planted an
+// unrelated decoy candidate cluster near the domain floor that ascending-scan reached before the
+// real seam at 75. Same floor-clustering problem, re-entering through the prose-derived candidate
+// list instead of the deviation's declared position. Fixed by using `percentOff` (renders as
+// "12% off", no dollar figure) instead of `flatFee` — verified this closes the gap exactly:
+// ascending-scan and descending-scan now hold at the identical rate (63% each) on the full grid.
+//
+// What this rebuild does NOT touch, disclosed so it isn't mistaken for more progress than it is:
+// (1) `certify-seamC`'s range clause still visits `lo` before `hi` under ascending order and the
+// reverse under descending — an inherent property of range-type deviations, not fixable by
+// repositioning the seam, and not fully eliminated (a small residual ordering effect remains from
+// this one declaration). (2) The DOMINANT remaining source of CERTIFY failures has nothing to do
+// with probe order at all: under unbounded probing (`after-cap`/`never`), every ordering
+// eventually catches every seeded bug (fair total collapses low) while both sound declarations
+// eventually exhaust their candidate list and trip the surge/stall protector, paying a flat
+// `openB` penalty each regardless of how much real coverage they'd already earned — this accounts
+// for far more of the remaining failures than the ascending/descending effect ever did, and this
+// rebuild does not address it.
 var CERTIFY_POOL = {
   seamA: { id: "certify-seamA", domain: { min: 1, max: 300 },
-    clauses: [ { type: "threshold", op: ">=", t: 75, effect: { kind: "percentOff", value: 15 } } ],
-    deviation: { clauseIndex: 0, flip: "opStrict" } },
-  seamB: { id: "certify-seamB", domain: { min: 0, max: 150 },
-    clauses: [ { type: "namedCase", at: 0, outcome: "owesNothing" },
-               { type: "threshold", op: "<", t: 20, effect: { kind: "flatFee", value: 8 } } ],
-    deviation: { clauseIndex: 0, flip: "unwritten" } },
+    clauses: [ { type: "threshold", op: ">=", t: 100, effect: { kind: "percentOff", value: 15 } } ],
+    deviation: { clauseIndex: 0, flip: "opStrict" } },                    // seam @ 100/300 ≈ 33%
+  seamB: { id: "certify-seamB", domain: { min: 1, max: 150 },
+    clauses: [ { type: "threshold", op: "<=", t: 75, effect: { kind: "percentOff", value: 12 } } ],
+    deviation: { clauseIndex: 0, flip: "opStrict" } },                    // seam @ 75/150 ≈ 50%
   seamC: { id: "certify-seamC", domain: { min: 1, max: 450 },
-    clauses: [ { type: "range", lo: 20, hi: 400, outside: "rejected" } ],
-    deviation: { clauseIndex: 0, flip: "hiExclusive" } },
-  soundA: { id: "certify-soundA", domain: { min: 0, max: 150 },
-    clauses: [ { type: "namedCase", at: 0, outcome: "owesNothing" },
-               { type: "threshold", op: "<", t: 20, effect: { kind: "flatFee", value: 8 } } ],
+    clauses: [ { type: "range", lo: 150, hi: 300, outside: "rejected" } ],
+    deviation: { clauseIndex: 0, flip: "hiExclusive" } },                 // seam @ 300/450 ≈ 67%
+  soundA: { id: "certify-soundA", domain: { min: 1, max: 150 },
+    clauses: [ { type: "threshold", op: "<=", t: 75, effect: { kind: "percentOff", value: 12 } } ],
     deviation: null },
   soundB: { id: "certify-soundB", domain: { min: 1, max: 450 },
-    clauses: [ { type: "range", lo: 20, hi: 400, outside: "rejected" } ], deviation: null }
+    clauses: [ { type: "range", lo: 150, hi: 300, outside: "rejected" } ], deviation: null }
 };
 var CERTIFY_BUILDS = {
   fair:      [CERTIFY_POOL.seamA, CERTIFY_POOL.seamB, CERTIFY_POOL.seamC],

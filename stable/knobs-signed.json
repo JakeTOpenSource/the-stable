@@ -19,7 +19,7 @@
    "illegalW": 12
   },
   "scale_fixture_sha256": "2ed3fb9aca2290a6d77a8630eb1bd402d67bb54272426f98102458459d3efb1e",
-  "certify_roster_sha256": "8ec4d9be2d80badaff6b008517ca30eb62655d202ee89ac4a4c40ccce126de99"
+  "certify_roster_sha256": "adda1b6735b354189ab3a4cda21c364f7761db6bac43245368383d977359cbf9"
  },
  "signoff_log": [
   {
@@ -65,6 +65,15 @@
    "ratification_token": "JT-2026-07-21",
    "note": "Wider result: 520/1120 hold (46.4%), down from 150/240 (62.5%) on the narrower grid — the knob's failure is MORE pronounced at scale, not less. Breakdown by ordering shows the failure concentrated in the targeted/structured probing strategies (ranked-exact, ascending-scan, extremes-first, boundary-targeted: 13-25% hold) and nearly absent in lazy ones (midpoint-only, random 'none': 100% hold) — meaning the imbalance is worst against exactly the kind of careful, targeted witness a real model tends to be, not an edge-case artifact of a narrow or unrealistic grid. Full breakdown: witness-suite/SPEC-B-RESULTS.md. This ratifies the WIDER roster's existence and hash, not a claim that the knob passes — same non-claim as the prior entry, now measured at greater scale.",
    "governed_sha256": "e8e9e1da2309b295aeda5b0e574d3f0aad21f9e349deb850d3ec78a1e49135d6"
+  },
+  {
+   "date": "2026-07-21",
+   "action": "RATIFIED — certify pool rebuilt to fix the ascending/descending-scan seam-position bias (Jake directed: 'fix the pool's construction now'). All 3 fair-pool seams repositioned to the interior of their domains (~33/50/67%), namedCase dropped, then a second pass (adversarial review) removed an accidental dollar-figure echo in seamB's own effect that was recreating the same bias through the prose-derived candidate list.",
+   "scale": "0.3",
+   "ratified": true,
+   "ratification_token": "JT-2026-07-21",
+   "note": "Result: ascending-scan and descending-scan now hold at the IDENTICAL rate (63% each, was 13%/63%) — the asymmetry Jake asked to be fixed is gone. Overall CERTIFY: 740/1120 hold (66.1%), up from 520/1120 (46.4%) before this fix. Disclosed, not fixed by this change: certify-seamC's range clause still carries an inherent, small lo/hi ordering effect (structural to range-type deviations, not repositionable away); and the dominant remaining failure driver is unrelated to ordering entirely — under unbounded probing (after-cap/never) every ordering eventually catches every seam while both sound declarations trip the surge/stall protector and pay a flat penalty regardless of coverage earned, which accounts for far more of the remaining red than ascending/descending ever did. This ratifies the rebuilt roster's existence and hash, not a claim that CERTIFY passes. Full trace: witness-suite/SPEC-B-RESULTS.md.",
+   "governed_sha256": "c7887a3f7f2fea5633a1ace3d5a5ded4e9095cfad2cbefe27c78adf17c63baa5"
   }
  ]
 }

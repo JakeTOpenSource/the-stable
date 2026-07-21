@@ -13,7 +13,11 @@ probing a black box — efficiently.** Not "can the agent write code." Can it *a
 not write, find where the implementation deviates from the spec, and do it by reading rather
 than flailing. The nearest prior art (PBT-Bench, TestExplora) scores bug *detection*; this
 scores **probe economy and earned abstention** — the part they leave out. Landscape notes with
-fetched sources: `agent-eval-landscape-v0.json`.
+fetched sources: `agent-eval-landscape-v0.json` (does anything already score this? provisionally
+no) and `agent-coherence-landscape-v0.json` (why it matters: fetch-verified evidence that agents
+lose coherence over long tasks and cannot reliably verify their own work or know when to stop —
+benchmarks, named failure mechanisms, calibration studies, and six documented real-world
+incidents, each finding carried with its verification note and citation cautions).
 
 ## The floor
 

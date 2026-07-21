@@ -69,6 +69,10 @@ try {
   JSON.parse(fs.readFileSync(path.join(DIR,"agent-eval-landscape-v0.json"),"utf8"));
   check("agent-eval-landscape-v0.json","parses",true);
 } catch(e){ check("agent-eval-landscape-v0.json","parses",false,e.message); }
+try {
+  JSON.parse(fs.readFileSync(path.join(DIR,"agent-coherence-landscape-v0.json"),"utf8"));
+  check("agent-coherence-landscape-v0.json","parses",true);
+} catch(e){ check("agent-coherence-landscape-v0.json","parses",false,e.message); }
 
 // --- the Stable machines: each self-tests ---
 const { execSync } = require("child_process");

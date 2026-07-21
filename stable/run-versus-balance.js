@@ -1,115 +1,65 @@
-// Versus Table Phase 3 — balance validation. Deterministic; fuse-compatible output.
-//   node run-versus-balance.js              -> tournament table + invariants
-//   node run-versus-balance.js --self-test  -> invariants only (the gate runs this)
+// Versus Table balance — TUNE + CERTIFY (Spec B, witness-suite/SPEC-B-holdout.md, built 2026-07-21).
+//   node run-versus-balance.js              -> full tournament table + both blocks
+//   node run-versus-balance.js --self-test  -> both blocks only (the gate runs this)
 //
-// The knobs (weights, quota, cap, trip) are validated by MEASUREMENT, not cold-read:
-// scripted players of graded skill play a full round-robin; the game is balanced iff the
-// invariants hold. Any knob change that breaks an invariant turns the gate red — the
-// game's fairness is itself corpus-gated. No real agent sits down before this is green.
+// TUNE: the original Phase-3 roster (stable/roster-tune.js), free to iterate, INFORMATIONAL
+// ONLY. Its 9 invariants are unchanged from the pre-Spec-B file; three of them (the finding is
+// the crown, replay/determinism, bounded cabinet economics) test the ENGINE, not this specific
+// roster — they are not re-homed into CERTIFY because stable/run-versus-match.js's own
+// self-test (already, separately, unconditionally gate-wired) already covers exactly those
+// engine properties. Demoting TUNE to informational therefore loses no real gate coverage.
+//
+// CERTIFY: a roster GENERATED from a grammar (stable/roster-certify.js), frozen, never seen by
+// the tuning process (disjointness enforced below, not assumed). GATES. Requires: for every
+// policy in the generated grid, the fair-builder pool scores at least as high as the
+// defensive/sound-heavy pool against that policy — "score" operationalized (Jake, 2026-07-21)
+// as each pool's summed BUILDER-side points (vm._scoreRound, the same scoring function used
+// everywhere else) across its 3 declarations, driven by the policy via playAgainst(compiled,
+// session) — a white-box call (compiled.par visible) rather than the spec's literal
+// witness(session)-only shape; see roster-certify.js's header for why. This is the whole point
+// of the hold-out: if the ratified knob doesn't generalize to players it was never fit to, this
+// block reports it plainly and the gate goes red — that is enforcement working, not a broken
+// instrument (Jake directed, 2026-07-21: build it and let a red CERTIFY be the first finding).
 "use strict";
 
 var path = require("path");
+var vc = require(path.join(__dirname, "versus-compiler.js"));
 var vm = require(path.join(__dirname, "versus-match.js"));
+var rosterTune = require(path.join(__dirname, "roster-tune.js"));
+var rosterCertify = require(path.join(__dirname, "roster-certify.js"));
 
 var checks = 0, passes = 0, fails = [];
 function check(name, ok, detail){ checks++; if (ok) passes++; else fails.push(name + (detail ? " — " + detail : "")); }
 
-// ---- declaration pools ---------------------------------------------------------------------
-var POOL = {
-  seamThreshold: { id: "disc", domain: { min: 1, max: 200 },
-    clauses: [ { type: "threshold", op: ">=", t: 50, effect: { kind: "percentOff", value: 10 } } ],
-    deviation: { clauseIndex: 0, flip: "opStrict" } },
-  seamNamed: { id: "cart", domain: { min: 0, max: 200 },
-    clauses: [ { type: "namedCase", at: 0, outcome: "owesNothing" },
-               { type: "threshold", op: "<", t: 30, effect: { kind: "flatFee", value: 5 } } ],
-    deviation: { clauseIndex: 0, flip: "unwritten" } },
-  seamCeiling: { id: "gift", domain: { min: 1, max: 600 },
-    clauses: [ { type: "range", lo: 10, hi: 500, outside: "rejected" } ],
-    deviation: { clauseIndex: 0, flip: "hiExclusive" } },
-  seamFloor: { id: "gift-lo", domain: { min: 1, max: 600 },
-    clauses: [ { type: "range", lo: 10, hi: 500, outside: "rejected" } ],
-    deviation: { clauseIndex: 0, flip: "loExclusive" } },
-  soundCart: { id: "cart-sound", domain: { min: 0, max: 200 },
-    clauses: [ { type: "namedCase", at: 0, outcome: "owesNothing" },
-               { type: "threshold", op: "<", t: 30, effect: { kind: "flatFee", value: 5 } } ],
-    deviation: null },
-  soundGift: { id: "gift-sound", domain: { min: 1, max: 600 },
-    clauses: [ { type: "range", lo: 10, hi: 500, outside: "rejected" } ], deviation: null }
-};
-var BUILDS = {
-  fair:      [POOL.seamThreshold, POOL.seamNamed, POOL.seamCeiling],
-  varied:    [POOL.seamFloor, POOL.seamThreshold, POOL.seamNamed],
-  defensive: [POOL.soundCart, POOL.soundGift, POOL.seamCeiling],   // max quota: 2 sound + 1 seamed
-  greedy:    [POOL.soundCart, POOL.soundGift, POOL.soundGift]      // 3 sound: the third forfeits
-};
+// ---- disjointness: enforced at load, not assumed (Spec B's own rename-guard requirement) ----
+(function assertDisjoint(){
+  var tuneById = {};
+  Object.keys(rosterTune.POOL).forEach(function(k){ tuneById[rosterTune.POOL[k].id] = rosterTune.POOL[k]; });
+  var certifyById = {};
+  Object.keys(rosterCertify.CERTIFY_POOL).forEach(function(k){ certifyById[rosterCertify.CERTIFY_POOL[k].id] = rosterCertify.CERTIFY_POOL[k]; });
+  var sharedIds = Object.keys(tuneById).filter(function(id){ return id in certifyById; });
+  if (sharedIds.length) throw new Error("Spec B disjointness violated: shared declaration id(s): " + sharedIds.join(", "));
+  // Content comparison MUST strip id first — otherwise a decl renamed to a certify-style id
+  // with byte-identical clauses/domain/deviation would sail past this check (the id-check above
+  // already caught the id match; this branch exists specifically for the rename-around-identical-
+  // content attack the spec calls out, so it cannot itself compare on id). Verified by adversarial
+  // test (2026-07-21 pre-ship review): a tune declaration copied verbatim under a new certify-
+  // style id used to pass silently; stripping id here catches it.
+  function canonSansId(d){ var c = {}; Object.keys(d).forEach(function(k){ if (k !== "id") c[k] = d[k]; }); return rosterCertify.canon(c); }
+  var tuneCanonToId = {};
+  Object.keys(tuneById).forEach(function(id){ tuneCanonToId[canonSansId(tuneById[id])] = id; });
+  var contentClash = null;
+  Object.keys(certifyById).forEach(function(id){
+    var c = canonSansId(certifyById[id]);
+    if (tuneCanonToId[c]) contentClash = id + " is byte-identical (by content, ignoring id) to tune's " + tuneCanonToId[c];
+  });
+  if (contentClash) throw new Error("Spec B disjointness violated: " + contentClash);
+})();
 
-// ---- witness strategies, graded by skill ----------------------------------------------------
-function prosemoney(spec){
-  var nums = {}; var m; var re = /\$(\d+(?:\.\d+)?)/g;
-  while ((m = re.exec(spec))) nums[parseFloat(m[1])] = true;
-  return Object.keys(nums).map(Number).sort(function(a, b){ return a - b; });
-}
-// Ranked: exact spec-named values FIRST (seams in this grammar always sit on a named value),
-// then neighbors and domain ends to earn abstention coverage on sound cases.
-function rankedPlay(session){
-  var exact = prosemoney(session.spec).filter(function(v){ return v >= session.domain.min && v <= session.domain.max; });
-  for (var i = 0; i < exact.length; i++){
-    var r = session.probe(exact[i]);
-    if (r && (r.roundOver || r.match === false)) return;
-  }
-  var rest = {};
-  prosemoney(session.spec).forEach(function(n){ [n - 1, n + 1].forEach(function(v){ rest[v] = true; }); });
-  rest[session.domain.min] = true; rest[session.domain.max] = true;
-  var list = Object.keys(rest).map(Number)
-    .filter(function(v){ return v >= session.domain.min && v <= session.domain.max && exact.indexOf(v) < 0; })
-    .sort(function(a, b){ return a - b; });
-  for (var j = 0; j < list.length; j++){
-    var r2 = session.probe(list[j]);
-    if (r2 && (r2.roundOver || r2.match === false)) return;
-  }
-  session.abstain();
-}
-// Spec reader: everything ascending (exact + neighbors + ends) — competent, unranked.
-function specPlay(session){
-  var cands = {};
-  prosemoney(session.spec).forEach(function(n){ [n - 1, n, n + 1].forEach(function(v){ cands[v] = true; }); });
-  cands[session.domain.min] = true; cands[session.domain.max] = true;
-  var list = Object.keys(cands).map(Number)
-    .filter(function(v){ return v >= session.domain.min && v <= session.domain.max; })
-    .sort(function(a, b){ return a - b; });
-  for (var i = 0; i < list.length; i++){
-    var r = session.probe(list[i]);
-    if (r && (r.roundOver || r.match === false)) return;
-  }
-  session.abstain();
-}
-function quitPlay(session){
-  session.probe(Math.round((session.domain.min + session.domain.max) / 2) + 0.37);
-  session.abstain();
-}
-function flailPlay(session){
-  var st = 20260714;
-  function nx(){ st = (st * 1103515245 + 12345) % 2147483648; return st / 2147483648; }
-  while (!session.over()){
-    var r = session.probe(Math.floor(session.domain.min + nx() * (session.domain.max - session.domain.min + 1)) + 0.37);
-    if (r && r.roundOver) return;
-  }
-}
-
-function P(name, buildKey, witnessFn){
-  var pool = BUILDS[buildKey];
-  return { name: name, build: function(r){ return pool[Math.floor(r / 2) % pool.length]; }, witness: witnessFn };
-}
-var PLAYERS = [
-  P("rankedFair", "fair", rankedPlay),
-  P("specFair", "varied", specPlay),
-  P("quitFair", "fair", quitPlay),
-  P("flailFair", "varied", flailPlay),
-  P("rankedDefensive", "defensive", rankedPlay),
-  P("rankedGreedy", "greedy", rankedPlay)
-];
-
-// ---- round-robin tournament ------------------------------------------------------------------
+// ============================================================================================
+// TUNE block — unchanged from the pre-Spec-B file, sourced from roster-tune.js. Informational.
+// ============================================================================================
+var PLAYERS = rosterTune.PLAYERS;
 var totals = {}, wins = {}, probeSpend = {};
 PLAYERS.forEach(function(p){ totals[p.name] = 0; wins[p.name] = 0; probeSpend[p.name] = 0; });
 var matches = [];
@@ -126,6 +76,7 @@ for (var i = 0; i < PLAYERS.length; i++){
 }
 
 if (process.argv.indexOf("--self-test") < 0){
+  console.log("=== TUNE roster (informational) ===");
   console.log("player            total    wins   probes");
   PLAYERS.map(function(p){ return p.name; })
     .sort(function(a, b){ return totals[b] - totals[a]; })
@@ -137,61 +88,46 @@ if (process.argv.indexOf("--self-test") < 0){
   console.log("");
 }
 
-// ---- balance invariants (the game's own corpus) ----------------------------------------------
-// 1. skill orders outcomes among fair-building witnesses
-check("skill orders outcomes: ranked > spec > quitter/flailer",
+var tuneChecks = 0, tunePasses = 0, tuneFails = [];
+function tuneCheck(name, ok, detail){ tuneChecks++; if (ok) tunePasses++; else tuneFails.push(name + (detail ? " — " + detail : "")); }
+
+tuneCheck("skill orders outcomes: ranked > spec > quitter/flailer",
       totals.rankedFair > totals.specFair &&
       totals.specFair > Math.max(totals.quitFair, totals.flailFair),
       JSON.stringify(totals));
-
-// 2. sound-spam is not dominant: fair building beats defensive building at equal witness skill
-check("defense does not dominate: rankedFair >= rankedDefensive",
+tuneCheck("defense does not dominate: rankedFair >= rankedDefensive",
       totals.rankedFair >= totals.rankedDefensive,
       totals.rankedFair + " vs " + totals.rankedDefensive);
-
-// 3. rule-breaking never pays: greedy (quota-breaker) < defensive (legal max defense)
-check("rule-breaking never pays: rankedGreedy < rankedDefensive",
+tuneCheck("rule-breaking never pays: rankedGreedy < rankedDefensive",
       totals.rankedGreedy < totals.rankedDefensive,
       totals.rankedGreedy + " vs " + totals.rankedDefensive);
-
-// 4. the finding is the crown: no single-round builder outcome exceeds a false pass
 (function(){
   var maxB = 0, findingSeen = false;
   matches.forEach(function(m){ m.rounds.forEach(function(r){
     if (r.score && r.score.builder > maxB) maxB = r.score.builder;
     if (r.verdict === "false pass") findingSeen = true;
   }); });
-  check("the finding is the top builder prize (" + vm.RULES.SCORE.findingB + ")",
+  tuneCheck("the finding is the top builder prize (" + vm.RULES.SCORE.findingB + ")",
         maxB <= vm.RULES.SCORE.findingB, "max builder round score " + maxB);
-  check("weak witnesses concede findings (false passes occur in the tournament)", findingSeen);
+  tuneCheck("weak witnesses concede findings (false passes occur in the tournament)", findingSeen);
 })();
-
-// 5. the surge protector holds in tournament play. 0.3 recalibration: flailers now fold back
-// via the STALL trip (no new target for 2x grace) rather than the Gamma trip, so the bound is
-// grace + 2x grace — still well under the 25 cap (measured worst: 16).
 (function(){
   var worst = 0;
   matches.forEach(function(m){ m.rounds.forEach(function(r){
     if (r.witness === "flailFair" && r.legal && r.probes > worst) worst = r.probes;
   }); });
-  check("surge holds in tournament: flailer folds back within grace + 2x grace", worst <= 3 * vm.RULES.SURGE_GRACE_PROBES, "worst " + worst);
+  tuneCheck("surge holds in tournament: flailer folds back within grace + 2x grace", worst <= 3 * vm.RULES.SURGE_GRACE_PROBES, "worst " + worst);
 })();
-
-// 6. strong witnesses always conclude: no ranked/spec round ends open or tripped
 (function(){
   var bad = null;
   matches.forEach(function(m){ m.rounds.forEach(function(r){
     if ((r.witness === "rankedFair" || r.witness === "specFair") && r.legal &&
         (r.verdict === "open" || r.verdict === "tripped")) bad = r.witness + "@" + m.matchId;
   }); });
-  check("readers always conclude (catch or earned abstention)", bad === null, bad);
+  tuneCheck("readers always conclude (catch or earned abstention)", bad === null, bad);
 })();
-
-// 7. ranked skill shows as probe economy: ranked spends fewer probes than spec overall
-check("ranked reading is cheaper than ascending reading", probeSpend.rankedFair < probeSpend.specFair,
+tuneCheck("ranked reading is cheaper than ascending reading", probeSpend.rankedFair < probeSpend.specFair,
       probeSpend.rankedFair + " vs " + probeSpend.specFair);
-
-// 8. determinism: replaying the first match reproduces it; re-running it agrees byte-for-byte
 (function(){
   var m0 = matches[0];
   var rep = vm.replay(m0);
@@ -200,27 +136,78 @@ check("ranked reading is cheaper than ascending reading", probeSpend.rankedFair 
     if (live.legal === false) return rr.verdict === "illegal";
     return rr.verdict === live.verdict && rr.probes === live.probes;
   });
-  check("tournament matches replay exactly", same);
+  tuneCheck("tournament matches replay exactly", same);
   var again = vm.playMatch(m0.matchId, PLAYERS[0], PLAYERS[1]);
-  check("tournament is deterministic", JSON.stringify(again) === JSON.stringify(m0));
+  tuneCheck("tournament is deterministic", JSON.stringify(again) === JSON.stringify(m0));
 })();
-
-// 9. every match is bounded (cabinet economics): no match exceeds ROUNDS * CAP probes
 (function(){
   var worst = 0;
   matches.forEach(function(m){
     var t = 0; Object.keys(m.probesTotal).forEach(function(k){ t += m.probesTotal[k]; });
     if (t > worst) worst = t;
   });
-  check("cabinet economics: worst match probe total within bounds",
+  tuneCheck("cabinet economics: worst match probe total within bounds",
         worst <= vm.RULES.ROUNDS * vm.RULES.PROBE_CAP, "worst " + worst);
 })();
 
+// TUNE is informational: fold its checks into the overall count for visibility, but a TUNE
+// failure alone does not flip the process exit code — CERTIFY does that (see below). The
+// printed line below deliberately avoids the bare token "FAIL" so an informational miss here
+// cannot be mistaken by a naive log-grep for the gate's own verdict.
+console.log("TUNE: " + (tuneFails.length === 0 ? "GREEN" : "not all invariants hold") +
+  " (" + tunePasses + "/" + tuneChecks + ")");
+if (tuneFails.length) tuneFails.forEach(function(f){ console.log("  (tune, informational) " + f); });
+checks += tuneChecks; passes += tunePasses;
+
+// ============================================================================================
+// CERTIFY block — the hold-out. GATES.
+// ============================================================================================
+function poolTotalAgainst(build, policy){
+  var total = 0;
+  build.forEach(function(decl){
+    var v = vc.validate(decl);
+    if (!v.legal) throw new Error("certify declaration illegal: " + decl.id + " — " + (v.reasons || []).join("; "));
+    var session = vm.openHidden(v.compiled, function(){});
+    policy.playAgainst(v.compiled, session);
+    if (!session.over()) session.abstain();
+    var res = session._result();
+    var sc = vm._scoreRound(res.verdict, res.probes, v.compiled.par);
+    total += sc.builder;
+  });
+  return Math.round(total * 10) / 10;
+}
+
+var certifyViolations = [];
+var worstGap = -Infinity, worstPolicyId = null, worstFair = null, worstDef = null;
+rosterCertify.GRID.forEach(function(policy){
+  var fairTotal = poolTotalAgainst(rosterCertify.CERTIFY_BUILDS.fair, policy);
+  var defTotal = poolTotalAgainst(rosterCertify.CERTIFY_BUILDS.defensive, policy);
+  var gap = defTotal - fairTotal;
+  if (gap > 0) certifyViolations.push({ id: policy.id, fair: fairTotal, defensive: defTotal, gap: Math.round(gap * 10) / 10 });
+  if (gap > worstGap){ worstGap = gap; worstPolicyId = policy.id; worstFair = fairTotal; worstDef = defTotal; }
+});
+
+check("CERTIFY: fair pool scores >= defensive pool against every one of the " + rosterCertify.GRID.length + " generated policies",
+      certifyViolations.length === 0,
+      certifyViolations.length + " violation(s); worst is " + worstPolicyId + " (fair " + worstFair + " vs defensive " + worstDef + ", gap " + Math.round(worstGap * 10) / 10 + ")");
+
+var certifyGreen = certifyViolations.length === 0;
+console.log("CERTIFY: " + (certifyGreen ? "GREEN" : "FAIL") +
+  " — " + (rosterCertify.GRID.length - certifyViolations.length) + "/" + rosterCertify.GRID.length + " generated policies hold" +
+  (certifyGreen ? "" : "; worst violation: " + worstPolicyId + " (fair " + worstFair + " vs defensive " + worstDef + ", defense wins by " + Math.round(worstGap * 10) / 10 + ")"));
+if (!certifyGreen && certifyViolations.length > 1){
+  console.log("  (" + (certifyViolations.length - 1) + " more violation(s) not printed individually — see certifyViolations in a debugger/require() for the full list)");
+}
+
 console.log("checks: " + passes + "/" + checks + " hold");
+if (!certifyGreen){
+  console.log("CERTIFY FAIL — the ratified knob does not generalize to the held-out policy grid. This is Spec B working as designed: no knob ships unless it holds on players it was never fit to.");
+  process.exit(1);
+}
 if (fails.length){
   console.log("FAIL — " + fails.length + " balance break(s):");
   fails.forEach(function(f){ console.log("  ✗ " + f); });
   process.exit(1);
 }
-console.log("GREEN — skill orders outcomes; defense and rule-breaking do not dominate; the finding is the crown; the game is fair enough to seat real agents.");
+console.log("GREEN — TUNE informational, CERTIFY holds on the held-out policy grid: the game is fair enough to seat real agents, and the fairness generalizes beyond the roster it was tuned on.");
 process.exit(0);

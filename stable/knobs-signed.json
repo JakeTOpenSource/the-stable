@@ -18,7 +18,8 @@
    "openB": 12,
    "illegalW": 12
   },
-  "scale_fixture_sha256": "2ed3fb9aca2290a6d77a8630eb1bd402d67bb54272426f98102458459d3efb1e"
+  "scale_fixture_sha256": "2ed3fb9aca2290a6d77a8630eb1bd402d67bb54272426f98102458459d3efb1e",
+  "certify_roster_sha256": "21c7d63c4d751a5b669d56945046d18544be7dc6f69aafd1470c6dad155730de"
  },
  "signoff_log": [
   {
@@ -46,6 +47,15 @@
    "ratification_token": "JT-2026-07-16",
    "note": "Scope, stated honestly: (1) PAR SEMANTICS changed — par is now the minimal cover (boundaries + distinct extremes + interiors of uncovered regions), derived through the suite, replacing special.length; 0.2 ledgers are refused by replay rather than silently re-rated. (2) ONE FORMULA CHANGED: the sound-builder reward divisor, floor((probes-par)/2) -> floor((probes-par)/3). Measured, not chosen by taste: under derived par the /2 reward let defensive sound-spam out-earn fair play again (193.6 vs 187.6 in the reference tournament — the exact imbalance the 0.2 tuning existed to prevent); /3 restores the reference players' 0.2-era builder economics and the balance invariants. FLAGGED FOR JAKE: this divisor is the one judgment call in the migration — revert or amend at will; the tournament re-measures either way. (3) The surge protector gained a STALL trip (no new target for 2x SURGE_GRACE_PROBES, derived from the existing grace constant — no new governed knob); required because region credit gives even unaimed play small R, blinding a Gamma-only trip. (4) Closes the SPEC-B-holdout par root-cause item by derivation. Token is a human-readable marker directed by Jake via chat (0.2-ratification precedent); he may amend it.",
    "governed_sha256": "80caf88a4517a2e7c4997fe5f646da58fd26ae8e4e0968dbb416e00edc15cd43"
+  },
+  {
+   "date": "2026-07-21",
+   "action": "RATIFIED — Spec B built (witness-suite/SPEC-B-holdout.md). certify_roster_sha256 added to governed, pinning stable/roster-certify.js's file content (the generated hold-out grid + its declarations + the grammar that produces them). Jake directed the build via chat this session.",
+   "scale": "0.3",
+   "ratified": true,
+   "ratification_token": "JT-2026-07-21",
+   "note": "This ratifies that the CERTIFY ROSTER EXISTS, is frozen, and is disjoint (by id and by canonical declaration content) from the tune roster it was never fit to — it does NOT ratify that the current knob passes certification against it. First real run: CERTIFY FAILS (150/240 generated policies hold; worst gap 22 points in the defensive pool's favor) — Jake directed 'build it anyway, let it fail,' treating a red CERTIFY as the mechanism's first real finding rather than a reason not to ship the mechanism. Full results: witness-suite/SPEC-B-RESULTS.md. Consequence stated plainly: wiring CERTIFY into the gate as specifically-required-green (per the original design) means stable-gate.js goes red until either the knob is revised or the certify grid's scope is reconsidered — a deliberate, visible act, not a silent one. Corrected framing (a cross-project Fable advisor pass, 2026-07-21): Spec B is Check's externality clause enforced by mechanism, NOT an instance of the Witness Ledger's Candidate I (ordering drift) — that category already has a live, calibrated detector elsewhere (Delta Atlas's Priority Tracer); do not re-cite Spec B as evidence for it.",
+   "governed_sha256": "edf077ae0322c7bc98477f3c4eeba0b54888741f0d7f1a852d80f946639f3774"
   }
  ]
 }

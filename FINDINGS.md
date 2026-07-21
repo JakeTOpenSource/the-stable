@@ -111,10 +111,12 @@ recomputes; the DENIED verdict was independently re-derived twice from raw cells
   **closed** by the `experiments/*/decision-logs.json` archives and
   `bridge/replay-replication.js`;
 - label conflation: "Spec B par root-cause closed" — the *par-derivation* item cited in the
-  0.2 ratification note is closed by derived par; **Spec B itself (the held-out
-  certification roster) is a separate design and remains unbuilt.** Standing consequence:
-  the /3 sound-reward divisor was tuned and certified on the same six scripted players;
-  Spec B is the instrument that would certify it against players it was never fit to.
+  0.2 ratification note is closed by derived par; Spec B itself (the held-out certification
+  roster) was a separate design. **Update (2026-07-21): Spec B is now built and run** —
+  `witness-suite/SPEC-B-RESULTS.md`. The /3 sound-reward divisor, tuned and certified on the
+  same six scripted players, does NOT generalize to the held-out policy grid (150/240 hold,
+  worst gap 22 points in the defensive pool's favor) — the exact standing consequence this
+  section used to only warn about is now a measured, gate-pinned finding, not a prediction.
 
 ---
 
@@ -132,10 +134,10 @@ recomputes; the DENIED verdict was independently re-derived twice from raw cells
 ## Reproduce everything
 
 ```
-node stable-gate.js                                    # 35/35 — all machines + the clamp + the replication verdict
+node stable-gate.js                                    # prints GREEN — all machines + the clamp + the replication verdict + Spec B's CERTIFY line
 node witness-suite/run-witness-suite.js                # suite self-test + baselines
 node stable/run-rail.js                                # phasor corpus + archetypes
-node stable/run-versus-balance.js                      # tournament + 11 balance invariants
+node stable/run-versus-balance.js                      # TUNE (informational) + CERTIFY (Spec B hold-out — see witness-suite/SPEC-B-RESULTS.md)
 node bridge/play-versus.js bridge/versus-plans.json    # E2 exactly
 node bridge/play-versus.js bridge/iterative-plans.json # E3 exactly
 node bridge/replay-replication.js                      # E4 verdict, asserted

@@ -67,7 +67,8 @@ custody, claims, and verdicts included — with no reference to any private syst
 ## Inviting stress testers
 
 Point newcomers at `FINDINGS.md` (what is claimed, at what n, with what limits) and
-`witness-suite/SPEC-B-holdout.md` (the advertised open problem: the held-out certification
-roster that would certify the current balance tuning against players it was never fit to).
-Issues that break a claim are *findings* — the highest-value contribution this project
+`witness-suite/SPEC-B-RESULTS.md` (the held-out certification roster is now built and run: the
+ratified balance knob does not generalize to players it was never fit to — 150/240 hold, worst
+gap 22 points). The design doc, `witness-suite/SPEC-B-holdout.md`, is now history, not an open
+problem. Issues that break a claim are *findings* — the highest-value contribution this project
 recognizes.

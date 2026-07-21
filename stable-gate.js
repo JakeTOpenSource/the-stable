@@ -79,11 +79,39 @@ function selfTest(label, rel, args, timeout){
     check(label, "self-test GREEN", /GREEN/.test(out) && !/FAIL/.test(out));
   } catch(e){ check(label, "self-test GREEN", false, "nonzero exit or did not run"); }
 }
+// Like selfTest, but requires a SPECIFIC line rather than the generic GREEN-and-no-FAIL scan —
+// needed for run-versus-balance.js (Spec B, 2026-07-21), whose TUNE block is informational and
+// may print its own non-gating "not all invariants hold" line without that meaning the file's
+// actual gate (CERTIFY) is red. A bare GREEN/FAIL regex scan would either be fooled by TUNE's
+// wording or falsely tripped by it; this checks for the one line that's actually the verdict.
+function selfTestRequires(label, rel, args, requiredLine, timeout){
+  var out;
+  try {
+    out = execSync('node "' + path.join(DIR, rel) + '"' + (args?" "+args:""),
+                   { stdio:["ignore","pipe","pipe"], timeout: timeout||30000 }).toString();
+  } catch(e){ out = (e.stdout ? e.stdout.toString() : "") + (e.stderr ? e.stderr.toString() : ""); }
+  check(label, "prints \"" + requiredLine + "\"", out.indexOf(requiredLine) >= 0,
+        out.indexOf(requiredLine) >= 0 ? "" : "did not find the required line (exit nonzero is expected when this is red)");
+}
 selfTest("witness-suite", "witness-suite/run-witness-suite.js", "--self-test");
 selfTest("stable/rail", "stable/run-rail.js", "--self-test");
 selfTest("stable/versus-compiler", "stable/run-versus-compiler.js", "--self-test");
 selfTest("stable/versus-match", "stable/run-versus-match.js", "--self-test");
-selfTest("stable/versus-balance", "stable/run-versus-balance.js", "--self-test", 60000);
+// Spec B (2026-07-21): the CERTIFY verdict is a CLAIM, gate-checked like the deadlock trial's
+// GRANTED and the replication trial's DENIED above — the gate holds the exact reported line, not
+// "must be green." A pre-ship adversarial review caught that requiring literal "CERTIFY: GREEN"
+// would make this repo's own pre-push hook (which requires stable-gate.js to pass) physically
+// reject a push that ships a deliberate, correctly-isolated red finding — the same category
+// error replay-replication.js's --self-test already avoids by pinning DOCTRINE DENIED as the
+// expected, gate-passing state rather than demanding the underlying claim be positive. If the
+// ratified knob is later revised and CERTIFY's real result changes, this line must be updated
+// deliberately (the same discipline the clamp itself enforces for governed knobs) — it will not
+// drift silently, because the gate goes red the moment the reported line no longer matches.
+// TUNE is informational and does not gate here, by design (see run-versus-balance.js header —
+// the three engine-level invariants it used to gate on are independently covered forever by
+// run-versus-match.js's own self-test above, so demoting TUNE loses no real coverage).
+selfTestRequires("stable/versus-balance (CERTIFY)", "stable/run-versus-balance.js", "--self-test",
+  "CERTIFY: FAIL — 150/240 generated policies hold; worst violation: ranked-exact@after-cap-seed0 (fair 3 vs defensive 25, defense wins by 22)", 60000);
 selfTest("scoreboard custody", "stable/make-scoreboard-data.js", "--check");
 // The public explorer page: its numbers must equal the verified machines, forever (the
 // display cannot lie — same custody as the scoreboard).
@@ -138,12 +166,18 @@ try {
   const signed = signedFull.governed;
   const fx = JSON.parse(fs.readFileSync(path.join(DIR,"stable","scale-fixture.json"),"utf8"));
   const fxHash = crypto.createHash("sha256").update(JSON.stringify({scale:fx.scale, rows:fx.rows})).digest("hex");
+  // Spec B (2026-07-21): pins stable/roster-certify.js's file content (declarations + the
+  // grammar that generates the grid), the same "hash the file" pattern as scale_fixture_sha256
+  // above — a hostile edit to the roster or the grammar that produces it changes this hash,
+  // same discipline, same precedent.
+  const certifyHash = crypto.createHash("sha256")
+    .update(fs.readFileSync(path.join(DIR,"stable","roster-certify.js"),"utf8")).digest("hex");
   const live = {
     scale_version: rules.version, SOUND_QUOTA: rules.SOUND_QUOTA, PROBE_CAP: rules.PROBE_CAP,
     SURGE_VSWR_TRIP: rules.SURGE_VSWR_TRIP, SURGE_GRACE_PROBES: rules.SURGE_GRACE_PROBES,
-    scale_fixture_sha256: fxHash, SCORE: rules.SCORE,
+    scale_fixture_sha256: fxHash, certify_roster_sha256: certifyHash, SCORE: rules.SCORE,
   };
-  const REQUIRED = ["scale_version","SOUND_QUOTA","PROBE_CAP","SURGE_VSWR_TRIP","SURGE_GRACE_PROBES","scale_fixture_sha256","SCORE"];
+  const REQUIRED = ["scale_version","SOUND_QUOTA","PROBE_CAP","SURGE_VSWR_TRIP","SURGE_GRACE_PROBES","scale_fixture_sha256","certify_roster_sha256","SCORE"];
   const REQUIRED_SCORE = ["catchW","nullW","prematureB","findingB","openB","illegalW"];
   const missing = REQUIRED.filter(k => !(k in signed)).concat(
     (signed.SCORE ? REQUIRED_SCORE.filter(k => !(k in signed.SCORE)).map(k=>"SCORE."+k) : ["SCORE(absent)"]));

@@ -96,13 +96,35 @@ tends to use (this project's own prior real-agent runs consistently show targete
 probing, not random flailing), so the narrower grid's 62.5% figure was, if anything, an optimistic
 sample rather than a pessimistic one.
 
-**A secondary, unexplained observation, worth flagging rather than smoothing over:**
-`descending-scan` holds 63% of the time — nearly 5× `ascending-scan`'s 13% — despite probing the
-exact same set of candidate values, just in reverse order. Probe order alone is changing which
-side of the pass rule a policy lands on for a large fraction of the grid. This session did not
-dig into why; it's a real, reproducible structural fact about how the scoring interacts with
-probe order, and a natural next thing to investigate before drawing conclusions about *which*
-orderings "matter."
+**The ascending/descending asymmetry, chased down (2026-07-21):** `descending-scan` holds 63% of
+the time vs. `ascending-scan`'s 13%, despite probing the identical candidate set in reverse. Root
+cause, confirmed with a per-declaration diagnostic trace: **`certify-seamB`'s planted bug sits
+exactly at its `domain.min` (0), and `certify-seamC`'s sits near its `domain.max` (400, close to
+the 450 ceiling)** — an accidental artifact of where the deviations were placed when these
+declarations were hand-built, not a property of the scoring engine.
+
+- `ascending-scan` (starts at `domain.min`) catches `seamB` almost for free — 1 probe, builder
+  score ~0 — but has to work through most of the candidate list before reaching `seamC`'s bug near
+  the far end, so under any short abstain-timing (`after-1` through `after-5`) it misses `seamC`
+  entirely: a **false pass**, worth a flat 15 points to the builder regardless of how few probes
+  were spent. Net for short timings: ~0 (seamB, caught) + 15 (seamC, missed) = 15.
+- `descending-scan` is the mirror image — it reaches `seamC` quickly but takes just as long to
+  reach `seamB`'s bug at the opposite end, so short timings miss `seamB` instead. But because
+  BOTH bugs sit far from where descending starts under the shortest timings (`after-1`
+  through `after-3`), it misses BOTH: two false passes, 15 + 15 = 30 — nearly double ascending's
+  15, which alone accounts for most of the gap.
+- The two orderings converge again once the timing is generous enough to reach both ends
+  (`after-cap`/`never`): both eventually catch every seam, and the comparison shifts entirely to
+  the sound declarations' overshoot penalties, where the two orderings end up closer.
+
+**What this actually means:** the 5× swing isn't telling us something new about the `/3` divisor —
+it's exposing that these 5 certify declarations weren't built with their deviations placed
+evenly across the domain, so a probe order that happens to start from the "wrong" end pays an
+outsized false-pass penalty that has nothing to do with witness quality. This is a real
+construction weakness in the certify pool itself, not a finding about the knob. Left as documented
+and unfixed for now — regenerating the pool with deviation placement varied deliberately across
+the domain (not clustered near one end each) is the natural next step if the certify roster gets
+revised again.
 
 By abstain-timing: `immediate` is trivial by construction (0 probes, 100% hold, not a real test).
 `after-1` through `after-3` hold ~43%; `after-5` drops to 29%; `after-par` is the best of the
